@@ -402,7 +402,7 @@ export default function Home() {
             <TiltWrapper delay={0.1} className="bg-black p-6 sm:p-8 md:p-10 rounded-xl border border-zinc-800 h-full">
               <div className="flex items-center gap-4 mb-6" style={{ transform: "translateZ(30px)" }}>
                 <div className="relative w-16 h-16 md:w-20 md:h-20 rounded-full overflow-hidden border border-zinc-700">
-                  <Image src="/images/rxq.jpg" alt="任玄奇" fill className="object-cover" />
+                  <Image src="/portfolio-site/images/rxq.jpg" alt="任玄奇" fill className="object-cover" />
                 </div>
                 <div>
                   <h3 className="text-xl md:text-2xl font-semibold mb-1">任玄奇</h3>
@@ -422,7 +422,7 @@ export default function Home() {
             <TiltWrapper delay={0.2} className="bg-black p-6 sm:p-8 md:p-10 rounded-xl border border-zinc-800 h-full">
               <div className="flex items-center gap-4 mb-6" style={{ transform: "translateZ(30px)" }}>
                 <div className="relative w-16 h-16 md:w-20 md:h-20 rounded-full overflow-hidden border border-zinc-700">
-                  <Image src="/images/wyf.jpg" alt="吴于枫" fill className="object-cover scale-[1.25] origin-top translate-x-2 -translate-y-2" />
+                  <Image src="/portfolio-site/images/wyf.jpg" alt="吴于枫" fill className="object-cover scale-[1.25] origin-top translate-x-2 -translate-y-2" />
                 </div>
                 <div>
                   <h3 className="text-xl md:text-2xl font-semibold mb-1">吴于枫</h3>
@@ -455,7 +455,7 @@ export default function Home() {
             <div className="w-32 h-32 md:w-40 md:h-40 bg-black rounded-xl flex items-center justify-center mb-4 overflow-hidden border border-zinc-800 hover:border-zinc-600 transition-colors p-3">
               <div className="relative w-full h-full scale-[1.2] -translate-y-1">
                 <Image 
-                  src="/images/qrcode_dark.jpg" 
+                  src="/portfolio-site/images/qrcode_dark.jpg" 
                   alt="微信二维码" 
                   fill 
                   className="object-contain mix-blend-screen opacity-90 hover:opacity-100 transition-opacity"
