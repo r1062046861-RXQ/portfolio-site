@@ -1,9 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   output: 'export',
-  // 对于 GitHub Pages，由于使用了 next/image 的 unoptimized，且通过 basePath 设置了根路径
-  // 不再使用 assetPrefix，避免在某些加载场景下路径被双重叠加导致 404
-  basePath: '/portfolio-site',
+  // 对于绑定了自定义顶级域名的 GitHub Pages，不需要 basePath
   images: {
     unoptimized: true,
   },
