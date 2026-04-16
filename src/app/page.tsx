@@ -8,10 +8,19 @@ import { useRef, useEffect, useState } from "react";
 // 全局鼠标跟随高光组件
 function CursorGlow() {
   const [isVisible, setIsVisible] = useState(false);
+  const [isDesktop, setIsDesktop] = useState(false);
   const mouseX = useMotionValue(-1000);
   const mouseY = useMotionValue(-1000);
 
   useEffect(() => {
+    if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+      setIsDesktop(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!isDesktop) return;
+
     const handleMouseMove = (e: MouseEvent) => {
       // 增加 requestAnimationFrame 来优化高频的鼠标移动事件性能
       requestAnimationFrame(() => {
@@ -38,7 +47,9 @@ function CursorGlow() {
       document.body.removeEventListener("mouseleave", handleMouseLeave);
       document.body.removeEventListener("mouseenter", handleMouseEnter);
     };
-  }, [mouseX, mouseY, isVisible]);
+  }, [mouseX, mouseY, isVisible, isDesktop]);
+
+  if (!isDesktop) return null;
 
   return (
     <motion.div
@@ -61,6 +72,7 @@ function CursorGlow() {
 // 可复用的 3D 悬浮透视卡片包装组件
 function TiltWrapper({ children, className, delay = 0, margin = "0px" }: { children: React.ReactNode, className?: string, delay?: number, margin?: string }) {
   const ref = useRef<HTMLDivElement>(null);
+  const [isHoverable, setIsHoverable] = useState(false);
   const x = useMotionValue(0);
   const y = useMotionValue(0);
 
@@ -70,8 +82,14 @@ function TiltWrapper({ children, className, delay = 0, margin = "0px" }: { child
   const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["8deg", "-8deg"]);
   const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-8deg", "8deg"]);
 
+  useEffect(() => {
+    if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+      setIsHoverable(true);
+    }
+  }, []);
+
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!ref.current) return;
+    if (!ref.current || !isHoverable) return;
     const rect = ref.current.getBoundingClientRect();
     const width = rect.width;
     const height = rect.height;
@@ -84,17 +102,18 @@ function TiltWrapper({ children, className, delay = 0, margin = "0px" }: { child
   };
 
   const handleMouseLeave = () => {
+    if (!isHoverable) return;
     x.set(0);
     y.set(0);
   };
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0.001, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin }}
       transition={{ duration: 0.5, delay }}
-      style={{ perspective: 1200 }}
+      style={{ perspective: isHoverable ? 1200 : "none" }}
       className="h-full"
     >
       <motion.div
@@ -102,9 +121,9 @@ function TiltWrapper({ children, className, delay = 0, margin = "0px" }: { child
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
         style={{
-          rotateX,
-          rotateY,
-          transformStyle: "preserve-3d",
+          rotateX: isHoverable ? rotateX : 0,
+          rotateY: isHoverable ? rotateY : 0,
+          transformStyle: isHoverable ? "preserve-3d" : "flat",
         }}
         className={className}
       >
@@ -151,7 +170,7 @@ export default function Home() {
         
         <div className="relative z-10 w-full max-w-5xl mx-auto">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0.001, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
           >
@@ -162,7 +181,7 @@ export default function Home() {
           </motion.div>
           
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0.001, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
           >
@@ -172,7 +191,7 @@ export default function Home() {
           </motion.div>
 
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0.001, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.4, ease: "easeOut" }}
             className="flex flex-col sm:flex-row gap-4"
