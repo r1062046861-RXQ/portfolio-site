@@ -261,70 +261,70 @@ export default function Home() {
                 project: "社会美育与疗愈工作坊",
                 category: "艺术工作坊",
                 desc: "策划并落地社会参与性艺术活动，在公共空间中唤起个体的审美感知，将艺术创意与情感疗愈深度结合。",
-                image: "/portfolio-site/images/11.png"
+                image: "/images/11.png"
               },
               {
                 client: "天津美术学院",
                 project: "AI 艺术高研班",
                 category: "教学与培训",
                 desc: "担任人工智能艺术高研班艺术创作导师，提供专业的生成式 AI 技能培训与数字艺术创作指导。",
-                image: "/portfolio-site/images/22.jpg"
+                image: "/images/22.jpg"
               },
               {
                 client: "快手磁力引擎",
                 project: "年度宣传影像",
                 category: "视觉创意",
                 desc: "结合图像拼贴与动态视频技术，为平台活动制作宣传影像。",
-                image: "/portfolio-site/images/33.png"
+                image: "/images/33.png"
               },
               {
                 client: "中国科学技术馆",
                 project: "音乐可视化项目",
                 category: "场馆展示",
                 desc: "制作光影与音律结合的动态视觉，应用于场馆的科学与艺术传播活动。",
-                image: "/portfolio-site/images/44.png"
+                image: "/images/44.png"
               },
               {
                 client: "上海嘉定文旅",
                 project: "城市文旅数字影像",
                 category: "文化展示",
                 desc: "运用数字特效与风格化转绘，制作展现城市历史与风貌的高质量视频内容，助力文旅 IP 传播。",
-                image: "/portfolio-site/images/55.png"
+                image: "/images/55.png"
               },
               {
                 client: "K11 Select",
                 project: "商业地产气味雕塑",
                 category: "实体公共艺术",
                 desc: "为 K11 跬步计划设计并落地《焱泠》交互气味雕塑，结合物理材料与程序控制，提升商业空间艺术氛围。",
-                image: "/portfolio-site/images/66.png"
+                image: "/images/66.png"
               },
               {
                 client: "合成生物研究所",
                 project: "气味交互艺术展",
                 category: "气味与科技艺术",
                 desc: "将合成生物学概念转化为《地球蓝得像个橘子》交互装置，通过嗅觉与视觉的跨界结合实现科学概念的艺术表达。",
-                image: "/portfolio-site/images/77.png"
+                image: "/images/77.png"
               },
               {
                 client: "非物质文化遗产",
                 project: "杨柳青与红楼梦数字焕新",
                 category: "文化 IP 数字化",
                 desc: "提取传统经典视觉特征，定向炼制专属 AIGC 图像生成模型，实现非物质文化遗产的当代数字视觉重构与跨媒介传播。",
-                image: "/portfolio-site/images/99.png"
+                image: "/images/99.png"
               },
               {
                 client: "普达措国家公园",
                 project: "首届生态艺术季",
                 category: "展览策划与驻地",
                 desc: "策划并执行大型自然生态公共艺术季，在自然林木间构建在地可持续装置，打造自然与人文对话的疗愈展览场域。",
-                image: "/portfolio-site/images/88.png"
+                image: "/images/88.png"
               },
               {
                 client: "深圳南头古城",
                 project: "《桃源秘境》商业展",
                 category: "展览与空间策划",
                 desc: "策划并落地结合藏南民艺与岭南元素的沉浸式商业文化展览，将大地叙事转化为可体验的户外探索产品与空间陈设。",
-                image: "/portfolio-site/images/100.png"
+                image: "/images/100.png"
               }
             ].map((work, idx) => (
               <TiltWrapper 
@@ -402,7 +402,7 @@ export default function Home() {
             <TiltWrapper delay={0.1} className="bg-black p-6 sm:p-8 md:p-10 rounded-xl border border-zinc-800 h-full">
               <div className="flex items-center gap-4 mb-6" style={{ transform: "translateZ(30px)" }}>
                 <div className="relative w-16 h-16 md:w-20 md:h-20 rounded-full overflow-hidden border border-zinc-700">
-                  <Image src="/portfolio-site/images/rxq.jpg" alt="任玄奇" fill className="object-cover" />
+                  <Image src="/images/rxq.jpg" alt="任玄奇" fill className="object-cover" />
                 </div>
                 <div>
                   <h3 className="text-xl md:text-2xl font-semibold mb-1">任玄奇</h3>
@@ -422,7 +422,7 @@ export default function Home() {
             <TiltWrapper delay={0.2} className="bg-black p-6 sm:p-8 md:p-10 rounded-xl border border-zinc-800 h-full">
               <div className="flex items-center gap-4 mb-6" style={{ transform: "translateZ(30px)" }}>
                 <div className="relative w-16 h-16 md:w-20 md:h-20 rounded-full overflow-hidden border border-zinc-700">
-                  <Image src="/portfolio-site/images/wyf.jpg" alt="吴于枫" fill className="object-cover scale-[1.25] origin-top translate-x-2 -translate-y-2" />
+                  <Image src="/images/wyf.jpg" alt="吴于枫" fill className="object-cover scale-[1.25] origin-top translate-x-2 -translate-y-2" />
                 </div>
                 <div>
                   <h3 className="text-xl md:text-2xl font-semibold mb-1">吴于枫</h3>
@@ -455,7 +455,7 @@ export default function Home() {
             <div className="w-32 h-32 md:w-40 md:h-40 bg-black rounded-xl flex items-center justify-center mb-4 overflow-hidden border border-zinc-800 hover:border-zinc-600 transition-colors p-3">
               <div className="relative w-full h-full scale-[1.2] -translate-y-1">
                 <Image 
-                  src="/portfolio-site/images/qrcode_dark.jpg" 
+                  src="/images/qrcode_dark.jpg" 
                   alt="微信二维码" 
                   fill 
                   className="object-contain mix-blend-screen opacity-90 hover:opacity-100 transition-opacity"
