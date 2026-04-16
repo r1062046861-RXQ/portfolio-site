@@ -322,7 +322,7 @@ export default function Home() {
               {
                 client: "深圳南头古城",
                 project: "《桃源秘境》商业展",
-                category: "展览与空间策划",
+                category: "在地公共艺术装置",
                 desc: "策划并落地结合藏南民艺与岭南元素的沉浸式商业文化展览，将大地叙事转化为可体验的户外探索产品与空间陈设。",
                 image: "/images/100.png"
               }
