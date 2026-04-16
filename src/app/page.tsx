@@ -11,15 +11,14 @@ function CursorGlow() {
   const mouseX = useMotionValue(-1000);
   const mouseY = useMotionValue(-1000);
 
-  // 使用 spring 让光标移动更平滑，带有一定的阻尼感
-  const smoothX = useSpring(mouseX, { damping: 40, stiffness: 400 });
-  const smoothY = useSpring(mouseY, { damping: 40, stiffness: 400 });
-
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
-      mouseX.set(e.clientX);
-      mouseY.set(e.clientY);
-      if (!isVisible) setIsVisible(true);
+      // 增加 requestAnimationFrame 来优化高频的鼠标移动事件性能
+      requestAnimationFrame(() => {
+        mouseX.set(e.clientX);
+        mouseY.set(e.clientY);
+        if (!isVisible) setIsVisible(true);
+      });
     };
 
     const handleMouseLeave = () => {
@@ -51,8 +50,8 @@ function CursorGlow() {
       <motion.div
         className="absolute w-[300px] h-[300px] rounded-full bg-indigo-500/5 blur-[60px] -translate-x-1/2 -translate-y-1/2"
         style={{
-          x: smoothX,
-          y: smoothY,
+          x: mouseX,
+          y: mouseY,
         }}
       />
     </motion.div>
