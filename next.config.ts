@@ -1,11 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   output: 'export',
-  // 对于 GitHub Pages 的特殊处理：
-  // basePath 确保所有的路由跳转和静态资源前缀带上仓库名
+  // 对于 GitHub Pages，由于使用了 next/image 的 unoptimized，且通过 basePath 设置了根路径
+  // 不再使用 assetPrefix，避免在某些加载场景下路径被双重叠加导致 404
   basePath: '/portfolio-site',
-  // assetPrefix 在有些情况下会和 basePath 冲突，但为了保险起见，显式声明静态资源的来源
-  assetPrefix: '/portfolio-site/',
   images: {
     unoptimized: true,
   },
