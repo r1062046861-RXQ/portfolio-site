@@ -49,6 +49,18 @@ body {
   overflow-x: hidden;
 }
 
+@media (hover: none), (pointer: coarse) {
+  [style*="translateZ("] {
+    transform: none !important;
+  }
+
+  .mix-blend-difference,
+  .mix-blend-screen,
+  .mix-blend-overlay {
+    mix-blend-mode: normal !important;
+  }
+}
+
 ::selection {
   background: #333;
   color: #fff;

@@ -110,8 +110,7 @@ function TiltWrapper({ children, className, delay = 0, margin = "0px" }: { child
   return (
     <motion.div
       initial={{ opacity: 0.001, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin }}
+      animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay }}
       style={{ perspective: isHoverable ? 1200 : "none" }}
       className="h-full"
