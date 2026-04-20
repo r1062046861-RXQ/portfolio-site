@@ -168,24 +168,51 @@ export default function Home() {
           <div className="absolute inset-0 bg-gradient-to-b from-transparent via-zinc-950/80 to-zinc-950 z-0" />
         </div>
         
-        <div className="relative z-10 w-full max-w-5xl mx-auto">
+        <div className="relative z-10 w-full max-w-5xl mx-auto flex flex-col items-start justify-center">
           <motion.div
             initial={{ opacity: 0.001, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
+            className="w-full flex flex-col items-center justify-center mb-8"
           >
-            <h1 className="text-4xl sm:text-5xl md:text-7xl font-semibold tracking-tight leading-tight mb-6">
-              跨媒体艺术与 <br className="block sm:hidden" />
-              <span className="text-zinc-300">前沿技术团队</span>
-            </h1>
+            <div className="flex flex-wrap justify-center gap-3 sm:gap-4 md:gap-5">
+              {[
+                { text: "人工智能", delay: 0 },
+                { text: "数字影像", delay: 0.1 },
+                { text: "多感官交互", delay: 0.2 },
+                { text: "公共艺术", delay: 0.3 },
+                { text: "算法美学", delay: 0.4 }
+              ].map((pill, i) => (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, scale: 0.8, y: 15 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  transition={{ 
+                    duration: 0.6, 
+                    delay: pill.delay,
+                    type: "spring", 
+                    stiffness: 100 
+                  }}
+                  whileHover={{ 
+                    scale: 1.05, 
+                    y: -5, 
+                    boxShadow: "0 10px 25px -5px rgba(129, 140, 248, 0.3)" 
+                  }}
+                  className="px-5 py-2.5 sm:px-6 sm:py-3 md:px-8 md:py-4 rounded-full border border-zinc-700/50 bg-zinc-900/60 backdrop-blur-md text-zinc-200 text-lg sm:text-xl md:text-2xl font-medium tracking-wide shadow-xl cursor-default"
+                >
+                  {pill.text}
+                </motion.div>
+              ))}
+            </div>
           </motion.div>
           
           <motion.div
             initial={{ opacity: 0.001, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
+            transition={{ duration: 0.8, delay: 0.7, ease: "easeOut" }}
+            className="w-full flex justify-center"
           >
-            <p className="text-zinc-400 text-base sm:text-lg md:text-xl max-w-3xl font-normal leading-relaxed mb-10">
+            <p className="text-zinc-400 text-base sm:text-lg md:text-xl max-w-3xl font-normal leading-relaxed mb-10 text-center">
               由跨媒体艺术创作者与青年学者组建的复合型团队。致力于将前沿算法与多元媒介深度融合，提供涵盖数字影像创意、多感官公共艺术、文化 IP 数字化、定制化网页交互开发及 AIGC 技能培训的综合解决方案。
             </p>
           </motion.div>
@@ -193,8 +220,8 @@ export default function Home() {
           <motion.div
             initial={{ opacity: 0.001, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4, ease: "easeOut" }}
-            className="flex flex-col sm:flex-row gap-4"
+            transition={{ duration: 0.8, delay: 0.9, ease: "easeOut" }}
+            className="w-full flex justify-center gap-4"
           >
             <a href="#services" className="flex items-center justify-center gap-2 bg-white text-black px-6 py-3 md:px-8 md:py-4 rounded-md font-medium hover:bg-zinc-200 transition-colors w-full sm:w-auto text-center">
               查看服务 <ArrowRight className="w-4 h-4" />
@@ -426,54 +453,72 @@ export default function Home() {
             {[
               {
                 year: "2025",
-                person: "章斯敏",
-                title: "国家艺术基金人才培养项目",
-                desc: "参与 2025 年度《沉浸式交互动漫人工智能创作高级人才培养》，聚焦人工智能与交互动漫创作的方法研究。"
+                title: "第十四届北京国际电影节第六届国际青年学者论坛",
+                desc: "围绕影像研究、当代艺术与技术方法参与国际青年学术交流，拓展电影节语境下的跨学科讨论。",
+                image: "/images/aa.jpg"
               },
               {
-                year: "2024",
-                person: "章斯敏",
-                title: "第一作者论文发表",
-                desc: "以第一作者身份发表《三维游戏“一公米线上实体店”建设研究》，刊载于《教育前沿》，将数字媒介研究转化为可讨论的方法论成果。"
+                year: "2025",
+                title: "第十届网络社会年会青年学者论坛",
+                desc: "参与网络社会语境下的青年学术论坛交流，持续推进数字影像、算法文化与网络社会研究的交叉讨论。",
+                image: "/images/bb.jpg"
+              },
+              {
+                year: "2025",
+                title: "新媒体与非物质文化遗产传承创新学术论坛",
+                desc: "参与中央民族大学相关学术论坛交流，围绕新媒体语境下的非物质文化遗产传承、创新转化与数字传播展开讨论。",
+                image: "/images/cc.jpg"
+              },
+              {
+                year: "2025",
+                title: "国家艺术基金沉浸式交互动漫人工智能创作人才培养资助项目",
+                desc: "参与国家艺术基金人才培养项目，由中国动漫集团发起，聚焦沉浸式交互、动漫叙事与人工智能创作方法。",
+                image: "/images/dd.jpeg"
+              },
+              {
+                year: "2023",
+                title: "国家艺术基金数字博物馆数字艺术人才培训资助项目",
+                desc: "参与国家艺术基金数字艺术人才培训项目，由文化和旅游部艺术发展中心发起，聚焦数字博物馆与数字艺术方法。",
+                image: "/images/ee.jpg"
               },
               {
                 year: "2022-2024",
-                person: "章斯敏",
                 title: "科研项目与教学研究",
-                desc: "主持或参与天津市研究生科研创新项目，包括《基于人机交互技术的 OMO 智慧教学应用模式研究》与《三维游戏“一公米线上实体店”建设研究项目》。"
-              },
-              {
-                year: "2026",
-                person: "任玄奇",
-                title: "北京国际电影节青年学者论坛",
-                desc: "参与北京国际电影节相关青年学者论坛交流，围绕影像、技术与当代艺术方法展开研究分享。"
-              },
-              {
-                year: "近年",
-                person: "任玄奇",
-                title: "网络社会年会学术交流",
-                desc: "参与网络社会年会等跨学科交流场域，持续拓展算法文化、数字影像与网络社会研究之间的连接。"
-              },
-              {
-                year: "持续进行",
-                person: "团队",
-                title: "人工智能艺术研究与教学转化",
-                desc: "围绕 AIGC、数字影像、跨媒体艺术与公共传播展开研究，并将成果转化为课程、工作坊、论坛交流与实际项目方法。"
+                desc: "主持并参与天津市科研创新项目，包括《基于人机交互技术的 OMO 智慧教学应用模式研究》与《三维游戏“一公米线上实体店”建设研究项目》等。",
+                image: "/images/ff.png"
               }
             ].map((item, idx) => (
               <TiltWrapper
                 key={idx}
                 delay={idx * 0.05}
-                className="group p-5 md:p-6 bg-zinc-950 border border-zinc-800 rounded-lg hover:border-zinc-600 transition-colors flex flex-col h-full"
+                className="group relative min-h-[250px] md:min-h-[300px] p-5 md:p-6 bg-zinc-950 border border-zinc-800 rounded-lg hover:border-zinc-600 transition-colors flex flex-col justify-between overflow-hidden"
               >
-                <div className="flex items-center justify-between gap-4 mb-4" style={{ transform: "translateZ(10px)" }}>
-                  <span className="text-zinc-500 font-mono text-xs sm:text-sm">{item.year}</span>
-                  <span className="text-zinc-400 text-xs sm:text-sm">{item.person}</span>
+                {/* 背景图片 */}
+                <Image 
+                  src={item.image} 
+                  alt={item.title} 
+                  fill 
+                  className="object-cover transition-transform duration-700 group-hover:scale-105 opacity-40 group-hover:opacity-80" 
+                />
+                
+                {/* 悬停时的微光效果 */}
+                <div className="absolute inset-0 bg-gradient-to-br from-indigo-900/40 via-transparent to-emerald-900/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500 mix-blend-overlay z-10" />
+
+                {/* 均衡的全覆盖半透明黑色暗层：调整默认透明度为 45%，悬停时变亮为 25% */}
+                <div className="absolute inset-0 bg-black/45 group-hover:bg-black/25 transition-colors duration-500 z-10" />
+
+                {/* 顶部区域：年份和主标题（悬停时向上推） */}
+                <div className="relative z-20 flex flex-col transition-transform duration-500 md:group-hover:-translate-y-2">
+                  <div className="mb-3" style={{ transform: "translateZ(10px)" }}>
+                    <span className="text-zinc-300 font-mono text-xs sm:text-sm bg-black/50 px-2 py-1 rounded backdrop-blur-sm">{item.year}</span>
+                  </div>
+                  <h3 className="text-zinc-100 font-medium text-lg md:text-xl leading-snug" style={{ transform: "translateZ(20px)" }}>
+                    {item.title}
+                  </h3>
                 </div>
-                <h3 className="text-zinc-100 font-medium text-lg md:text-xl mb-3 leading-snug" style={{ transform: "translateZ(20px)" }}>
-                  {item.title}
-                </h3>
-                <p className="text-zinc-400 text-sm md:text-base leading-relaxed mt-auto" style={{ transform: "translateZ(15px)" }}>
+
+                {/* 底部区域：描述文字（默认显示，悬停时向下推） */}
+                <p className="relative z-20 text-zinc-400 text-sm md:text-base leading-relaxed mt-4 transition-transform duration-500 md:group-hover:translate-y-2" style={{ transform: "translateZ(15px)" }}>
                   {item.desc}
                 </p>
               </TiltWrapper>
@@ -490,7 +535,7 @@ export default function Home() {
           <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 md:gap-8">
             <TiltWrapper delay={0.1} className="bg-black p-6 sm:p-8 md:p-10 rounded-xl border border-zinc-800 h-full">
               <div className="flex items-center gap-4 mb-6" style={{ transform: "translateZ(30px)" }}>
-                <div className="relative w-16 h-16 md:w-20 md:h-20 rounded-full overflow-hidden border border-zinc-700">
+                <div className="relative shrink-0 aspect-square w-16 md:w-20 rounded-full overflow-hidden border border-zinc-700">
                   <Image src="/images/rxq.jpg" alt="任玄奇" fill className="object-cover" />
                 </div>
                 <div>
@@ -500,7 +545,7 @@ export default function Home() {
               </div>
               
               <p className="text-zinc-300 text-sm md:text-base leading-relaxed mb-6" style={{ transform: "translateZ(20px)" }}>
-                具备丰富的数字影像、AIGC 与网页交互开发经验，致力于将视觉研究转化为可落地的商业展示与数字平台。同时担任人工智能艺术高研班及艺术创作导师。
+                具备丰富的数字影像、AIGC 与数字技术开发经验，致力于将视觉研究转化为可落地的商业展示与数字平台。同时担任人工智能艺术高研班及艺术创作导师。
               </p>
               <div className="text-xs md:text-sm text-zinc-500 space-y-1.5" style={{ transform: "translateZ(10px)" }}>
                 <p>参与展览：全国美术作品展览、中国数字艺术大展、北京国际电影节等</p>
@@ -510,7 +555,7 @@ export default function Home() {
 
             <TiltWrapper delay={0.2} className="bg-black p-6 sm:p-8 md:p-10 rounded-xl border border-zinc-800 h-full">
               <div className="flex items-center gap-4 mb-6" style={{ transform: "translateZ(30px)" }}>
-                <div className="relative w-16 h-16 md:w-20 md:h-20 rounded-full overflow-hidden border border-zinc-700">
+                <div className="relative shrink-0 aspect-square w-16 md:w-20 rounded-full overflow-hidden border border-zinc-700">
                   <Image src="/images/wyf.jpg" alt="吴于枫" fill className="object-cover scale-[1.25] origin-top translate-x-2 -translate-y-2" />
                 </div>
                 <div>
@@ -530,8 +575,8 @@ export default function Home() {
 
             <TiltWrapper delay={0.3} className="bg-black p-6 sm:p-8 md:p-10 rounded-xl border border-zinc-800 h-full">
               <div className="flex items-center gap-4 mb-6" style={{ transform: "translateZ(30px)" }}>
-                <div className="relative w-16 h-16 md:w-20 md:h-20 rounded-full overflow-hidden border border-zinc-700 bg-zinc-900 flex items-center justify-center">
-                  <span className="text-zinc-300 text-xl md:text-2xl font-semibold">章</span>
+                <div className="relative shrink-0 aspect-square w-16 md:w-20 rounded-full overflow-hidden border border-zinc-700 bg-zinc-900 flex items-center justify-center">
+                  <Image src="/images/zsm.png" alt="章斯敏" fill className="object-cover" />
                 </div>
                 <div>
                   <h3 className="text-xl md:text-2xl font-semibold mb-1">章斯敏</h3>
@@ -540,10 +585,10 @@ export default function Home() {
               </div>
 
               <p className="text-zinc-300 text-sm md:text-base leading-relaxed mb-6" style={{ transform: "translateZ(20px)" }}>
-                研究方向偏向数字媒体艺术理论、中国传统文化数字化再现与跨媒介叙事，兼具艺术学、古文化艺术与计算机基础，关注虚拟身份、数据叙事与 AIGC 融合研究。
+                研究方向偏向中国传统文化数字化再现与跨媒介叙事，兼具艺术学、古文化艺术，关注虚拟身份、数据叙事与 AIGC 融合研究。
               </p>
               <div className="text-xs md:text-sm text-zinc-500 space-y-1.5" style={{ transform: "translateZ(10px)" }}>
-                <p>学术成果：第一作者论文、天津市研究生科研创新项目、国家艺术基金人才培养项目</p>
+    
                 <p>实践方向：交互装置、实验影像、交互影像、生成艺术</p>
               </div>
             </TiltWrapper>
