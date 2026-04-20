@@ -145,6 +145,7 @@ export default function Home() {
           <a href="#services" className="hover:opacity-70 transition-opacity p-2">服务项目</a>
           <a href="#works" className="hover:opacity-70 transition-opacity p-2">案例展示</a>
           <a href="#awards" className="hover:opacity-70 transition-opacity p-2">展览荣誉</a>
+          <a href="#research" className="hover:opacity-70 transition-opacity p-2">学术成果</a>
           <a href="#team" className="hover:opacity-70 transition-opacity p-2">团队成员</a>
         </div>
         <a href="#contact" className="border border-white/30 px-4 py-2 rounded-md text-sm hover:bg-white hover:text-black transition-colors">
@@ -411,12 +412,82 @@ export default function Home() {
         </div>
       </section>
 
+      {/* 学术成果 Research Section */}
+      <section id="research" className="py-20 md:py-32 px-4 sm:px-8 md:px-12 bg-black border-t border-zinc-900">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 md:mb-16 gap-4">
+            <h2 className="text-2xl sm:text-4xl font-semibold tracking-tight">学术成果</h2>
+            <p className="text-zinc-400 text-sm md:text-base max-w-2xl">
+              包含团队成员的论文发表、科研项目、论坛发言与学术交流，体现理论研究、跨学科方法与艺术实践之间的持续联动。
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-6">
+            {[
+              {
+                year: "2025",
+                person: "章斯敏",
+                title: "国家艺术基金人才培养项目",
+                desc: "参与 2025 年度《沉浸式交互动漫人工智能创作高级人才培养》，聚焦人工智能与交互动漫创作的方法研究。"
+              },
+              {
+                year: "2024",
+                person: "章斯敏",
+                title: "第一作者论文发表",
+                desc: "以第一作者身份发表《三维游戏“一公米线上实体店”建设研究》，刊载于《教育前沿》，将数字媒介研究转化为可讨论的方法论成果。"
+              },
+              {
+                year: "2022-2024",
+                person: "章斯敏",
+                title: "科研项目与教学研究",
+                desc: "主持或参与天津市研究生科研创新项目，包括《基于人机交互技术的 OMO 智慧教学应用模式研究》与《三维游戏“一公米线上实体店”建设研究项目》。"
+              },
+              {
+                year: "2026",
+                person: "任玄奇",
+                title: "北京国际电影节青年学者论坛",
+                desc: "参与北京国际电影节相关青年学者论坛交流，围绕影像、技术与当代艺术方法展开研究分享。"
+              },
+              {
+                year: "近年",
+                person: "任玄奇",
+                title: "网络社会年会学术交流",
+                desc: "参与网络社会年会等跨学科交流场域，持续拓展算法文化、数字影像与网络社会研究之间的连接。"
+              },
+              {
+                year: "持续进行",
+                person: "团队",
+                title: "人工智能艺术研究与教学转化",
+                desc: "围绕 AIGC、数字影像、跨媒体艺术与公共传播展开研究，并将成果转化为课程、工作坊、论坛交流与实际项目方法。"
+              }
+            ].map((item, idx) => (
+              <TiltWrapper
+                key={idx}
+                delay={idx * 0.05}
+                className="group p-5 md:p-6 bg-zinc-950 border border-zinc-800 rounded-lg hover:border-zinc-600 transition-colors flex flex-col h-full"
+              >
+                <div className="flex items-center justify-between gap-4 mb-4" style={{ transform: "translateZ(10px)" }}>
+                  <span className="text-zinc-500 font-mono text-xs sm:text-sm">{item.year}</span>
+                  <span className="text-zinc-400 text-xs sm:text-sm">{item.person}</span>
+                </div>
+                <h3 className="text-zinc-100 font-medium text-lg md:text-xl mb-3 leading-snug" style={{ transform: "translateZ(20px)" }}>
+                  {item.title}
+                </h3>
+                <p className="text-zinc-400 text-sm md:text-base leading-relaxed mt-auto" style={{ transform: "translateZ(15px)" }}>
+                  {item.desc}
+                </p>
+              </TiltWrapper>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* 团队成员 Team Section */}
       <section id="team" className="py-20 md:py-32 px-4 sm:px-8 md:px-12 bg-black border-t border-zinc-900">
         <div className="max-w-7xl mx-auto">
           <h2 className="text-2xl sm:text-4xl font-semibold tracking-tight mb-10 md:mb-16 text-left md:text-center">团队成员</h2>
           
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
+          <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 md:gap-8">
             <TiltWrapper delay={0.1} className="bg-black p-6 sm:p-8 md:p-10 rounded-xl border border-zinc-800 h-full">
               <div className="flex items-center gap-4 mb-6" style={{ transform: "translateZ(30px)" }}>
                 <div className="relative w-16 h-16 md:w-20 md:h-20 rounded-full overflow-hidden border border-zinc-700">
@@ -454,6 +525,26 @@ export default function Home() {
               <div className="text-xs md:text-sm text-zinc-500 space-y-1.5" style={{ transform: "translateZ(10px)" }}>
                 <p>参与展览：北京/海南岛国际电影节、青岛国际双年展、普达措生态艺术季等</p>
                 <p>专业资质：CIBTAC整全疗愈师</p>
+              </div>
+            </TiltWrapper>
+
+            <TiltWrapper delay={0.3} className="bg-black p-6 sm:p-8 md:p-10 rounded-xl border border-zinc-800 h-full">
+              <div className="flex items-center gap-4 mb-6" style={{ transform: "translateZ(30px)" }}>
+                <div className="relative w-16 h-16 md:w-20 md:h-20 rounded-full overflow-hidden border border-zinc-700 bg-zinc-900 flex items-center justify-center">
+                  <span className="text-zinc-300 text-xl md:text-2xl font-semibold">章</span>
+                </div>
+                <div>
+                  <h3 className="text-xl md:text-2xl font-semibold mb-1">章斯敏</h3>
+                  <p className="text-zinc-400 text-sm md:text-base">艺术研究者 / 数字媒体艺术硕士</p>
+                </div>
+              </div>
+
+              <p className="text-zinc-300 text-sm md:text-base leading-relaxed mb-6" style={{ transform: "translateZ(20px)" }}>
+                研究方向偏向数字媒体艺术理论、中国传统文化数字化再现与跨媒介叙事，兼具艺术学、古文化艺术与计算机基础，关注虚拟身份、数据叙事与 AIGC 融合研究。
+              </p>
+              <div className="text-xs md:text-sm text-zinc-500 space-y-1.5" style={{ transform: "translateZ(10px)" }}>
+                <p>学术成果：第一作者论文、天津市研究生科研创新项目、国家艺术基金人才培养项目</p>
+                <p>实践方向：交互装置、实验影像、交互影像、生成艺术</p>
               </div>
             </TiltWrapper>
           </div>
