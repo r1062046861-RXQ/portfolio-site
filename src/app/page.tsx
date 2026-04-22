@@ -213,7 +213,7 @@ export default function Home() {
             className="w-full flex justify-center"
           >
             <p className="text-zinc-400 text-base sm:text-lg md:text-xl max-w-3xl font-normal leading-relaxed mb-10 text-center">
-              由跨媒体艺术创作者与青年学者组建的复合型团队。致力于将前沿算法与多元媒介深度融合，提供涵盖数字影像创意、多感官公共艺术、文化 IP 数字化、定制化网页交互开发及 AIGC 技能培训的综合解决方案。
+              由天津美术学院毕业的跨媒体艺术创作者们组建的复合型团队。致力于将前沿算法与多元媒介深度融合，提供涵盖数字影像创意、多感官公共艺术、文化 IP 数字化、定制化交互开发及 AIGC 技能培训的综合解决方案。
             </p>
           </motion.div>
 
