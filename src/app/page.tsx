@@ -8,6 +8,7 @@ import { useRef, useEffect, useState, useCallback } from "react";
 function LoadProgress() {
   const [progress, setProgress] = useState(0);
   const [loadedKB, setLoadedKB] = useState(0);
+  const [speed, setSpeed] = useState(0);
   const [done, setDone] = useState(false);
   const estimatedTotalKB = 3500;
 
@@ -17,18 +18,30 @@ function LoadProgress() {
   }, []);
 
   useEffect(() => {
-    let totalTransferred = 0;
+    let lastBytes = 0;
+    let lastTime = performance.now();
     let rafId: number;
 
     const tick = () => {
       const entries = performance.getEntriesByType("resource") as PerformanceResourceTiming[];
-      totalTransferred = entries.reduce((sum, e) => {
+      const currentBytes = entries.reduce((sum, e) => {
         if (e.transferSize > 0) return sum + e.transferSize;
         if (e.decodedBodySize > 0) return sum + e.decodedBodySize;
         return sum;
       }, 0);
 
-      const kb = totalTransferred / 1024;
+      const now = performance.now();
+      const deltaTime = now - lastTime;
+      const deltaBytes = currentBytes - lastBytes;
+
+      if (deltaTime > 300 && deltaBytes > 0) {
+        const speedKBps = (deltaBytes / 1024) / (deltaTime / 1000);
+        setSpeed(Math.max(0, speedKBps));
+        lastBytes = currentBytes;
+        lastTime = now;
+      }
+
+      const kb = currentBytes / 1024;
       setLoadedKB(kb);
       const pct = Math.min(Math.round((kb / estimatedTotalKB) * 100), 99);
       setProgress(pct);
@@ -41,6 +54,7 @@ function LoadProgress() {
       cancelAnimationFrame(rafId);
       setProgress(100);
       setLoadedKB(estimatedTotalKB);
+      setSpeed(0);
       setTimeout(() => setDone(true), 600);
     };
 
@@ -70,7 +84,7 @@ function LoadProgress() {
       </div>
       <div className="flex justify-center py-1.5 bg-black/80 backdrop-blur-sm">
         <span className="text-zinc-400 text-[11px] sm:text-xs font-mono tracking-wide">
-          加载中 {progress}% · {formatSize(loadedKB)} / ~{formatSize(estimatedTotalKB)}
+          {speed > 0 ? formatSize(speed) + "/s · " : ""}{formatSize(loadedKB)} / {formatSize(estimatedTotalKB)}
         </span>
       </div>
     </motion.div>
