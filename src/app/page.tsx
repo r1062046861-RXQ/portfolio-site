@@ -3,13 +3,23 @@
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import Image from "next/image";
 import { ArrowRight, Mail } from "lucide-react";
-import { useRef, useEffect, useState } from "react";
+import { useRef, useEffect, useState, useCallback } from "react";
 
 function LoadProgress() {
   const [progress, setProgress] = useState(0);
+  const [loadedKB, setLoadedKB] = useState(0);
+  const [speed, setSpeed] = useState(0);
   const [done, setDone] = useState(false);
+  const estimatedTotalKB = 3500;
+
+  const formatSize = useCallback((kb: number) => {
+    if (kb < 1024) return Math.round(kb) + "KB";
+    return (kb / 1024).toFixed(1) + "MB";
+  }, []);
 
   useEffect(() => {
+    let lastBytes = 0;
+    let lastTime = performance.now();
     let rafId: number;
     let finished = false;
 
@@ -19,6 +29,26 @@ function LoadProgress() {
       const entries = performance.getEntriesByType("resource") as PerformanceResourceTiming[];
       const total = entries.length;
       const loaded = entries.filter(e => e.responseEnd > 0).length;
+
+      const currentBytes = entries.reduce((sum, e) => {
+        if (e.transferSize > 0) return sum + e.transferSize;
+        if (e.decodedBodySize > 0) return sum + e.decodedBodySize;
+        return sum;
+      }, 0);
+
+      const now = performance.now();
+      const deltaTime = now - lastTime;
+      const deltaBytes = currentBytes - lastBytes;
+
+      if (deltaTime > 300 && deltaBytes > 0) {
+        const speedKBps = (deltaBytes / 1024) / (deltaTime / 1000);
+        setSpeed(Math.max(0, speedKBps));
+        lastBytes = currentBytes;
+        lastTime = now;
+      }
+
+      const kb = currentBytes / 1024;
+      setLoadedKB(kb);
 
       if (total > 0) {
         const pct = Math.min(Math.round((loaded / total) * 100), 99);
@@ -34,6 +64,8 @@ function LoadProgress() {
       finished = true;
       cancelAnimationFrame(rafId);
       setProgress(100);
+      setLoadedKB(estimatedTotalKB);
+      setSpeed(0);
       setTimeout(() => setDone(true), 400);
     };
 
@@ -51,14 +83,19 @@ function LoadProgress() {
   if (done) return null;
 
   return (
-    <div
-      className="w-full h-[2px] mt-1 bg-white/15 overflow-hidden rounded-full"
-    >
-      <motion.div
-        className="h-full bg-white/90 rounded-full"
-        animate={{ width: `${progress}%` }}
-        transition={{ duration: 0.15 }}
-      />
+    <div className="w-full">
+      <div className="w-full h-[2px] mt-1 bg-white/15 overflow-hidden rounded-full">
+        <motion.div
+          className="h-full bg-white/90 rounded-full"
+          animate={{ width: `${progress}%` }}
+          transition={{ duration: 0.15 }}
+        />
+      </div>
+      <div className="flex mt-0.5">
+        <span className="text-white/40 text-[10px] font-mono leading-none">
+          {speed > 0 ? formatSize(speed) + "/s · " : ""}{formatSize(loadedKB)} / {formatSize(estimatedTotalKB)}
+        </span>
+      </div>
     </div>
   );
 }
