@@ -17,6 +17,7 @@
 | 动效 | Framer Motion 12 |
 | 图标 | lucide-react |
 | 字体 | Geist Sans / Geist Mono (next/font) |
+| CDN | Cloudflare |
 
 ---
 
@@ -25,12 +26,12 @@
 ```
 portfolio-site/
 ├── src/app/
-│   ├── page.tsx          # 主页面（所有内容集中在此单文件）
+│   ├── page.tsx          # 主页面（所有内容集中在此单文件，含3个内置组件）
 │   ├── layout.tsx        # 根布局（metadata、字体加载、html/body 壳）
 │   ├── globals.css       # 全局样式、自定义工具类、移动端降级
 │   └── favicon.ico
 ├── public/
-│   ├── images/           # 所有图片资源（案例、学术、头像、二维码等）
+│   ├── images/           # 所有图片资源（全部 WebP，单张 ≤200KB）
 │   └── CNAME             # 自定义域名（renxuanqi.top）
 ├── .github/workflows/
 │   └── deploy.yml        # GitHub Pages 自动部署 CI/CD
@@ -39,9 +40,10 @@ portfolio-site/
 ├── tsconfig.json
 ├── eslint.config.mjs
 │
-├── export_pdf_final.js   # Puppeteer PDF 导出脚本
+├── export_pdf_final.js   # Puppeteer PDF 导出脚本（主要使用）
 ├── export_word.js        # Puppeteer + docx Word 导出脚本
-├── compress_images.js    # sharp 图片批量压缩脚本
+├── compress_images.js    # sharp 图片批量压缩脚本（已归档）
+├── convert_images.js     # PNG/JPG → WebP 转换脚本（已归档）
 ├── screenshot.js         # Puppeteer 全页长截图脚本
 └── package.json
 ```
@@ -52,7 +54,7 @@ portfolio-site/
 
 页面由 7 个 `<section>` 组成，导航锚点链接固定跳转：
 
-1. **Hero** — 关键词气泡、团队简介、CTA 按钮
+1. **Hero** — 关键词气泡（5个动画）、团队简介、CTA 按钮、加载进度条
 2. **核心服务** (`#services`) — 6 个 3D 悬浮卡片
 3. **案例展示** (`#works`) — 10 个项目（5 列网格）
 4. **展览与荣誉** (`#awards`) — 8 项展览记录
@@ -65,19 +67,10 @@ portfolio-site/
 ## 本地开发
 
 ```bash
-# 安装依赖
-npm install
-
-# 启动开发服务器
-npm run dev
-# → http://localhost:3000
-
-# 生产构建
-npm run build
-# 输出到 ./out 目录
-
-# 代码检查
-npm run lint
+npm install        # 安装依赖
+npm run dev        # 启动开发服务器 → http://localhost:3000
+npm run build      # 生产构建 → 输出到 ./out/
+npm run lint       # ESLint 检查
 ```
 
 ---
@@ -86,16 +79,15 @@ npm run lint
 
 | 脚本 | 用途 | 命令 |
 |------|------|------|
-| `export_pdf_final.js` | 导出按板块分页的 PDF（A3 横向/16:9，<3MB） | `node export_pdf_final.js` |
+| `export_pdf_final.js` | 导出按板块分页的 PDF（16:9，<3MB） | `node export_pdf_final.js` |
 | `export_word.js` | 导出含序号层级的 DOCX 文件 | `node export_word.js` |
-| `compress_images.js` | 压缩 `public/images/` 下所有图片至 <400KB | `node compress_images.js` |
 | `screenshot.js` | 生成本地站点的全页长图 | `node screenshot.js` |
 
 ---
 
 ## 部署
 
-**平台**: GitHub Pages（通过 GitHub Actions CI/CD）
+**平台**: GitHub Pages（GitHub Actions CI/CD）
 
 **流程**:
 1. 代码推送到 `main` 分支
@@ -103,9 +95,9 @@ npm run lint
 3. 将 `./out` 目录部署到 GitHub Pages
 
 **关键配置**:
-- `next.config.ts` 中 `output: 'export'`（静态导出模式）
-- `images.unoptimized: true`（GitHub Pages 不支持 Next.js 图片优化）
-- `public/CNAME` 文件绑定自定义域名 `renxuanqi.top`
+- `next.config.ts` 中 `output: 'export'` + `images.unoptimized: true`
+- `public/CNAME` 绑定自定义域名 `renxuanqi.top`
+- Cloudflare DNS 记录全部为 CNAME（**不要用 A 记录**），SSL/TLS 模式为 Full
 
 ---
 
@@ -114,14 +106,18 @@ npm run lint
 ### 移动端兼容
 - iOS Safari 和微信浏览器存在 `preserve-3d` / `mix-blend-mode` 渲染崩溃 Bug
 - 已在 `globals.css` 中通过 `@media (hover: none), (pointer: coarse)` 降级处理
-- 触摸设备自动禁用 3D 透视和混合模式效果
 
 ### 图片
-- 所有图片路径为 `/images/xxx`（根路径，因自定义域名无需 basePath）
-- 案例图片、学术成果图片需保持命名与 `page.tsx` 中的引用一致
-- 新图片添加后建议运行 `node compress_images.js` 压缩
+- 所有图片为 WebP 格式，单张 ≤200KB
+- 路径为 `/images/xxx.webp`（根路径，无 basePath）
+- 二维码图片标记了 `priority` 预加载
+
+### 加载进度条
+- 顶部渐变色进度条，显示下载速度和已加载/预估大小
+- 通过 `responseEnd` 判断资源完成（支持缓存），10 秒超时兜底
+- 全部加载完毕后自动消失
 
 ### Framer Motion
 - `page.tsx` 标记为 `"use client"`（整个文件为客户端组件）
-- 使用 `TiltWrapper` 组件实现卡片 3D 悬浮效果（仅桌面端）
+- `TiltWrapper` 仅在桌面端启用 3D 透视效果
 - 关键词气泡使用 spring 动画逐词弹出

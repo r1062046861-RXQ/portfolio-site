@@ -21,9 +21,15 @@ function LoadProgress() {
     let lastBytes = 0;
     let lastTime = performance.now();
     let rafId: number;
+    let finished = false;
 
     const tick = () => {
+      if (finished) return;
+
       const entries = performance.getEntriesByType("resource") as PerformanceResourceTiming[];
+      const total = entries.length;
+      const loaded = entries.filter(e => e.responseEnd > 0).length;
+
       const currentBytes = entries.reduce((sum, e) => {
         if (e.transferSize > 0) return sum + e.transferSize;
         if (e.decodedBodySize > 0) return sum + e.decodedBodySize;
@@ -43,14 +49,19 @@ function LoadProgress() {
 
       const kb = currentBytes / 1024;
       setLoadedKB(kb);
-      const pct = Math.min(Math.round((kb / estimatedTotalKB) * 100), 99);
-      setProgress(pct);
+
+      if (total > 0) {
+        const pct = Math.min(Math.round((loaded / total) * 100), 99);
+        setProgress(pct);
+      }
+
       rafId = requestAnimationFrame(tick);
     };
 
     rafId = requestAnimationFrame(tick);
 
-    const handleLoad = () => {
+    const hide = () => {
+      finished = true;
       cancelAnimationFrame(rafId);
       setProgress(100);
       setLoadedKB(estimatedTotalKB);
@@ -58,10 +69,14 @@ function LoadProgress() {
       setTimeout(() => setDone(true), 600);
     };
 
-    window.addEventListener("load", handleLoad);
+    window.addEventListener("load", hide);
+    const maxTimer = setTimeout(hide, 10000);
+
     return () => {
+      finished = true;
       cancelAnimationFrame(rafId);
-      window.removeEventListener("load", handleLoad);
+      clearTimeout(maxTimer);
+      window.removeEventListener("load", hide);
     };
   }, []);
 
