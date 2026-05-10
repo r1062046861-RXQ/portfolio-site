@@ -3,7 +3,79 @@
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import Image from "next/image";
 import { ArrowRight, Mail } from "lucide-react";
-import { useRef, useEffect, useState } from "react";
+import { useRef, useEffect, useState, useCallback } from "react";
+
+function LoadProgress() {
+  const [progress, setProgress] = useState(0);
+  const [loadedKB, setLoadedKB] = useState(0);
+  const [done, setDone] = useState(false);
+  const estimatedTotalKB = 3500;
+
+  const formatSize = useCallback((kb: number) => {
+    if (kb < 1024) return Math.round(kb) + "KB";
+    return (kb / 1024).toFixed(1) + "MB";
+  }, []);
+
+  useEffect(() => {
+    let totalTransferred = 0;
+    let rafId: number;
+
+    const tick = () => {
+      const entries = performance.getEntriesByType("resource") as PerformanceResourceTiming[];
+      totalTransferred = entries.reduce((sum, e) => {
+        if (e.transferSize > 0) return sum + e.transferSize;
+        if (e.decodedBodySize > 0) return sum + e.decodedBodySize;
+        return sum;
+      }, 0);
+
+      const kb = totalTransferred / 1024;
+      setLoadedKB(kb);
+      const pct = Math.min(Math.round((kb / estimatedTotalKB) * 100), 99);
+      setProgress(pct);
+      rafId = requestAnimationFrame(tick);
+    };
+
+    rafId = requestAnimationFrame(tick);
+
+    const handleLoad = () => {
+      cancelAnimationFrame(rafId);
+      setProgress(100);
+      setLoadedKB(estimatedTotalKB);
+      setTimeout(() => setDone(true), 600);
+    };
+
+    window.addEventListener("load", handleLoad);
+    return () => {
+      cancelAnimationFrame(rafId);
+      window.removeEventListener("load", handleLoad);
+    };
+  }, []);
+
+  if (done) return null;
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: -8 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -8 }}
+      transition={{ duration: 0.4 }}
+      className="fixed top-0 left-0 right-0 z-[100]"
+    >
+      <div className="h-[3px] bg-zinc-800">
+        <motion.div
+          className="h-full bg-gradient-to-r from-indigo-500 to-emerald-400"
+          animate={{ width: `${progress}%` }}
+          transition={{ duration: 0.2 }}
+        />
+      </div>
+      <div className="flex justify-center py-1.5 bg-black/80 backdrop-blur-sm">
+        <span className="text-zinc-400 text-[11px] sm:text-xs font-mono tracking-wide">
+          加载中 {progress}% · {formatSize(loadedKB)} / ~{formatSize(estimatedTotalKB)}
+        </span>
+      </div>
+    </motion.div>
+  );
+}
 
 // 全局鼠标跟随高光组件
 function CursorGlow() {
@@ -135,6 +207,9 @@ function TiltWrapper({ children, className, delay = 0, margin = "0px" }: { child
 export default function Home() {
   return (
     <main className="flex flex-col min-h-screen">
+      {/* 加载进度条 */}
+      <LoadProgress />
+      
       {/* 全局鼠标高光 */}
       <CursorGlow />
       
@@ -307,70 +382,70 @@ export default function Home() {
                 project: "社会美育与疗愈工作坊",
                 category: "艺术工作坊",
                 desc: "策划并落地社会参与性艺术活动，在公共空间中唤起个体的审美感知，将艺术创意与情感疗愈深度结合。",
-                image: "/images/11.png"
+                image: "/images/11.webp"
               },
               {
                 client: "天津美术学院",
                 project: "AI 艺术高研班",
                 category: "教学与培训",
                 desc: "担任人工智能艺术高研班艺术创作导师，提供专业的生成式 AI 技能培训与数字艺术创作指导。",
-                image: "/images/22.jpg"
+                image: "/images/22.webp"
               },
               {
                 client: "快手磁力引擎",
                 project: "年度宣传影像",
                 category: "视觉创意",
                 desc: "结合图像拼贴与动态视频技术，为平台活动制作宣传影像。",
-                image: "/images/33.png"
+                image: "/images/33.webp"
               },
               {
                 client: "中国科学技术馆",
                 project: "音乐可视化项目",
                 category: "场馆展示",
                 desc: "制作光影与音律结合的动态视觉，应用于场馆的科学与艺术传播活动。",
-                image: "/images/44.png"
+                image: "/images/44.webp"
               },
               {
                 client: "上海嘉定文旅",
                 project: "城市文旅数字影像",
                 category: "文化展示",
                 desc: "运用数字特效与风格化转绘，制作展现城市历史与风貌的高质量视频内容，助力文旅 IP 传播。",
-                image: "/images/55.png"
+                image: "/images/55.webp"
               },
               {
                 client: "K11 Select",
                 project: "商业地产气味雕塑",
                 category: "实体公共艺术",
                 desc: "为 K11 跬步计划设计并落地《焱泠》交互气味雕塑，结合物理材料与程序控制，提升商业空间艺术氛围。",
-                image: "/images/66.png"
+                image: "/images/66.webp"
               },
               {
                 client: "合成生物研究所",
                 project: "气味交互艺术展",
                 category: "气味与科技艺术",
                 desc: "将合成生物学概念转化为《地球蓝得像个橘子》交互装置，通过嗅觉与视觉的跨界结合实现科学概念的艺术表达。",
-                image: "/images/77.png"
+                image: "/images/77.webp"
               },
               {
                 client: "非物质文化遗产",
                 project: "杨柳青与红楼梦数字焕新",
                 category: "文化 IP 数字化",
                 desc: "提取传统经典视觉特征，定向炼制专属 AIGC 图像生成模型，实现非物质文化遗产的当代数字视觉重构与跨媒介传播。",
-                image: "/images/99.png"
+                image: "/images/99.webp"
               },
               {
                 client: "普达措国家公园",
                 project: "首届生态艺术季",
                 category: "展览策划与驻地",
                 desc: "策划并执行大型自然生态公共艺术季，在自然林木间构建在地可持续装置，打造自然与人文对话的疗愈展览场域。",
-                image: "/images/88.png"
+                image: "/images/88.webp"
               },
               {
                 client: "深圳南头古城",
                 project: "《桃源秘境》商业展",
                 category: "在地公共艺术装置",
                 desc: "策划并落地结合藏南民艺与岭南元素的沉浸式商业文化展览，将大地叙事转化为可体验的户外探索产品与空间陈设。",
-                image: "/images/100.png"
+                image: "/images/100.webp"
               }
             ].map((work, idx) => (
               <TiltWrapper 
@@ -455,37 +530,37 @@ export default function Home() {
                 year: "2025",
                 title: "第十四届北京国际电影节第六届国际青年学者论坛",
                 desc: "围绕影像研究、当代艺术与技术方法参与国际青年学术交流，拓展电影节语境下的跨学科讨论。",
-                image: "/images/aa.jpg"
+                image: "/images/aa.webp"
               },
               {
                 year: "2025",
                 title: "第十届网络社会年会青年学者论坛",
                 desc: "参与网络社会语境下的青年学术论坛交流，持续推进数字影像、算法文化与网络社会研究的交叉讨论。",
-                image: "/images/bb.jpg"
+                image: "/images/bb.webp"
               },
               {
                 year: "2025",
                 title: "新媒体与非物质文化遗产传承创新学术论坛",
                 desc: "参与中央民族大学相关学术论坛交流，围绕新媒体语境下的非物质文化遗产传承、创新转化与数字传播展开讨论。",
-                image: "/images/cc.jpg"
+                image: "/images/cc.webp"
               },
               {
                 year: "2025",
                 title: "国家艺术基金沉浸式交互动漫人工智能创作人才培养资助项目",
                 desc: "参与国家艺术基金人才培养项目，由中国动漫集团发起，聚焦沉浸式交互、动漫叙事与人工智能创作方法。",
-                image: "/images/dd.jpeg"
+                image: "/images/dd.webp"
               },
               {
                 year: "2023",
                 title: "国家艺术基金数字博物馆数字艺术人才培训资助项目",
                 desc: "参与国家艺术基金数字艺术人才培训项目，由文化和旅游部艺术发展中心发起，聚焦数字博物馆与数字艺术方法。",
-                image: "/images/ee.jpg"
+                image: "/images/ee.webp"
               },
               {
                 year: "2022-2024",
                 title: "科研项目与教学研究",
                 desc: "主持并参与天津市科研创新项目，包括《基于人机交互技术的 OMO 智慧教学应用模式研究》与《三维游戏“一公米线上实体店”建设研究项目》等。",
-                image: "/images/ff.png"
+                image: "/images/ff.webp"
               }
             ].map((item, idx) => (
               <TiltWrapper
@@ -536,7 +611,7 @@ export default function Home() {
             <TiltWrapper delay={0.1} className="bg-black p-6 sm:p-8 md:p-10 rounded-xl border border-zinc-800 h-full">
               <div className="flex items-center gap-4 mb-6" style={{ transform: "translateZ(30px)" }}>
                 <div className="relative shrink-0 aspect-square w-16 md:w-20 rounded-full overflow-hidden border border-zinc-700">
-                  <Image src="/images/rxq.jpg" alt="任玄奇" fill className="object-cover" />
+                  <Image src="/images/rxq.webp" alt="任玄奇" fill className="object-cover" />
                 </div>
                 <div>
                   <h3 className="text-xl md:text-2xl font-semibold mb-1">任玄奇</h3>
@@ -556,7 +631,7 @@ export default function Home() {
             <TiltWrapper delay={0.2} className="bg-black p-6 sm:p-8 md:p-10 rounded-xl border border-zinc-800 h-full">
               <div className="flex items-center gap-4 mb-6" style={{ transform: "translateZ(30px)" }}>
                 <div className="relative shrink-0 aspect-square w-16 md:w-20 rounded-full overflow-hidden border border-zinc-700">
-                  <Image src="/images/wyf.jpg" alt="吴于枫" fill className="object-cover scale-[1.25] origin-top translate-x-2 -translate-y-2" />
+                  <Image src="/images/wyf.webp" alt="吴于枫" fill className="object-cover scale-[1.25] origin-top translate-x-2 -translate-y-2" />
                 </div>
                 <div>
                   <h3 className="text-xl md:text-2xl font-semibold mb-1">吴于枫</h3>
@@ -576,7 +651,7 @@ export default function Home() {
             <TiltWrapper delay={0.3} className="bg-black p-6 sm:p-8 md:p-10 rounded-xl border border-zinc-800 h-full">
               <div className="flex items-center gap-4 mb-6" style={{ transform: "translateZ(30px)" }}>
                 <div className="relative shrink-0 aspect-square w-16 md:w-20 rounded-full overflow-hidden border border-zinc-700 bg-zinc-900 flex items-center justify-center">
-                  <Image src="/images/zsm.png" alt="章斯敏" fill className="object-cover" />
+                  <Image src="/images/zsm.webp" alt="章斯敏" fill className="object-cover" />
                 </div>
                 <div>
                   <h3 className="text-xl md:text-2xl font-semibold mb-1">章斯敏</h3>
@@ -609,9 +684,10 @@ export default function Home() {
             <div className="w-32 h-32 md:w-40 md:h-40 bg-black rounded-xl flex items-center justify-center mb-4 overflow-hidden border border-zinc-800 hover:border-zinc-600 transition-colors p-3">
               <div className="relative w-full h-full scale-[1.2] -translate-y-1">
                 <Image 
-                  src="/images/qrcode_dark.jpg" 
+                  src="/images/qrcode_dark.webp" 
                   alt="微信二维码" 
                   fill 
+                  priority
                   className="object-contain mix-blend-screen opacity-90 hover:opacity-100 transition-opacity"
                 />
               </div>
