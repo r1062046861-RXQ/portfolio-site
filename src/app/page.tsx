@@ -3,23 +3,13 @@
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import Image from "next/image";
 import { ArrowRight, Mail } from "lucide-react";
-import { useRef, useEffect, useState, useCallback } from "react";
+import { useRef, useEffect, useState } from "react";
 
 function LoadProgress() {
   const [progress, setProgress] = useState(0);
-  const [loadedKB, setLoadedKB] = useState(0);
-  const [speed, setSpeed] = useState(0);
   const [done, setDone] = useState(false);
-  const estimatedTotalKB = 3500;
-
-  const formatSize = useCallback((kb: number) => {
-    if (kb < 1024) return Math.round(kb) + "KB";
-    return (kb / 1024).toFixed(1) + "MB";
-  }, []);
 
   useEffect(() => {
-    let lastBytes = 0;
-    let lastTime = performance.now();
     let rafId: number;
     let finished = false;
 
@@ -29,26 +19,6 @@ function LoadProgress() {
       const entries = performance.getEntriesByType("resource") as PerformanceResourceTiming[];
       const total = entries.length;
       const loaded = entries.filter(e => e.responseEnd > 0).length;
-
-      const currentBytes = entries.reduce((sum, e) => {
-        if (e.transferSize > 0) return sum + e.transferSize;
-        if (e.decodedBodySize > 0) return sum + e.decodedBodySize;
-        return sum;
-      }, 0);
-
-      const now = performance.now();
-      const deltaTime = now - lastTime;
-      const deltaBytes = currentBytes - lastBytes;
-
-      if (deltaTime > 300 && deltaBytes > 0) {
-        const speedKBps = (deltaBytes / 1024) / (deltaTime / 1000);
-        setSpeed(Math.max(0, speedKBps));
-        lastBytes = currentBytes;
-        lastTime = now;
-      }
-
-      const kb = currentBytes / 1024;
-      setLoadedKB(kb);
 
       if (total > 0) {
         const pct = Math.min(Math.round((loaded / total) * 100), 99);
@@ -64,9 +34,7 @@ function LoadProgress() {
       finished = true;
       cancelAnimationFrame(rafId);
       setProgress(100);
-      setLoadedKB(estimatedTotalKB);
-      setSpeed(0);
-      setTimeout(() => setDone(true), 600);
+      setTimeout(() => setDone(true), 400);
     };
 
     window.addEventListener("load", hide);
@@ -83,26 +51,15 @@ function LoadProgress() {
   if (done) return null;
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: -8 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -8 }}
-      transition={{ duration: 0.4 }}
-      className="fixed top-0 left-0 right-0 z-[100]"
+    <div
+      className="w-full h-[2px] mt-1 bg-white/15 overflow-hidden rounded-full"
     >
-      <div className="h-[3px] bg-zinc-800">
-        <motion.div
-          className="h-full bg-gradient-to-r from-indigo-500 to-emerald-400"
-          animate={{ width: `${progress}%` }}
-          transition={{ duration: 0.2 }}
-        />
-      </div>
-      <div className="flex justify-center py-1.5 bg-black/80 backdrop-blur-sm">
-        <span className="text-zinc-400 text-[11px] sm:text-xs font-mono tracking-wide">
-          {speed > 0 ? formatSize(speed) + "/s · " : ""}{formatSize(loadedKB)} / {formatSize(estimatedTotalKB)}
-        </span>
-      </div>
-    </motion.div>
+      <motion.div
+        className="h-full bg-white/90 rounded-full"
+        animate={{ width: `${progress}%` }}
+        transition={{ duration: 0.15 }}
+      />
+    </div>
   );
 }
 
@@ -236,15 +193,15 @@ function TiltWrapper({ children, className, delay = 0, margin = "0px" }: { child
 export default function Home() {
   return (
     <main className="flex flex-col min-h-screen">
-      {/* 加载进度条 */}
-      <LoadProgress />
-      
       {/* 全局鼠标高光 */}
       <CursorGlow />
       
       {/* 导航栏 */}
       <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-4 sm:px-8 py-3 mix-blend-difference text-white">
-        <div className="font-bold text-lg tracking-tight">液态像素艺术工作室</div>
+        <div>
+          <div className="font-bold text-lg tracking-tight">液态像素艺术工作室</div>
+          <LoadProgress />
+        </div>
         <div className="hidden md:flex gap-6 text-sm font-medium">
           <a href="#services" className="hover:opacity-70 transition-opacity p-2">服务项目</a>
           <a href="#works" className="hover:opacity-70 transition-opacity p-2">案例展示</a>
