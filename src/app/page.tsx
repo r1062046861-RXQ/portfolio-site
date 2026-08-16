@@ -5,6 +5,20 @@ import Image from "next/image";
 import { ArrowRight, Mail } from "lucide-react";
 import { useRef, useEffect, useState, useCallback } from "react";
 
+const finePointerQuery = "(hover: hover) and (pointer: fine)";
+
+function hasFinePointer() {
+  return typeof window !== "undefined" &&
+    typeof window.matchMedia === "function" &&
+    window.matchMedia(finePointerQuery).matches;
+}
+
+function prefersReducedMotion() {
+  return typeof window !== "undefined" &&
+    typeof window.matchMedia === "function" &&
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+}
+
 function LoadProgress() {
   const [progress, setProgress] = useState(0);
   const [loadedKB, setLoadedKB] = useState(0);
@@ -18,6 +32,16 @@ function LoadProgress() {
   }, []);
 
   useEffect(() => {
+    const canMeasureResources =
+      typeof window.requestAnimationFrame === "function" &&
+      typeof performance !== "undefined" &&
+      typeof performance.getEntriesByType === "function";
+
+    if (!canMeasureResources) {
+      const fallbackTimer = window.setTimeout(() => setDone(true), 0);
+      return () => window.clearTimeout(fallbackTimer);
+    }
+
     let lastBytes = 0;
     let lastTime = performance.now();
     let rafId: number;
@@ -55,26 +79,30 @@ function LoadProgress() {
         setProgress(pct);
       }
 
-      rafId = requestAnimationFrame(tick);
+      rafId = window.requestAnimationFrame(tick);
     };
 
-    rafId = requestAnimationFrame(tick);
+    rafId = window.requestAnimationFrame(tick);
 
     const hide = () => {
       finished = true;
-      cancelAnimationFrame(rafId);
+      window.cancelAnimationFrame(rafId);
       setProgress(100);
       setLoadedKB(estimatedTotalKB);
       setSpeed(0);
       setTimeout(() => setDone(true), 400);
     };
 
-    window.addEventListener("load", hide);
+    if (document.readyState === "complete") {
+      window.setTimeout(hide, 0);
+    } else {
+      window.addEventListener("load", hide);
+    }
     const maxTimer = setTimeout(hide, 10000);
 
     return () => {
       finished = true;
-      cancelAnimationFrame(rafId);
+      window.cancelAnimationFrame(rafId);
       clearTimeout(maxTimer);
       window.removeEventListener("load", hide);
     };
@@ -108,7 +136,7 @@ function CursorGlow() {
   const mouseY = useMotionValue(-1000);
 
   useEffect(() => {
-    if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+    if (hasFinePointer() && !prefersReducedMotion()) {
       setIsDesktop(true);
     }
   }, []);
@@ -117,12 +145,17 @@ function CursorGlow() {
     if (!isDesktop) return;
 
     const handleMouseMove = (e: MouseEvent) => {
-      // 增加 requestAnimationFrame 来优化高频的鼠标移动事件性能
-      requestAnimationFrame(() => {
+      const updatePointer = () => {
         mouseX.set(e.clientX);
         mouseY.set(e.clientY);
         if (!isVisible) setIsVisible(true);
-      });
+      };
+
+      if (typeof window.requestAnimationFrame === "function") {
+        window.requestAnimationFrame(updatePointer);
+      } else {
+        updatePointer();
+      }
     };
 
     const handleMouseLeave = () => {
@@ -148,7 +181,7 @@ function CursorGlow() {
 
   return (
     <motion.div
-      className="pointer-events-none fixed inset-0 z-40 overflow-hidden mix-blend-screen"
+      className="cursor-glow pointer-events-none fixed inset-0 z-40 overflow-hidden mix-blend-screen"
       style={{ opacity: isVisible ? 1 : 0 }}
       animate={{ opacity: isVisible ? 1 : 0 }}
       transition={{ duration: 0.5 }}
@@ -165,7 +198,7 @@ function CursorGlow() {
 }
 
 // 可复用的 3D 悬浮透视卡片包装组件
-function TiltWrapper({ children, className, delay = 0, margin = "0px" }: { children: React.ReactNode, className?: string, delay?: number, margin?: string }) {
+function TiltWrapper({ children, className, delay = 0 }: { children: React.ReactNode, className?: string, delay?: number }) {
   const ref = useRef<HTMLDivElement>(null);
   const [isHoverable, setIsHoverable] = useState(false);
   const x = useMotionValue(0);
@@ -178,7 +211,7 @@ function TiltWrapper({ children, className, delay = 0, margin = "0px" }: { child
   const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-8deg", "8deg"]);
 
   useEffect(() => {
-    if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+    if (hasFinePointer() && !prefersReducedMotion()) {
       setIsHoverable(true);
     }
   }, []);
@@ -204,7 +237,7 @@ function TiltWrapper({ children, className, delay = 0, margin = "0px" }: { child
 
   return (
     <motion.div
-      initial={{ opacity: 0.001, y: 20 }}
+      initial={false}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay }}
       style={{ perspective: isHoverable ? 1200 : "none" }}
@@ -227,34 +260,67 @@ function TiltWrapper({ children, className, delay = 0, margin = "0px" }: { child
   );
 }
 
+// ponytail: decorative SVG keeps desktop visual texture optional and leaves old/mobile browsers on the static layout.
+function DesktopSignalField() {
+  return (
+    <div className="desktop-signal-field" aria-hidden="true">
+      <svg viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice" focusable="false">
+        <defs>
+          <linearGradient id="signal-line" x1="0" x2="1">
+            <stop offset="0" stopColor="#22c55e" stopOpacity="0" />
+            <stop offset="0.45" stopColor="#a78bfa" stopOpacity="0.8" />
+            <stop offset="1" stopColor="#22c55e" stopOpacity="0" />
+          </linearGradient>
+          <radialGradient id="signal-core">
+            <stop offset="0" stopColor="#ffffff" stopOpacity="0.9" />
+            <stop offset="0.2" stopColor="#a78bfa" stopOpacity="0.45" />
+            <stop offset="1" stopColor="#a78bfa" stopOpacity="0" />
+          </radialGradient>
+        </defs>
+        <g className="signal-grid">
+          <path d="M0 600 C250 460 470 690 720 500 S1040 300 1200 430" stroke="url(#signal-line)" />
+          <path d="M-40 690 C230 540 470 760 770 570 S1020 410 1240 540" stroke="url(#signal-line)" />
+          <path d="M120 800 L620 80 L1040 800" stroke="url(#signal-line)" />
+        </g>
+        <g className="signal-orbit">
+          <ellipse cx="900" cy="260" rx="245" ry="92" />
+          <ellipse cx="900" cy="260" rx="245" ry="92" transform="rotate(58 900 260)" />
+          <ellipse cx="900" cy="260" rx="245" ry="92" transform="rotate(-58 900 260)" />
+        </g>
+        <circle className="signal-core" cx="900" cy="260" r="118" fill="url(#signal-core)" />
+        <circle className="signal-dot signal-dot-one" cx="1070" cy="190" r="5" />
+        <circle className="signal-dot signal-dot-two" cx="780" cy="350" r="4" />
+      </svg>
+    </div>
+  );
+}
+
 export default function Home() {
   return (
-    <main className="flex flex-col min-h-screen">
+    <main className="site-shell flex flex-col min-h-screen">
       {/* 全局鼠标高光 */}
       <CursorGlow />
       
       {/* 导航栏 */}
-      <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-4 sm:px-8 py-3 mix-blend-difference text-white">
-        <div>
-          <div className="font-bold text-lg tracking-tight">液态像素艺术工作室</div>
+      <nav className="site-nav fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-4 sm:px-8 py-3 mix-blend-difference text-white">
+        <div className="shrink-0">
+          <div className="font-bold text-sm sm:text-lg tracking-tight whitespace-nowrap">液态像素艺术工作室</div>
           <LoadProgress />
         </div>
         <div className="hidden md:flex gap-6 text-sm font-medium">
-          <a href="#services" className="hover:opacity-70 transition-opacity p-2">服务项目</a>
-          <a href="#works" className="hover:opacity-70 transition-opacity p-2">案例展示</a>
-          <a href="#awards" className="hover:opacity-70 transition-opacity p-2">展览荣誉</a>
-          <a href="#research" className="hover:opacity-70 transition-opacity p-2">学术成果</a>
-          <a href="#team" className="hover:opacity-70 transition-opacity p-2">团队成员</a>
+          <a href="#services" className="hover:opacity-70 transition-opacity p-2">合作方向</a>
+          <a href="#works" className="hover:opacity-70 transition-opacity p-2">创作实践</a>
+          <a href="#team" className="hover:opacity-70 transition-opacity p-2">关于我们</a>
         </div>
         <a href="#contact" className="border border-white/30 px-4 py-2 rounded-md text-sm hover:bg-white hover:text-black transition-colors">
-          联系我们
+          预约咨询
         </a>
       </nav>
 
       {/* 首屏 Hero Section */}
-      <section className="relative flex flex-col justify-center min-h-screen px-4 sm:px-8 md:px-12 pt-20 overflow-hidden bg-black">
+      <section className="site-section site-hero relative flex flex-col justify-center min-h-screen px-4 sm:px-8 md:px-12 pt-20 overflow-hidden bg-black">
         {/* 高级创意背景：AIGC 光影 + 科技网格 */}
-        <div className="absolute inset-0 z-0 bg-zinc-950 overflow-hidden">
+        <div data-print-hidden="true" className="absolute inset-0 z-0 bg-zinc-950 overflow-hidden">
           {/* 动态模糊光球 (模拟 Generative Art 呼吸感) */}
           <div className="absolute top-[-10%] left-[-10%] w-[50vw] h-[50vw] max-w-[800px] max-h-[800px] bg-indigo-900/30 rounded-full blur-[120px] mix-blend-screen animate-pulse"></div>
           <div className="absolute bottom-[-10%] right-[-10%] w-[50vw] h-[50vw] max-w-[800px] max-h-[800px] bg-emerald-900/20 rounded-full blur-[120px] mix-blend-screen animate-pulse" style={{ animationDelay: '2s' }}></div>
@@ -265,137 +331,160 @@ export default function Home() {
           {/* 底部渐变过渡 */}
           <div className="absolute inset-0 bg-gradient-to-b from-transparent via-zinc-950/80 to-zinc-950 z-0" />
         </div>
+        <DesktopSignalField />
         
         <div className="relative z-10 w-full max-w-5xl mx-auto flex flex-col items-start justify-center">
           <motion.div
-            initial={{ opacity: 0.001, y: 20 }}
+            initial={false}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
-            className="w-full flex flex-col items-center justify-center mb-8"
+            className="w-full max-w-4xl mx-auto flex flex-col items-center text-center"
           >
-            <div className="flex flex-wrap justify-center gap-3 sm:gap-4 md:gap-5">
-              {[
-                { text: "人工智能", delay: 0 },
-                { text: "数字影像", delay: 0.1 },
-                { text: "多感官交互", delay: 0.2 },
-                { text: "公共艺术", delay: 0.3 },
-                { text: "算法美学", delay: 0.4 }
-              ].map((pill, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, scale: 0.8, y: 15 }}
-                  animate={{ opacity: 1, scale: 1, y: 0 }}
-                  transition={{ 
-                    duration: 0.6, 
-                    delay: pill.delay,
-                    type: "spring", 
-                    stiffness: 100 
-                  }}
-                  whileHover={{ 
-                    scale: 1.05, 
-                    y: -5, 
-                    boxShadow: "0 10px 25px -5px rgba(129, 140, 248, 0.3)" 
-                  }}
-                  className="px-5 py-2.5 sm:px-6 sm:py-3 md:px-8 md:py-4 rounded-full border border-zinc-700/50 bg-zinc-900/60 backdrop-blur-md text-zinc-200 text-lg sm:text-xl md:text-2xl font-medium tracking-wide shadow-xl cursor-default"
-                >
-                  {pill.text}
-                </motion.div>
+            <p className="text-xs sm:text-sm font-mono tracking-[0.18em] text-zinc-400 mb-6">企业团队 · 艺术家与创作机构</p>
+            <h1 className="text-4xl sm:text-5xl md:text-7xl font-semibold tracking-tight leading-[1.05] mb-6">
+              让技术真正服务于<br className="hidden sm:block" />工作与创作
+            </h1>
+            <p className="text-zinc-400 text-base sm:text-lg md:text-xl max-w-3xl font-normal leading-relaxed">
+              我们协助企业团队梳理重复工作、优化协作方式；也帮助艺术家和创作团队把新媒体、影像与影视创意发展为可讨论、可测试、可呈现的作品。
+            </p>
+            <div className="flex flex-wrap justify-center gap-2 mt-8">
+              {["让工作少绕弯", "让创意能落地", "新媒体与影视技术"].map((item) => (
+                <span key={item} className="px-3 py-1.5 rounded-full border border-zinc-700/70 bg-zinc-900/60 text-zinc-300 text-xs sm:text-sm">
+                  {item}
+                </span>
               ))}
             </div>
           </motion.div>
-          
-          <motion.div
-            initial={{ opacity: 0.001, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.7, ease: "easeOut" }}
-            className="w-full flex justify-center"
-          >
-            <p className="text-zinc-400 text-base sm:text-lg md:text-xl max-w-3xl font-normal leading-relaxed mb-10 text-center">
-              由天津美术学院毕业的跨媒体艺术创作者们组建的复合型团队。致力于将前沿算法与多元媒介深度融合，提供涵盖数字影像创意、多感官公共艺术、文化 IP 数字化、定制化交互开发及 AIGC 技能培训的综合解决方案。
-            </p>
-          </motion.div>
 
           <motion.div
-            initial={{ opacity: 0.001, y: 20 }}
+            initial={false}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.9, ease: "easeOut" }}
-            className="w-full flex justify-center gap-4"
+            transition={{ duration: 0.8, delay: 0.25, ease: "easeOut" }}
+            className="w-full flex flex-col sm:flex-row justify-center gap-3 sm:gap-4 mt-10"
           >
-            <a href="#services" className="flex items-center justify-center gap-2 bg-white text-black px-6 py-3 md:px-8 md:py-4 rounded-md font-medium hover:bg-zinc-200 transition-colors w-full sm:w-auto text-center">
-              查看服务 <ArrowRight className="w-4 h-4" />
+            <a href="#contact" className="flex items-center justify-center gap-2 bg-white text-black px-6 py-3 md:px-8 md:py-4 rounded-md font-medium hover:bg-zinc-200 transition-colors w-full sm:w-auto text-center">
+              聊聊你的项目 <ArrowRight className="w-4 h-4" />
+            </a>
+            <a href="#services" className="flex items-center justify-center border border-white/25 text-white px-6 py-3 md:px-8 md:py-4 rounded-md font-medium hover:bg-white/10 transition-colors w-full sm:w-auto text-center">
+              看看我们能做什么
             </a>
           </motion.div>
         </div>
       </section>
 
       {/* 服务项目 Services Section */}
-      <section id="services" className="py-20 md:py-32 px-4 sm:px-8 md:px-12 bg-zinc-950 border-t border-zinc-900">
+      <section id="services" className="site-section py-20 md:py-32 px-4 sm:px-8 md:px-12 bg-zinc-950 border-t border-zinc-900">
         <div className="max-w-7xl mx-auto">
-          <h2 className="text-2xl sm:text-4xl font-semibold tracking-tight mb-10 md:mb-16">核心服务</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-            {[
-              {
-                title: "艺术工作坊与 AIGC 培训",
-                desc: "策划并落地结合艺术创意与数字技术的线下工作坊。同时面向高校、企业及创作者提供前沿的生成式 AI 技能培训与艺术创作指导。",
-                tags: ["AIGC 技能培训", "艺术创意", "创意工作坊"]
-              },
-              {
-                title: "数字影像创意",
-                desc: "为品牌宣传、活动影像提供前沿的 AI 视觉生成与动态视频制作服务。",
-                tags: ["AIGC", "宣传影像", "动态视觉"]
-              },
-              {
-                title: "多感官交互与公共艺术",
-                desc: "结合气味艺术、实验影像与新媒体交互技术，为商业地产及自然文旅空间打造多维度的沉浸式数字艺术与疗愈体验。",
-                tags: ["新媒体交互", "气味艺术", "沉浸式空间"]
-              },
-              {
-                title: "文化 IP 数字化焕新",
-                desc: "运用数字媒体技术与生成算法，协助传统文化资产与文旅项目进行数字化展示与跨界传播。",
-                tags: ["文旅展示", "数字媒体", "文化传播"]
-              },
-              {
-                title: "艺术展览与空间策划",
-                desc: "结合生态疗愈与前沿数字艺术，为公共文化空间及商业地产提供从概念策划到作品落地的完整展览解决方案。",
-                tags: ["展览策划", "公共文化空间", "艺术陈设"]
-              },
-              {
-                title: "数字交互与网页开发",
-                desc: "提供从视觉设计到前端开发的定制化网页解决方案，以及基于游戏引擎的 3D 互动体验开发，打造新型交互数字平台。",
-                tags: ["UI/UX设计", "前端开发", "3D互动引擎"]
-              }
-            ].map((service, idx) => (
-              <TiltWrapper 
-                key={idx}
-                delay={idx * 0.1}
-                margin="-50px"
-                className="relative p-6 md:p-8 rounded-lg flex flex-col h-full overflow-hidden transition-all duration-300 hover:bg-zinc-800/80 bg-zinc-900/50 border border-zinc-800"
-              >
-                <h3 className="text-xl font-medium mb-3 text-zinc-100" style={{ transform: "translateZ(30px)" }}>
-                  {service.title}
-                </h3>
-                <p className="text-sm md:text-base mb-6 leading-relaxed flex-grow text-zinc-400" style={{ transform: "translateZ(20px)" }}>
-                  {service.desc}
-                </p>
-                <div className="flex flex-wrap gap-2 mt-auto" style={{ transform: "translateZ(40px)" }}>
-                  {service.tags.map((tag, i) => (
-                    <span key={i} className="text-xs px-2.5 py-1 rounded border bg-black border-zinc-800 text-zinc-300">
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-              </TiltWrapper>
-            ))}
+          <div className="max-w-3xl mb-10 md:mb-16">
+            <p className="text-xs sm:text-sm font-mono tracking-[0.18em] text-zinc-500 mb-4">合作方向</p>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight mb-5">让工作顺畅，也让创作落地</h2>
+            <p className="text-zinc-400 text-base md:text-lg leading-relaxed">
+              我们从一件具体的事开始：企业团队里总在重复、卡住的工作，或艺术家与创作团队正在寻找技术路径的创作构想。一起找到合适做法，再把它落实为团队或作品可持续使用的成果。
+            </p>
+          </div>
+          <div className="relative">
+            <div className="mx-auto w-fit rounded-lg border border-zinc-700 bg-black px-5 py-4 text-center">
+              <p className="text-xs font-mono tracking-[0.16em] text-zinc-500 mb-1">合作路径</p>
+              <p className="text-base font-medium text-zinc-100">从一件具体的事开始</p>
+            </div>
+            <div aria-hidden="true" className="relative hidden h-12 md:block">
+              <span className="absolute left-1/2 top-0 h-5 w-px -translate-x-1/2 bg-zinc-700" />
+              <span className="absolute left-1/4 right-1/4 top-5 h-px bg-zinc-700" />
+              <span className="absolute left-1/4 top-5 h-7 w-px -translate-x-1/2 bg-zinc-700" />
+              <span className="absolute left-3/4 top-5 h-7 w-px -translate-x-1/2 bg-zinc-700" />
+            </div>
+            <div className="mt-6 grid grid-cols-1 gap-8 md:mt-0 md:grid-cols-2 md:gap-12">
+              {[
+                {
+                  audience: "给企业团队",
+                  title: "把重复的工作，变成更顺手的做法",
+                  desc: "围绕真实工作流程，留下能复用的操作步骤、模板和检查清单。",
+                  panelClass: "border-indigo-400/30 bg-indigo-950/20",
+                  labelClass: "text-indigo-200",
+                  lineClass: "border-indigo-400/40",
+                  markerClass: "border-indigo-400/60 bg-indigo-950 text-indigo-100",
+                  tagClass: "border-indigo-400/20 text-indigo-100",
+                  steps: [
+                    {
+                      title: "先找出最费时间的事",
+                      desc: "一起看看哪些事情总在重复、容易卡住或花很久时间，优先从最值得改善的地方开始。",
+                      tags: ["找问题", "排先后", "用得放心"]
+                    },
+                    {
+                      title: "用自己的工作来练",
+                      desc: "拿正在做的材料、项目和沟通任务一起练，把新的做法变成团队日常能用的流程。",
+                      tags: ["边做边学", "当天能用", "团队一起练"]
+                    }
+                  ]
+                },
+                {
+                  audience: "给艺术家与创作团队",
+                  title: "把创作想法，推进到可以呈现的样子",
+                  desc: "围绕新媒体、交互、影像与影视制作，提供从测试到呈现的技术协作。",
+                  panelClass: "border-emerald-400/30 bg-emerald-950/15",
+                  labelClass: "text-emerald-200",
+                  lineClass: "border-emerald-400/40",
+                  markerClass: "border-emerald-400/60 bg-emerald-950 text-emerald-100",
+                  tagClass: "border-emerald-400/20 text-emerald-100",
+                  steps: [
+                    {
+                      title: "先把想法做成能看到的样子",
+                      desc: "先制作能讨论的视觉测试、技术样机或短段落，再决定下一步怎么走。",
+                      tags: ["视觉测试", "技术样机", "创作讨论"]
+                    },
+                    {
+                      title: "从样机到展映一起把关",
+                      desc: "根据展示场地、叙事需要和制作条件，梳理技术路线，让作品走向展览、展映或现场呈现。",
+                      tags: ["新媒体技术", "影像制作", "现场呈现"]
+                    }
+                  ]
+                }
+              ].map((branch, branchIndex) => (
+                <TiltWrapper key={branch.audience} delay={branchIndex * 0.1} className="site-card h-full rounded-lg border border-zinc-800 bg-zinc-900/50 p-6 md:p-8">
+                  <article>
+                    <header className={`rounded-lg border p-5 ${branch.panelClass}`}>
+                      <p className={`text-xs font-mono tracking-[0.16em] mb-3 ${branch.labelClass}`}>{branch.audience}</p>
+                      <h3 className="text-xl md:text-2xl font-medium text-zinc-100 mb-3">{branch.title}</h3>
+                      <p className="text-sm md:text-base leading-relaxed text-zinc-400">{branch.desc}</p>
+                    </header>
+                    <ol className={`relative mt-5 space-y-4 border-l pl-6 ${branch.lineClass}`}>
+                      {branch.steps.map((step, stepIndex) => (
+                        <li key={step.title} className="relative">
+                          <span className={`absolute -left-[2.5rem] top-5 grid h-8 w-8 place-items-center rounded-full border text-xs font-mono ${branch.markerClass}`}>{String(stepIndex + 1).padStart(2, "0")}</span>
+                          <article className="rounded-lg border border-zinc-800 bg-black p-5">
+                            <h4 className="text-base md:text-lg font-medium text-zinc-100 mb-2">{step.title}</h4>
+                            <p className="text-sm leading-relaxed text-zinc-400">{step.desc}</p>
+                            <div className="mt-4 flex flex-wrap gap-2">
+                              {step.tags.map((tag) => (
+                                <span key={tag} className={`rounded border px-2.5 py-1 text-xs ${branch.tagClass}`}>{tag}</span>
+                              ))}
+                            </div>
+                          </article>
+                        </li>
+                      ))}
+                    </ol>
+                  </article>
+                </TiltWrapper>
+              ))}
+            </div>
+          </div>
+          <div className="mt-6 md:mt-8 p-6 md:p-8 rounded-lg border border-zinc-800 bg-black flex flex-col md:flex-row md:items-center justify-between gap-6">
+            <p className="text-zinc-400 text-sm md:text-base leading-relaxed max-w-3xl">
+              无论是一件总让团队费时间的工作，还是一个还没找到做法的创作想法，都可以从一件具体的事开始。
+            </p>
+            <a href="#contact" className="shrink-0 inline-flex items-center gap-2 text-sm font-medium text-white hover:text-zinc-300 transition-colors">
+              从一个具体问题开始 <ArrowRight className="w-4 h-4" />
+            </a>
           </div>
         </div>
       </section>
 
       {/* 案例展示 Selected Works */}
-      <section id="works" className="py-20 md:py-32 px-4 sm:px-8 md:px-12 bg-black">
+      <section id="works" className="site-section py-20 md:py-32 px-4 sm:px-8 md:px-12 bg-black">
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 md:mb-16 gap-4">
-            <h2 className="text-2xl sm:text-4xl font-semibold tracking-tight">案例展示</h2>
-            <p className="text-zinc-400 text-sm md:text-base max-w-md">包含商业传播、场馆展示及技术研发落地项目。</p>
+            <h2 className="text-2xl sm:text-4xl font-semibold tracking-tight">创作、影像与新媒体实践</h2>
+            <p className="text-zinc-400 text-sm md:text-base max-w-md">从影像、展览、交互装置到公共艺术，持续把创意、协作与技术落实到真实项目中。</p>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 md:gap-6">
@@ -474,7 +563,7 @@ export default function Home() {
               <TiltWrapper 
                 key={idx}
                 delay={idx * 0.1}
-                className="group relative h-[250px] sm:h-[300px] md:h-[350px] lg:h-[400px] rounded-lg overflow-hidden bg-zinc-950 border border-zinc-800 p-4 md:p-6 flex flex-col justify-end"
+                className="site-card site-work-card group relative h-[250px] sm:h-[300px] md:h-[350px] lg:h-[400px] rounded-lg overflow-hidden bg-zinc-950 border border-zinc-800 p-4 md:p-6 flex flex-col justify-end"
               >
                 {/* 案例图片 */}
                 <Image 
@@ -485,9 +574,9 @@ export default function Home() {
                 />
                 
                 {/* 悬停时的微光效果 (代表灵感/AIGC) */}
-                <div className="absolute inset-0 bg-gradient-to-br from-indigo-900/40 via-transparent to-emerald-900/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500 mix-blend-overlay z-10" />
+                <div data-print-hidden="true" className="absolute inset-0 bg-gradient-to-br from-indigo-900/40 via-transparent to-emerald-900/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500 mix-blend-overlay z-10" />
 
-                <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/60 to-transparent z-10 group-hover:from-black/100 group-hover:via-black/70 transition-colors duration-300" />
+                <div data-print-hidden="true" className="site-image-scrim absolute inset-0 bg-gradient-to-t from-black/95 via-black/60 to-transparent z-10 group-hover:from-black/100 group-hover:via-black/70 transition-colors duration-300" />
                 
                 <div className="relative z-20 transform transition-transform duration-300 md:translate-y-4 md:group-hover:translate-y-0" style={{ transform: "translateZ(30px)" }}>
                   <div className="text-xs md:text-sm font-medium text-zinc-300 mb-1 md:mb-2">{work.category}</div>
@@ -505,7 +594,7 @@ export default function Home() {
       </section>
 
       {/* 展览与荣誉 Awards Section */}
-      <section id="awards" className="py-20 md:py-32 px-4 sm:px-8 md:px-12 bg-zinc-950 border-t border-zinc-900">
+      <section id="awards" className="site-section py-20 md:py-32 px-4 sm:px-8 md:px-12 bg-zinc-950 border-t border-zinc-900">
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 md:mb-16 gap-4">
             <h2 className="text-2xl sm:text-4xl font-semibold tracking-tight">展览与荣誉</h2>
@@ -526,7 +615,7 @@ export default function Home() {
               <TiltWrapper 
                 key={idx}
                 delay={idx * 0.05}
-                className="group p-5 md:p-6 bg-black border border-zinc-800 rounded-lg hover:border-zinc-600 transition-colors flex flex-col h-full"
+                className="site-card group p-5 md:p-6 bg-black border border-zinc-800 rounded-lg hover:border-zinc-600 transition-colors flex flex-col h-full"
               >
                 <div className="text-zinc-500 font-mono text-xs sm:text-sm mb-3 group-hover:text-zinc-400 transition-colors" style={{ transform: "translateZ(10px)" }}>{award.year}</div>
                 <h3 className="text-zinc-200 font-medium text-base sm:text-lg mb-2 leading-snug" style={{ transform: "translateZ(20px)" }}>{award.title}</h3>
@@ -538,7 +627,7 @@ export default function Home() {
       </section>
 
       {/* 学术成果 Research Section */}
-      <section id="research" className="py-20 md:py-32 px-4 sm:px-8 md:px-12 bg-black border-t border-zinc-900">
+      <section id="research" className="site-section py-20 md:py-32 px-4 sm:px-8 md:px-12 bg-black border-t border-zinc-900">
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 md:mb-16 gap-4">
             <h2 className="text-2xl sm:text-4xl font-semibold tracking-tight">学术成果</h2>
@@ -589,7 +678,7 @@ export default function Home() {
               <TiltWrapper
                 key={idx}
                 delay={idx * 0.05}
-                className="group relative min-h-[250px] md:min-h-[300px] p-5 md:p-6 bg-zinc-950 border border-zinc-800 rounded-lg hover:border-zinc-600 transition-colors flex flex-col justify-between overflow-hidden"
+                className="site-card site-research-card group relative min-h-[250px] md:min-h-[300px] p-5 md:p-6 bg-zinc-950 border border-zinc-800 rounded-lg hover:border-zinc-600 transition-colors flex flex-col justify-between overflow-hidden"
               >
                 {/* 背景图片 */}
                 <Image 
@@ -600,10 +689,10 @@ export default function Home() {
                 />
                 
                 {/* 悬停时的微光效果 */}
-                <div className="absolute inset-0 bg-gradient-to-br from-indigo-900/40 via-transparent to-emerald-900/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500 mix-blend-overlay z-10" />
+                <div data-print-hidden="true" className="absolute inset-0 bg-gradient-to-br from-indigo-900/40 via-transparent to-emerald-900/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500 mix-blend-overlay z-10" />
 
                 {/* 均衡的全覆盖半透明黑色暗层：调整默认透明度为 45%，悬停时变亮为 25% */}
-                <div className="absolute inset-0 bg-black/45 group-hover:bg-black/25 transition-colors duration-500 z-10" />
+                <div data-print-hidden="true" className="absolute inset-0 bg-black/45 group-hover:bg-black/25 transition-colors duration-500 z-10" />
 
                 {/* 顶部区域：年份和主标题（悬停时向上推） */}
                 <div className="relative z-20 flex flex-col transition-transform duration-500 md:group-hover:-translate-y-2">
@@ -626,32 +715,37 @@ export default function Home() {
       </section>
 
       {/* 团队成员 Team Section */}
-      <section id="team" className="py-20 md:py-32 px-4 sm:px-8 md:px-12 bg-black border-t border-zinc-900">
+      <section id="team" className="site-section py-20 md:py-32 px-4 sm:px-8 md:px-12 bg-black border-t border-zinc-900">
         <div className="max-w-7xl mx-auto">
-          <h2 className="text-2xl sm:text-4xl font-semibold tracking-tight mb-10 md:mb-16 text-left md:text-center">团队成员</h2>
+          <div className="max-w-3xl mb-10 md:mb-16 text-left md:text-center md:mx-auto">
+            <p className="text-xs sm:text-sm font-mono tracking-[0.18em] text-zinc-500 mb-4">我们是谁</p>
+            <h2 className="text-2xl sm:text-4xl font-semibold tracking-tight mb-5">一个把技术放进真实工作与创作现场的工作室</h2>
+            <p className="text-zinc-400 text-sm md:text-base leading-relaxed">液态像素艺术工作室由艺术家与技术实践者组成。我们将影像、动画、新媒体、交互和影视制作经验，与人工智能和数字工具的实际应用结合起来：为企业团队优化具体工作流程，也与艺术家和创作团队共同把想法发展为可测试、可呈现的作品。</p>
+          </div>
           
-          <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 md:gap-8">
-            <TiltWrapper delay={0.1} className="bg-black p-6 sm:p-8 md:p-10 rounded-xl border border-zinc-800 h-full">
+          <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 md:gap-8">
+            <TiltWrapper delay={0.1} className="site-card bg-black p-6 sm:p-8 md:p-10 rounded-xl border border-zinc-800 h-full">
               <div className="flex items-center gap-4 mb-6" style={{ transform: "translateZ(30px)" }}>
                 <div className="relative shrink-0 aspect-square w-16 md:w-20 rounded-full overflow-hidden border border-zinc-700">
                   <Image src="/images/rxq.webp" alt="任玄奇" fill className="object-cover" />
                 </div>
                 <div>
                   <h3 className="text-xl md:text-2xl font-semibold mb-1">任玄奇</h3>
-                  <p className="text-zinc-400 text-sm md:text-base">影像导演 / 跨媒体艺术硕士</p>
+                  <p className="text-zinc-400 text-sm md:text-base">动画导演 / 北京电影学院博士研究生 / 青年学者</p>
                 </div>
               </div>
               
               <p className="text-zinc-300 text-sm md:text-base leading-relaxed mb-6" style={{ transform: "translateZ(20px)" }}>
-                具备丰富的数字影像、AIGC 与数字技术开发经验，致力于将视觉研究转化为可落地的商业展示与数字平台。同时担任人工智能艺术高研班及艺术创作导师。
+                研究科技艺术与跨媒体艺术，聚焦人工智能时代的影像与动画创作；也在编程、装置、新媒体和虚拟现实等实践中，将创意发展为可测试、可呈现的作品。
               </p>
               <div className="text-xs md:text-sm text-zinc-500 space-y-1.5" style={{ transform: "translateZ(10px)" }}>
-                <p>参与展览：全国美术作品展览、中国数字艺术大展、北京国际电影节等</p>
-                <p>教学经历：天津美术学院人工智能艺术通识课、天津美术学院人工智能艺术高研班</p>
+                <p>学术与研修：国家艺术基金数字博物馆数字艺术人才培训、沉浸式交互动漫人工智能创作人才培养</p>
+                <p>教学经历：2024–2026 天津美术学院人工智能艺术通识课及高级研修班</p>
+                <p>展览与展映：中国数字艺术大展、全国美展、CCF 计算艺术大展及北京／海南岛国际电影节等</p>
               </div>
             </TiltWrapper>
 
-            <TiltWrapper delay={0.2} className="bg-black p-6 sm:p-8 md:p-10 rounded-xl border border-zinc-800 h-full">
+            <TiltWrapper delay={0.2} className="site-card bg-black p-6 sm:p-8 md:p-10 rounded-xl border border-zinc-800 h-full">
               <div className="flex items-center gap-4 mb-6" style={{ transform: "translateZ(30px)" }}>
                 <div className="relative shrink-0 aspect-square w-16 md:w-20 rounded-full overflow-hidden border border-zinc-700">
                   <Image src="/images/wyf.webp" alt="吴于枫" fill className="object-cover scale-[1.25] origin-top translate-x-2 -translate-y-2" />
@@ -671,34 +765,15 @@ export default function Home() {
               </div>
             </TiltWrapper>
 
-            <TiltWrapper delay={0.3} className="bg-black p-6 sm:p-8 md:p-10 rounded-xl border border-zinc-800 h-full">
-              <div className="flex items-center gap-4 mb-6" style={{ transform: "translateZ(30px)" }}>
-                <div className="relative shrink-0 aspect-square w-16 md:w-20 rounded-full overflow-hidden border border-zinc-700 bg-zinc-900 flex items-center justify-center">
-                  <Image src="/images/zsm.webp" alt="章斯敏" fill className="object-cover" />
-                </div>
-                <div>
-                  <h3 className="text-xl md:text-2xl font-semibold mb-1">章斯敏</h3>
-                  <p className="text-zinc-400 text-sm md:text-base">艺术研究者 / 数字媒体艺术硕士</p>
-                </div>
-              </div>
-
-              <p className="text-zinc-300 text-sm md:text-base leading-relaxed mb-6" style={{ transform: "translateZ(20px)" }}>
-                研究方向偏向中国传统文化数字化再现与跨媒介叙事，兼具艺术学、古文化艺术，关注虚拟身份、数据叙事与 AIGC 融合研究。
-              </p>
-              <div className="text-xs md:text-sm text-zinc-500 space-y-1.5" style={{ transform: "translateZ(10px)" }}>
-    
-                <p>实践方向：交互装置、实验影像、交互影像、生成艺术</p>
-              </div>
-            </TiltWrapper>
           </div>
         </div>
       </section>
 
       {/* 联系我们 Contact Section */}
-      <section id="contact" className="py-20 md:py-32 px-4 sm:px-8 md:px-12 bg-black flex flex-col items-center justify-center text-center">
-        <h2 className="text-2xl sm:text-4xl md:text-5xl font-semibold tracking-tight mb-6">项目洽谈与合作</h2>
+      <section id="contact" className="site-section py-20 md:py-32 px-4 sm:px-8 md:px-12 bg-black flex flex-col items-center justify-center text-center">
+        <h2 className="text-2xl sm:text-4xl md:text-5xl font-semibold tracking-tight mb-6">聊聊一个工作难题，或一个创作想法</h2>
         <p className="text-zinc-400 text-sm md:text-base mb-12 md:mb-16 max-w-lg mx-auto px-4">
-          欢迎与我们取得联系，了解更多案例细节或探讨具体的合作需求。
+          不管是团队总在重复做表格、写材料、整理信息，还是你正在准备新媒体、互动、影像或影视作品，欢迎带着一个具体问题来聊。我们会先听懂现状，再一起判断什么做法更合适。
         </p>
         
         <div className="flex flex-col md:flex-row items-center justify-center gap-12 md:gap-20">
@@ -715,7 +790,7 @@ export default function Home() {
                 />
               </div>
             </div>
-            <span className="text-zinc-300 font-medium">扫码添加微信</span>
+            <span className="text-zinc-300 font-medium">扫码聊聊合作可能</span>
             <span className="text-zinc-500 text-sm mt-1">Feuille_1100</span>
           </div>
           
@@ -727,15 +802,15 @@ export default function Home() {
             <div className="w-32 h-32 md:w-40 md:h-40 bg-black border border-zinc-800 rounded-full flex items-center justify-center mb-4 hover:border-zinc-600 transition-colors">
               <Mail className="w-10 h-10 text-zinc-500" />
             </div>
-            <a href="mailto:feuillefeng@foxmail.com" className="text-zinc-300 font-medium hover:text-white transition-colors">发送邮件合作</a>
+            <a href="mailto:feuillefeng@foxmail.com" className="text-zinc-300 font-medium hover:text-white transition-colors">邮件预约交流</a>
             <span className="text-zinc-500 text-sm mt-1">feuillefeng@foxmail.com</span>
           </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="py-6 text-center text-zinc-600 text-xs md:text-sm border-t border-zinc-900 bg-black">
-        <p>© {new Date().getFullYear()} 液态像素工作室. 保留所有权利.</p>
+      <footer className="site-footer py-6 text-center text-zinc-600 text-xs md:text-sm border-t border-zinc-900 bg-black">
+        <p>© {new Date().getFullYear()} 液态像素艺术工作室 · 企业团队与艺术家技术协作</p>
       </footer>
     </main>
   );

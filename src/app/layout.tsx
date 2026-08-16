@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "液态像素工作室 | 跨媒体艺术与前沿技术团队",
-  description: "由跨媒体艺术创作者与青年学者组建的复合型团队。致力于将前沿算法与多元媒介深度融合，提供涵盖数字影像创意、多感官公共艺术、文化 IP 数字化、定制化网页交互开发及 AIGC 技能培训的综合解决方案。",
+  title: "液态像素艺术工作室 | 企业与艺术家技术协作",
+  description: "帮助企业团队减少重复工作、把事情做顺，也协助艺术家和创作团队实现新媒体、影像与影视项目中的技术想法。",
 };
 
 export default function RootLayout({
