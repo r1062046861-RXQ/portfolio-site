@@ -302,3 +302,117 @@ body {
     transform: none !important;
   }
 }
+
+/* ---------- 作品集 3D 体验：贴纸式菜单与降级 ---------- */
+
+/* 星形爆炸贴纸 */
+.sticker-star {
+  width: 8.5rem;
+  height: 8.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-weight: 700;
+  color: #2e1065;
+  background: radial-gradient(circle at 35% 30%, #ede9fe, #c4b5fd 45%, #8b5cf6 80%);
+  clip-path: polygon(
+    50% 0%, 60% 12%, 74% 6%, 78% 21%, 92% 19%, 89% 34%, 100% 41%,
+    93% 53%, 100% 65%, 87% 70%, 88% 85%, 74% 83%, 70% 97%, 57% 89%,
+    45% 100%, 38% 88%, 23% 93%, 24% 78%, 9% 77%, 13% 63%, 0% 55%,
+    9% 44%, 3% 30%, 17% 29%, 20% 14%, 33% 22%, 37% 6%
+  );
+  filter: drop-shadow(0 10px 24px rgba(0, 0, 0, 0.5));
+  transition: transform 0.25s ease;
+}
+.sticker-star:hover {
+  transform: scale(1.08) rotate(-4deg);
+}
+
+/* 纸卡贴纸 */
+.sticker-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.35rem;
+  min-width: 13rem;
+  padding: 0.9rem 1.2rem;
+  text-align: left;
+  color: #3f3f46;
+  background: linear-gradient(160deg, #f5eaf2, #e9def6 55%, #dde9f6);
+  border-radius: 0.4rem;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.5);
+  transform: rotate(-2deg);
+  transition: transform 0.25s ease;
+}
+.sticker-card:hover {
+  transform: rotate(0deg) scale(1.04);
+}
+.sticker-card-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  border-bottom: 2px solid rgba(63, 63, 70, 0.25);
+  padding-bottom: 0.2rem;
+  width: 100%;
+}
+.sticker-card-sub {
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  color: #71717a;
+}
+.sticker-card-wave {
+  color: #7c3aed;
+  font-weight: 700;
+  letter-spacing: -0.08em;
+}
+
+/* 条形码贴纸 */
+.sticker-barcode {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  padding: 0.55rem 0.9rem 0.45rem;
+  background: #f4f4f5;
+  border-radius: 0.15rem;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.45);
+  transform: rotate(1.5deg);
+  transition: transform 0.25s ease;
+}
+.sticker-barcode:hover {
+  transform: rotate(0deg) scale(1.04);
+}
+.sticker-barcode-bars {
+  display: block;
+  width: 11rem;
+  height: 2.1rem;
+  background: repeating-linear-gradient(
+    90deg,
+    #18181b 0 2px, transparent 2px 4px,
+    #18181b 4px 7px, transparent 7px 10px,
+    #18181b 10px 11px, transparent 11px 15px,
+    #18181b 15px 17px, transparent 17px 20px,
+    #18181b 20px 21px, transparent 21px 24px
+  );
+}
+.sticker-barcode-label {
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.18em;
+  color: #52525b;
+}
+
+/* 3D 模式激活时隐藏静态版；打印时反过来 */
+.portfolio-static--hidden {
+  display: none;
+}
+
+@media print {
+  .portfolio-live {
+    display: none !important;
+  }
+  .portfolio-static--hidden {
+    display: block !important;
+  }
+}
