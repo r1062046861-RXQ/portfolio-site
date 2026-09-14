@@ -6,6 +6,7 @@ import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment
 import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer.js";
 import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass.js";
 import { ShaderPass } from "three/examples/jsm/postprocessing/ShaderPass.js";
+import { UnrealBloomPass } from "three/examples/jsm/postprocessing/UnrealBloomPass.js";
 import { OutputPass } from "three/examples/jsm/postprocessing/OutputPass.js";
 import type { Work } from "./works";
 
@@ -16,7 +17,7 @@ const GlitchShader = {
   uniforms: {
     tDiffuse: { value: null as THREE.Texture | null },
     uTime: { value: 0 },
-    uAmount: { value: 0.12 },
+    uAmount: { value: 0.035 },
   },
   vertexShader: /* glsl */ `
     varying vec2 vUv;
@@ -47,7 +48,7 @@ const GlitchShader = {
       }
 
       // RGB 色散（常开一点点，转场时加剧）
-      float shift = 0.0025 + 0.014 * a;
+      float shift = 0.0009 + 0.016 * a;
       float r = texture2D(tDiffuse, uv + vec2(shift, 0.0)).r;
       float g = texture2D(tDiffuse, uv).g;
       float b = texture2D(tDiffuse, uv - vec2(shift, 0.0)).b;
@@ -55,6 +56,11 @@ const GlitchShader = {
 
       // 噪点
       col += (rand(uv * (uTime + 1.0)) - 0.5) * 0.14 * a;
+
+      // 常开胶片颗粒 + 暗角
+      col += (rand(uv * (uTime + 7.0)) - 0.5) * 0.028;
+      float vig = distance(vUv, vec2(0.5, 0.5));
+      col *= 1.0 - smoothstep(0.52, 0.98, vig) * 0.5;
 
       gl_FragColor = vec4(col, 1.0);
     }
@@ -82,6 +88,15 @@ function makeDiscTexture(): THREE.CanvasTexture {
   ctx.arc(256, 256, 248, 0, Math.PI * 2);
   ctx.fill();
 
+  // 细密数据纹
+  for (let r = 128; r < 244; r += 3) {
+    ctx.strokeStyle = "rgba(120, 84, 30, 0.07)";
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.arc(256, 256, r, 0, Math.PI * 2);
+    ctx.stroke();
+  }
+
   ctx.globalAlpha = 0.32;
   for (let i = 0; i < 6; i++) {
     ctx.strokeStyle = `hsl(${i * 60}, 90%, 65%)`;
@@ -96,6 +111,11 @@ function makeDiscTexture(): THREE.CanvasTexture {
   ctx.beginPath();
   ctx.arc(256, 256, 118, 0, Math.PI * 2);
   ctx.fill();
+  ctx.strokeStyle = "#d8cdb4";
+  ctx.lineWidth = 3;
+  ctx.beginPath();
+  ctx.arc(256, 256, 118, 0, Math.PI * 2);
+  ctx.stroke();
 
   ctx.fillStyle = "#26221a";
   ctx.textAlign = "center";
@@ -107,12 +127,17 @@ function makeDiscTexture(): THREE.CanvasTexture {
   ctx.font = "20px monospace";
   ctx.fillText("SIDE A · 2026", 256, 324);
 
-  // 中心孔
+  // 中心孔 + 金属轴圈
   ctx.globalCompositeOperation = "destination-out";
   ctx.beginPath();
   ctx.arc(256, 256, 34, 0, Math.PI * 2);
   ctx.fill();
   ctx.globalCompositeOperation = "source-over";
+  ctx.strokeStyle = "rgba(70, 58, 34, 0.65)";
+  ctx.lineWidth = 5;
+  ctx.beginPath();
+  ctx.arc(256, 256, 36, 0, Math.PI * 2);
+  ctx.stroke();
 
   const tex = new THREE.CanvasTexture(canvas);
   tex.colorSpace = THREE.SRGBColorSpace;
@@ -128,12 +153,37 @@ function drawVinylLabel(ctx: CanvasRenderingContext2D, work: Work) {
   ctx.fill();
 
   for (let r = 118; r < 244; r += 5) {
-    ctx.strokeStyle = "rgba(255,255,255,0.05)";
+    ctx.strokeStyle = "rgba(255,255,255,0.16)";
     ctx.lineWidth = 1;
     ctx.beginPath();
     ctx.arc(256, 256, r, 0, Math.PI * 2);
     ctx.stroke();
   }
+
+  // 斜向高光带，模拟黑胶油亮反光（一主一辅两道弧）
+  const sheen = ctx.createLinearGradient(0, 0, 512, 512);
+  sheen.addColorStop(0.42, "rgba(255,255,255,0)");
+  sheen.addColorStop(0.5, "rgba(255,255,255,0.22)");
+  sheen.addColorStop(0.58, "rgba(255,255,255,0)");
+  ctx.fillStyle = sheen;
+  ctx.beginPath();
+  ctx.arc(256, 256, 250, 0, Math.PI * 2);
+  ctx.fill();
+  const sheen2 = ctx.createLinearGradient(512, 0, 0, 512);
+  sheen2.addColorStop(0.62, "rgba(255,255,255,0)");
+  sheen2.addColorStop(0.7, "rgba(255,255,255,0.08)");
+  sheen2.addColorStop(0.78, "rgba(255,255,255,0)");
+  ctx.fillStyle = sheen2;
+  ctx.beginPath();
+  ctx.arc(256, 256, 250, 0, Math.PI * 2);
+  ctx.fill();
+
+  // 外缘亮圈，让碟形在黑场中立起来
+  ctx.strokeStyle = "rgba(255,255,255,0.28)";
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.arc(256, 256, 246, 0, Math.PI * 2);
+  ctx.stroke();
 
   ctx.fillStyle = `hsl(${work.hue}, 62%, 52%)`;
   ctx.beginPath();
@@ -266,10 +316,57 @@ export default function Scene3D({ screen, index, glitchKey, works }: Props) {
 
     const pmrem = new THREE.PMREMGenerator(renderer);
     scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
-    const keyLight = new THREE.DirectionalLight(0xffffff, 1.4);
-    keyLight.position.set(3, 4, 5);
+    scene.environmentIntensity = 0.5;
+
+    // 摄影棚式三点布光 + 工作室紫绿双色轮廓光
+    const keyLight = new THREE.DirectionalLight(0xffffff, 0.5);
+    keyLight.position.set(2.5, 3, 5.5);
     scene.add(keyLight);
-    scene.add(new THREE.AmbientLight(0x8888ff, 0.25));
+    const rimIndigo = new THREE.PointLight(0x6366f1, 34, 25, 2);
+    rimIndigo.position.set(-5.5, 2.5, -2.5);
+    scene.add(rimIndigo);
+    const rimEmerald = new THREE.PointLight(0x10b981, 28, 25, 2);
+    rimEmerald.position.set(5.5, -1.5, -2);
+    scene.add(rimEmerald);
+    const frontFill = new THREE.PointLight(0xc4b5fd, 8, 20, 2);
+    frontFill.position.set(-2.5, -1, 4);
+    scene.add(frontFill);
+    // 黑胶补光：擦出碟面高光弧，而非整体打亮
+    const vinylLight = new THREE.PointLight(0xfff5e0, 6, 12, 2);
+    vinylLight.position.set(1.6, 2.4, 2.6);
+    scene.add(vinylLight);
+
+    // 漂浮微尘，增加空间纵深
+    const dustCount = 240;
+    const dustPos = new Float32Array(dustCount * 3);
+    for (let i = 0; i < dustCount; i++) {
+      dustPos[i * 3] = (Math.random() - 0.5) * 16;
+      dustPos[i * 3 + 1] = (Math.random() - 0.5) * 8;
+      dustPos[i * 3 + 2] = (Math.random() - 0.5) * 6 - 1;
+    }
+    const dustGeo = new THREE.BufferGeometry();
+    dustGeo.setAttribute("position", new THREE.BufferAttribute(dustPos, 3));
+    const dustCanvas = createCanvas(64, 64);
+    const dustGrad = dustCanvas.ctx.createRadialGradient(32, 32, 0, 32, 32, 32);
+    dustGrad.addColorStop(0, "rgba(255,255,255,0.9)");
+    dustGrad.addColorStop(0.4, "rgba(255,255,255,0.25)");
+    dustGrad.addColorStop(1, "rgba(255,255,255,0)");
+    dustCanvas.ctx.fillStyle = dustGrad;
+    dustCanvas.ctx.fillRect(0, 0, 64, 64);
+    const dustTex = new THREE.CanvasTexture(dustCanvas.canvas);
+    const dust = new THREE.Points(
+      dustGeo,
+      new THREE.PointsMaterial({
+        size: 0.06,
+        map: dustTex,
+        transparent: true,
+        opacity: 0.55,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false,
+        color: 0x9fb3ff,
+      })
+    );
+    scene.add(dust);
 
     const maxAniso = renderer.capabilities.getMaxAnisotropy();
 
@@ -277,16 +374,17 @@ export default function Scene3D({ screen, index, glitchKey, works }: Props) {
     const caseGroup = new THREE.Group();
     const shell = new THREE.Mesh(
       new THREE.BoxGeometry(3.4, 3.8, 0.3),
+      // 透射塑料：真实折射 + 表面反射，呈现 CD 盒的有机玻璃质感
       new THREE.MeshPhysicalMaterial({
-        color: 0xffffff,
-        transparent: true,
-        opacity: 0.07,
-        roughness: 0.12,
-        metalness: 0,
-        clearcoat: 0.5,
-        clearcoatRoughness: 0.2,
-        envMapIntensity: 0.6,
-        specularIntensity: 0.4,
+        transmission: 1,
+        thickness: 0.35,
+        roughness: 0.08,
+        ior: 1.5,
+        clearcoat: 0.4,
+        clearcoatRoughness: 0.25,
+        attenuationColor: new THREE.Color(0xdde6ff),
+        attenuationDistance: 2.5,
+        envMapIntensity: 1.0,
       })
     );
     caseGroup.add(shell);
@@ -300,7 +398,14 @@ export default function Scene3D({ screen, index, glitchKey, works }: Props) {
     const trayTex = makeTrayTexture(worksRef.current);
     trayTex.anisotropy = maxAniso;
     const trayDark = new THREE.MeshStandardMaterial({ color: 0x0c0c0e, roughness: 0.85 });
-    const trayBack = new THREE.MeshStandardMaterial({ map: trayTex, roughness: 0.85 });
+    // 曲目表轻微自发光，盒背在暗光下仍可读
+    const trayBack = new THREE.MeshStandardMaterial({
+      map: trayTex,
+      roughness: 0.7,
+      emissive: 0xffffff,
+      emissiveMap: trayTex,
+      emissiveIntensity: 0.3,
+    });
     const tray = new THREE.Mesh(
       new THREE.BoxGeometry(3.05, 3.45, 0.14),
       [trayDark, trayDark, trayDark, trayDark, trayDark, trayBack]
@@ -317,9 +422,9 @@ export default function Scene3D({ screen, index, glitchKey, works }: Props) {
       discBodyGeo,
       new THREE.MeshPhysicalMaterial({
         color: 0xd9b96a,
-        roughness: 0.3,
+        roughness: 0.36,
         metalness: 0.7,
-        envMapIntensity: 1.0,
+        envMapIntensity: 0.55,
       })
     );
     discBody.position.z = 0.045;
@@ -360,23 +465,22 @@ export default function Scene3D({ screen, index, glitchKey, works }: Props) {
     const vinylBody = new THREE.Mesh(
       vinylBodyGeo,
       new THREE.MeshPhysicalMaterial({
-        color: 0x0a0a0a,
-        roughness: 0.4,
-        metalness: 0.3,
-        clearcoat: 0.6,
+        color: 0x0a0a0c,
+        roughness: 0.5,
+        metalness: 0.1,
+        clearcoat: 0.3,
+        clearcoatRoughness: 0.3,
+        envMapIntensity: 0.15,
       })
     );
     vinylGroup.add(vinylBody);
-    // 正面贴图圆片（平面 UV，标签文字不镜像）
+    // 正面贴图圆片（平面 UV，标签文字不镜像）；无光照模型 + alphaTest：
+    // 碟面完全按贴图呈现（墨黑 + 手绘高光带），不会被灯光广谱高光洗白
     const vinylFace = new THREE.Mesh(
       new THREE.CircleGeometry(1.62, 72),
-      new THREE.MeshPhysicalMaterial({
+      new THREE.MeshBasicMaterial({
         map: vinyl.tex,
-        transparent: true,
-        roughness: 0.35,
-        metalness: 0.3,
-        clearcoat: 0.6,
-        envMapIntensity: 1.1,
+        alphaTest: 0.5,
       })
     );
     vinylFace.position.z = 0.027;
@@ -386,6 +490,13 @@ export default function Scene3D({ screen, index, glitchKey, works }: Props) {
     /* ----- 后处理 ----- */
     const composer = new EffectComposer(renderer);
     composer.addPass(new RenderPass(scene, camera));
+    const bloomPass = new UnrealBloomPass(
+      new THREE.Vector2(mount.clientWidth, mount.clientHeight),
+      0.25,
+      0.45,
+      0.9
+    );
+    composer.addPass(bloomPass);
     const glitchPass = new ShaderPass(GlitchShader);
     composer.addPass(glitchPass);
     composer.addPass(new OutputPass());
@@ -439,7 +550,7 @@ export default function Scene3D({ screen, index, glitchKey, works }: Props) {
     /* ----- 动画循环 ----- */
     const clock = new THREE.Clock();
     let raf = 0;
-    let glitchAmount = 0.12;
+    let glitchAmount = 0.035;
     const punch = new THREE.Vector3();
 
     const animate = () => {
@@ -468,6 +579,10 @@ export default function Scene3D({ screen, index, glitchKey, works }: Props) {
       discFace.rotation.z -= dt * 0.45;
       if (screenRef.current === "chapters") vinylFace.rotation.z -= dt * 1.1;
 
+      // 微尘缓慢漂移
+      dust.rotation.z = t * 0.008;
+      dust.rotation.y = t * 0.012;
+
       // 切换作品时重绘黑胶标签
       if (vinylDirtyRef.current) {
         vinylDirtyRef.current = false;
@@ -481,7 +596,7 @@ export default function Scene3D({ screen, index, glitchKey, works }: Props) {
         glitchSpikeRef.current = 0;
         punch.set((Math.random() - 0.5) * 0.25, (Math.random() - 0.5) * 0.2, 0);
       }
-      glitchAmount += (0.12 - glitchAmount) * (1 - Math.exp(-dt * 2.2));
+      glitchAmount += (0.035 - glitchAmount) * (1 - Math.exp(-dt * 2.2));
       glitchPass.uniforms.uAmount.value = glitchAmount;
       glitchPass.uniforms.uTime.value = t;
 

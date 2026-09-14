@@ -144,8 +144,8 @@ export default function PortfolioExperience() {
         <div className="portfolio-live fixed inset-0 z-40 overflow-hidden bg-black">
           {/* 氛围光 */}
           <div data-print-hidden="true" className="absolute inset-0 pointer-events-none">
-            <div className="absolute top-[-15%] left-[-10%] w-[55vw] h-[55vw] bg-indigo-900/25 rounded-full blur-[140px]" />
-            <div className="absolute bottom-[-15%] right-[-10%] w-[55vw] h-[55vw] bg-emerald-900/20 rounded-full blur-[140px]" />
+            <div className="absolute top-[-15%] left-[-10%] w-[55vw] h-[55vw] bg-indigo-900/25 rounded-full blur-[140px] animate-pulse" />
+            <div className="absolute bottom-[-15%] right-[-10%] w-[55vw] h-[55vw] bg-emerald-900/20 rounded-full blur-[140px] animate-pulse" style={{ animationDelay: "1.6s" }} />
           </div>
 
           <Scene3D screen={screen} index={index} glitchKey={glitchKey} works={works} />
