@@ -311,6 +311,7 @@ export default function Home() {
           <a href="#services" className="hover:opacity-70 transition-opacity p-2">合作方向</a>
           <a href="#works" className="hover:opacity-70 transition-opacity p-2">创作实践</a>
           <a href="#team" className="hover:opacity-70 transition-opacity p-2">关于我们</a>
+          <a href="/portfolio/" className="hover:opacity-70 transition-opacity p-2">任玄奇作品集</a>
         </div>
         <a href="#contact" className="border border-white/30 px-4 py-2 rounded-md text-sm hover:bg-white hover:text-black transition-colors">
           预约咨询
