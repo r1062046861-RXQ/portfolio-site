@@ -340,6 +340,7 @@ export default function Home() {
             transition={{ duration: 0.8, ease: "easeOut" }}
             className="w-full max-w-4xl mx-auto flex flex-col items-center text-center"
           >
+            <p className="text-sm sm:text-base font-medium tracking-[0.16em] text-zinc-200 mb-3">液态像素艺术工作室</p>
             <p className="text-xs sm:text-sm font-mono tracking-[0.18em] text-zinc-400 mb-6">企业团队 · 艺术家与创作机构</p>
             <h1 className="text-4xl sm:text-5xl md:text-7xl font-semibold tracking-tight leading-[1.05] mb-6">
               让技术真正服务于<br className="hidden sm:block" />工作与创作
