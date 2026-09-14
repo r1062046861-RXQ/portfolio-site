@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import type { MutableRefObject } from "react";
 import * as THREE from "three";
 import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js";
 import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer.js";
@@ -10,7 +11,10 @@ import { UnrealBloomPass } from "three/examples/jsm/postprocessing/UnrealBloomPa
 import { OutputPass } from "three/examples/jsm/postprocessing/OutputPass.js";
 import type { Work } from "./works";
 
-export type PortfolioScreen = "menu" | "chapters" | "detail" | "about";
+export type PortfolioMode = "journey" | "detail";
+
+/** 滚动状态：p = 全程进度 0..1（已平滑），v = 滚动速度（屏/秒，带方向） */
+export type ScrollState = { p: number; v: number };
 
 /* ---------------- VHS 故障 / RGB 色散后处理 ---------------- */
 const GlitchShader = {
@@ -40,7 +44,7 @@ const GlitchShader = {
       vec2 uv = vUv;
       float a = uAmount;
 
-      // 横向切片撕裂（转场时明显）
+      // 横向切片撕裂（转场与快速滚动时明显）
       float slice = floor(uv.y * 24.0);
       float seed = rand(vec2(slice, floor(uTime * 24.0)));
       if (seed > 1.0 - a * 0.55) {
@@ -55,10 +59,10 @@ const GlitchShader = {
       vec3 col = vec3(r, g, b);
 
       // 噪点
-      col += (rand(uv * (uTime + 1.0)) - 0.5) * 0.14 * a;
+      col += (rand(uv * (uTime + 1.0)) - 0.5) * 0.1 * a;
 
       // 常开胶片颗粒 + 暗角
-      col += (rand(uv * (uTime + 7.0)) - 0.5) * 0.028;
+      col += (rand(uv * (uTime + 7.0)) - 0.5) * 0.02;
       float vig = distance(vUv, vec2(0.5, 0.5));
       col *= 1.0 - smoothstep(0.52, 0.98, vig) * 0.5;
 
@@ -185,7 +189,7 @@ function drawVinylLabel(ctx: CanvasRenderingContext2D, work: Work) {
   ctx.arc(256, 256, 246, 0, Math.PI * 2);
   ctx.stroke();
 
-  ctx.fillStyle = `hsl(${work.hue}, 62%, 52%)`;
+  ctx.fillStyle = `hsl(${work.hue}, 58%, 46%)`;
   ctx.beginPath();
   ctx.arc(256, 256, 108, 0, Math.PI * 2);
   ctx.fill();
@@ -226,7 +230,7 @@ function makeTrayTexture(works: Work[]): THREE.CanvasTexture {
   ctx.fillRect(48, 92, 416, 2);
   works.forEach((w, i) => {
     const y = 150 + i * 62;
-    ctx.fillStyle = `hsl(${w.hue}, 62%, 60%)`;
+    ctx.fillStyle = `hsl(${w.hue}, 58%, 55%)`;
     ctx.font = "bold 24px monospace";
     ctx.fillText(String(i + 1).padStart(2, "0"), 48, y);
     ctx.fillStyle = "rgba(255,255,255,0.8)";
@@ -264,29 +268,45 @@ function makePriceTagTexture(): THREE.CanvasTexture {
   return tex;
 }
 
+/* ---------------- 关键帧插值：滚动进度 → 场景布局 ---------------- */
+const lerpNum = (a: number, b: number, t: number) => a + (b - a) * t;
+
+/** 分段线性关键帧：stops 为 [进度, 值][]，p 之外取端点 */
+function kf(stops: ReadonlyArray<readonly [number, number]>, p: number) {
+  if (p <= stops[0][0]) return stops[0][1];
+  for (let i = 1; i < stops.length; i++) {
+    if (p <= stops[i][0]) {
+      const t = (p - stops[i - 1][0]) / (stops[i][0] - stops[i - 1][0]);
+      return lerpNum(stops[i - 1][1], stops[i][1], t);
+    }
+  }
+  return stops[stops.length - 1][1];
+}
+
 /* ---------------- 场景组件 ---------------- */
 type Props = {
-  screen: PortfolioScreen;
-  index: number;
+  mode: PortfolioMode;
+  activeWork: number;
   glitchKey: number;
   works: Work[];
+  scrollRef: MutableRefObject<ScrollState>;
 };
 
-export default function Scene3D({ screen, index, glitchKey, works }: Props) {
+export default function Scene3D({ mode, activeWork, glitchKey, works, scrollRef }: Props) {
   const mountRef = useRef<HTMLDivElement>(null);
-  const screenRef = useRef(screen);
+  const modeRef = useRef(mode);
   const vinylDirtyRef = useRef(false);
   const glitchSpikeRef = useRef(1); // 入场即一次故障
   const worksRef = useRef(works);
-  const indexRef = useRef(index);
+  const activeWorkRef = useRef(activeWork);
 
   useEffect(() => {
-    screenRef.current = screen;
-  }, [screen]);
+    modeRef.current = mode;
+  }, [mode]);
   useEffect(() => {
-    indexRef.current = index;
+    activeWorkRef.current = activeWork;
     vinylDirtyRef.current = true;
-  }, [index]);
+  }, [activeWork]);
   useEffect(() => {
     glitchSpikeRef.current = 1;
   }, [glitchKey]);
@@ -318,55 +338,59 @@ export default function Scene3D({ screen, index, glitchKey, works }: Props) {
     scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
     scene.environmentIntensity = 0.5;
 
-    // 摄影棚式三点布光 + 工作室紫绿双色轮廓光
+    // 摄影棚式三点布光 + 工作室紫绿双色轮廓光（柔和取向，避免刺眼光斑）
     const keyLight = new THREE.DirectionalLight(0xffffff, 0.5);
     keyLight.position.set(2.5, 3, 5.5);
     scene.add(keyLight);
-    const rimIndigo = new THREE.PointLight(0x6366f1, 34, 25, 2);
+    const rimIndigo = new THREE.PointLight(0x6366f1, 22, 25, 2);
     rimIndigo.position.set(-5.5, 2.5, -2.5);
     scene.add(rimIndigo);
-    const rimEmerald = new THREE.PointLight(0x10b981, 28, 25, 2);
+    const rimEmerald = new THREE.PointLight(0x10b981, 18, 25, 2);
     rimEmerald.position.set(5.5, -1.5, -2);
     scene.add(rimEmerald);
-    const frontFill = new THREE.PointLight(0xc4b5fd, 8, 20, 2);
+    const frontFill = new THREE.PointLight(0xc4b5fd, 6, 20, 2);
     frontFill.position.set(-2.5, -1, 4);
     scene.add(frontFill);
     // 黑胶补光：擦出碟面高光弧，而非整体打亮
-    const vinylLight = new THREE.PointLight(0xfff5e0, 6, 12, 2);
+    const vinylLight = new THREE.PointLight(0xfff5e0, 5, 12, 2);
     vinylLight.position.set(1.6, 2.4, 2.6);
     scene.add(vinylLight);
 
-    // 漂浮微尘，增加空间纵深
-    const dustCount = 240;
-    const dustPos = new Float32Array(dustCount * 3);
-    for (let i = 0; i < dustCount; i++) {
-      dustPos[i * 3] = (Math.random() - 0.5) * 16;
-      dustPos[i * 3 + 1] = (Math.random() - 0.5) * 8;
-      dustPos[i * 3 + 2] = (Math.random() - 0.5) * 6 - 1;
-    }
-    const dustGeo = new THREE.BufferGeometry();
-    dustGeo.setAttribute("position", new THREE.BufferAttribute(dustPos, 3));
-    const dustCanvas = createCanvas(64, 64);
-    const dustGrad = dustCanvas.ctx.createRadialGradient(32, 32, 0, 32, 32, 32);
-    dustGrad.addColorStop(0, "rgba(255,255,255,0.9)");
-    dustGrad.addColorStop(0.4, "rgba(255,255,255,0.25)");
-    dustGrad.addColorStop(1, "rgba(255,255,255,0)");
-    dustCanvas.ctx.fillStyle = dustGrad;
-    dustCanvas.ctx.fillRect(0, 0, 64, 64);
-    const dustTex = new THREE.CanvasTexture(dustCanvas.canvas);
-    const dust = new THREE.Points(
-      dustGeo,
-      new THREE.PointsMaterial({
-        size: 0.06,
-        map: dustTex,
-        transparent: true,
-        opacity: 0.55,
-        blending: THREE.AdditiveBlending,
-        depthWrite: false,
-        color: 0x9fb3ff,
-      })
-    );
-    scene.add(dust);
+    // 双层漂浮微尘：远层细密、近层稀疏，滚动时近层窜动形成纵深视差
+    const makeDust = (count: number, size: number, spread: [number, number, number], zBase: number, color: number, opacity: number) => {
+      const pos = new Float32Array(count * 3);
+      for (let i = 0; i < count; i++) {
+        pos[i * 3] = (Math.random() - 0.5) * spread[0];
+        pos[i * 3 + 1] = (Math.random() - 0.5) * spread[1];
+        pos[i * 3 + 2] = (Math.random() - 0.5) * spread[2] + zBase;
+      }
+      const geo = new THREE.BufferGeometry();
+      geo.setAttribute("position", new THREE.BufferAttribute(pos, 3));
+      const c = createCanvas(64, 64);
+      const grad = c.ctx.createRadialGradient(32, 32, 0, 32, 32, 32);
+      grad.addColorStop(0, "rgba(255,255,255,0.9)");
+      grad.addColorStop(0.4, "rgba(255,255,255,0.25)");
+      grad.addColorStop(1, "rgba(255,255,255,0)");
+      c.ctx.fillStyle = grad;
+      c.ctx.fillRect(0, 0, 64, 64);
+      const tex = new THREE.CanvasTexture(c.canvas);
+      const points = new THREE.Points(
+        geo,
+        new THREE.PointsMaterial({
+          size,
+          map: tex,
+          transparent: true,
+          opacity,
+          blending: THREE.AdditiveBlending,
+          depthWrite: false,
+          color,
+        })
+      );
+      scene.add(points);
+      return points;
+    };
+    const dustFar = makeDust(240, 0.06, [16, 8, 6], -1, 0x9fb3ff, 0.5);
+    const dustNear = makeDust(90, 0.1, [12, 7, 3], 2.2, 0xc7d2fe, 0.32);
 
     const maxAniso = renderer.capabilities.getMaxAnisotropy();
 
@@ -380,8 +404,8 @@ export default function Scene3D({ screen, index, glitchKey, works }: Props) {
         thickness: 0.35,
         roughness: 0.08,
         ior: 1.5,
-        clearcoat: 0.4,
-        clearcoatRoughness: 0.25,
+        clearcoat: 0.22,
+        clearcoatRoughness: 0.35,
         attenuationColor: new THREE.Color(0xdde6ff),
         attenuationDistance: 2.5,
         envMapIntensity: 1.0,
@@ -431,10 +455,12 @@ export default function Scene3D({ screen, index, glitchKey, works }: Props) {
     caseGroup.add(discBody);
     const discFace = new THREE.Mesh(
       new THREE.CircleGeometry(1.45, 72),
-      // 不透明 + alphaTest：在实体渲染通道绘制，避免被透明外壳的深度写入遮挡
+      // 不透明 + alphaTest：在实体渲染通道绘制，避免被透明外壳的深度写入遮挡；
+      // 略降亮度避免金色盘面过曝刺眼
       new THREE.MeshBasicMaterial({
         map: discTex,
         alphaTest: 0.5,
+        color: 0xded8ca,
       })
     );
     discFace.position.z = 0.045 + 0.027;
@@ -458,7 +484,7 @@ export default function Scene3D({ screen, index, glitchKey, works }: Props) {
 
     /* ----- 黑胶唱片 ----- */
     const vinylGroup = new THREE.Group();
-    const vinyl = makeVinylTexture(worksRef.current[indexRef.current]);
+    const vinyl = makeVinylTexture(worksRef.current[activeWorkRef.current]);
     vinyl.tex.anisotropy = maxAniso;
     const vinylBodyGeo = new THREE.CylinderGeometry(1.62, 1.62, 0.05, 72);
     vinylBodyGeo.rotateX(Math.PI / 2);
@@ -492,42 +518,43 @@ export default function Scene3D({ screen, index, glitchKey, works }: Props) {
     composer.addPass(new RenderPass(scene, camera));
     const bloomPass = new UnrealBloomPass(
       new THREE.Vector2(mount.clientWidth, mount.clientHeight),
-      0.25,
+      0.16,
       0.45,
-      0.9
+      0.92
     );
     composer.addPass(bloomPass);
     const glitchPass = new ShaderPass(GlitchShader);
     composer.addPass(glitchPass);
     composer.addPass(new OutputPass());
 
-    /* ----- 布局目标 ----- */
-    const targets = {
-      menu: {
-        casePos: new THREE.Vector3(0.9, 0, 0),
-        caseRotY: -0.18,
-        vinylPos: new THREE.Vector3(7.5, -0.2, -1),
-      },
-      chapters: {
-        casePos: new THREE.Vector3(-6.5, 0.3, -1.5),
-        caseRotY: -0.7,
-        vinylPos: new THREE.Vector3(1.15, -0.05, 0),
-      },
-      detail: {
-        casePos: new THREE.Vector3(1.5, 0, 0),
-        caseRotY: Math.PI + 0.12,
-        vinylPos: new THREE.Vector3(7.5, -0.2, -1),
-      },
-      about: {
-        casePos: new THREE.Vector3(1.5, 0, 0),
-        caseRotY: Math.PI + 0.12,
-        vinylPos: new THREE.Vector3(7.5, -0.2, -1),
-      },
-    };
-    caseGroup.position.copy(targets.menu.casePos);
-    vinylGroup.position.copy(targets.menu.vinylPos);
-    const caseBase = targets.menu.casePos.clone();
-    const vinylBase = targets.menu.vinylPos.clone();
+    /* ----- 滚动旅程关键帧（Shopify Editions 式：滚动进度驱动布局） -----
+       站点结构：S0 菜单 · S1..SW 作品章节 · S(W+1) 关于 */
+    const W = worksRef.current.length;
+    const s1 = 1 / (W + 1); // 第一屏作品章节的进度位置
+    const s6 = W / (W + 1); // 最后一屏作品章节的进度位置
+
+    // CD 盒：菜单主角 → 章节时推出画面左侧深处当远景层 → 关于屏回到台前展示盒背
+    const caseX: ReadonlyArray<readonly [number, number]> = [[0, 0.9], [s1, -6.4], [s6, -4.6], [1, 1.5]];
+    const caseY: ReadonlyArray<readonly [number, number]> = [[0, 0], [s1, 0.6], [s6, -0.4], [1, 0]];
+    const caseZ: ReadonlyArray<readonly [number, number]> = [[0, 0], [s1, -4.2], [s6, -3.4], [1, 0]];
+    const caseRot: ReadonlyArray<readonly [number, number]> = [[0, -0.18], [s1, 0.5], [s6, -0.9], [1, Math.PI + 0.12]];
+
+    // 黑胶：菜单屏藏在右侧 → 章节屏滑入成为主角 → 关于屏从左侧离场
+    const vinX: ReadonlyArray<readonly [number, number]> = [[0, 7.5], [s1, 1.15], [s6, 1.35], [1, -6.8]];
+    const vinY: ReadonlyArray<readonly [number, number]> = [[0, -0.2], [s1, -0.05], [s6, 0], [1, 0.4]];
+    const vinZ: ReadonlyArray<readonly [number, number]> = [[0, -1], [s1, 0], [s6, 0], [1, -2]];
+
+    // 相机：章节中段轻轻推近，结尾再拉回来
+    const camZ: ReadonlyArray<readonly [number, number]> = [[0, 7.4], [s1 * 0.5, 6.8], [s6, 6.6], [1, 7.0]];
+    const camY: ReadonlyArray<readonly [number, number]> = [[0, 0.1], [0.5, 0.28], [1, 0]];
+
+    const caseBase = new THREE.Vector3(kf(caseX, 0), kf(caseY, 0), kf(caseZ, 0));
+    const vinylBase = new THREE.Vector3(kf(vinX, 0), kf(vinY, 0), kf(vinZ, 0));
+    caseGroup.position.copy(caseBase);
+    vinylGroup.position.copy(vinylBase);
+    caseGroup.rotation.y = kf(caseRot, 0);
+    const caseTarget = new THREE.Vector3();
+    const vinylTarget = new THREE.Vector3();
 
     /* ----- 鼠标视差 ----- */
     const pointer = { x: 0, y: 0 };
@@ -551,57 +578,87 @@ export default function Scene3D({ screen, index, glitchKey, works }: Props) {
     const clock = new THREE.Clock();
     let raf = 0;
     let glitchAmount = 0.035;
+    let detailT = 0; // 档案模式混合权重
     const punch = new THREE.Vector3();
 
     const animate = () => {
       raf = requestAnimationFrame(animate);
       const dt = Math.min(clock.getDelta(), 0.05);
       const t = clock.elapsedTime;
-      const s = targets[screenRef.current];
       const k = 1 - Math.exp(-dt * 3.2);
 
-      caseBase.lerp(s.casePos, k);
-      vinylBase.lerp(s.vinylPos, k);
+      // 滚动进度与速度（由外层 rAF 平滑后写入）
+      const p = scrollRef.current.p;
+      const v = scrollRef.current.v;
+      const sv = Math.min(Math.abs(v), 4);
+
+      // 档案模式：叠加混合到盒背特写
+      detailT += ((modeRef.current === "detail" ? 1 : 0) - detailT) * (1 - Math.exp(-dt * 4));
+
+      const jr = kf(caseRot, p);
+      caseTarget.set(
+        lerpNum(kf(caseX, p), 1.5, detailT),
+        lerpNum(kf(caseY, p), 0, detailT),
+        lerpNum(kf(caseZ, p), 0, detailT)
+      );
+      vinylTarget.set(
+        lerpNum(kf(vinX, p), 7.5, detailT),
+        lerpNum(kf(vinY, p), -0.2, detailT),
+        lerpNum(kf(vinZ, p), -1, detailT)
+      );
+      const caseRotTarget = lerpNum(jr, Math.PI + 0.12, detailT);
+
+      caseBase.lerp(caseTarget, k);
+      vinylBase.lerp(vinylTarget, k);
       caseGroup.position.set(
         caseBase.x,
         caseBase.y + Math.sin(t * 0.9) * 0.06,
         caseBase.z
       );
       vinylGroup.position.copy(vinylBase);
-      caseGroup.rotation.y += (s.caseRotY - caseGroup.rotation.y) * k;
+      caseGroup.rotation.y += (caseRotTarget - caseGroup.rotation.y) * k;
+      // 滚动惯性侧倾：快速滚动时盒体顺着滚动方向压一下
+      caseGroup.rotation.z +=
+        (Math.max(-0.08, Math.min(0.08, v * 0.05)) - caseGroup.rotation.z) * k;
 
-      // 视差（菜单态最明显）
-      const parallax = screenRef.current === "menu" ? 1 : 0.35;
+      // 鼠标视差（菜单屏最明显，进入章节后收敛）
+      const parallax = Math.max(0, 1 - p / (s1 * 0.7));
       caseGroup.rotation.x += (pointer.y * 0.1 * parallax - caseGroup.rotation.x) * k;
       vinylGroup.rotation.y = Math.sin(t * 0.5) * 0.08;
 
-      // 盘面旋转
-      discFace.rotation.z -= dt * 0.45;
-      if (screenRef.current === "chapters") vinylFace.rotation.z -= dt * 1.1;
+      // 盘面转速随滚动速度加快（惯性手感）
+      discFace.rotation.z -= dt * (0.45 + sv * 1.2);
+      vinylFace.rotation.z -= dt * (0.5 + sv * 2.2);
 
-      // 微尘缓慢漂移
-      dust.rotation.z = t * 0.008;
-      dust.rotation.y = t * 0.012;
+      // 双层微尘差速漂移；近层随滚动反向窜动
+      dustFar.rotation.z = t * 0.008;
+      dustFar.rotation.y = t * 0.012;
+      dustNear.rotation.z = -t * 0.014;
+      dustNear.rotation.y = t * 0.02;
+      dustNear.position.y += (v * 0.9 - dustNear.position.y) * k;
 
       // 切换作品时重绘黑胶标签
       if (vinylDirtyRef.current) {
         vinylDirtyRef.current = false;
-        drawVinylLabel(vinyl.ctx, worksRef.current[indexRef.current]);
+        drawVinylLabel(vinyl.ctx, worksRef.current[activeWorkRef.current]);
         vinyl.tex.needsUpdate = true;
       }
 
-      // 故障强度：转场尖峰后衰减回底噪
+      // 故障强度：换屏尖峰后衰减回底噪；快速滚动时追加速度噪声
       if (glitchSpikeRef.current > 0) {
-        glitchAmount = 1;
+        glitchAmount = 0.6;
         glitchSpikeRef.current = 0;
         punch.set((Math.random() - 0.5) * 0.25, (Math.random() - 0.5) * 0.2, 0);
       }
       glitchAmount += (0.035 - glitchAmount) * (1 - Math.exp(-dt * 2.2));
-      glitchPass.uniforms.uAmount.value = glitchAmount;
+      glitchPass.uniforms.uAmount.value = Math.min(
+        glitchAmount + Math.min(sv * 0.1, 0.28),
+        0.9
+      );
       glitchPass.uniforms.uTime.value = t;
 
       punch.multiplyScalar(1 - Math.min(dt * 5, 1));
-      camera.position.set(punch.x, 0.1 + punch.y, 7.4);
+      camera.position.set(punch.x, kf(camY, p) + punch.y, kf(camZ, p));
       camera.lookAt(0.4, 0, 0);
 
       composer.render();
@@ -613,7 +670,7 @@ export default function Scene3D({ screen, index, glitchKey, works }: Props) {
       window.removeEventListener("pointermove", onPointer);
       window.removeEventListener("resize", onResize);
       scene.traverse((obj) => {
-        if (obj instanceof THREE.Mesh) {
+        if (obj instanceof THREE.Mesh || obj instanceof THREE.Points) {
           obj.geometry.dispose();
           const mats = Array.isArray(obj.material) ? obj.material : [obj.material];
           mats.forEach((m) => {
@@ -629,6 +686,7 @@ export default function Scene3D({ screen, index, glitchKey, works }: Props) {
         mount.removeChild(renderer.domElement);
       }
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return <div ref={mountRef} className="absolute inset-0" data-print-hidden="true" />;

@@ -1,9 +1,9 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { works } from "./works";
-import type { PortfolioScreen } from "./Scene3D";
+import type { PortfolioMode, ScrollState } from "./Scene3D";
 
 const Scene3D = dynamic(() => import("./Scene3D"), { ssr: false });
 
@@ -63,25 +63,18 @@ function StaticPortfolio({ hidden }: { hidden: boolean }) {
   );
 }
 
-const SCREEN_LABEL: Record<PortfolioScreen, string> = {
-  menu: "MENU · 主菜单",
-  chapters: "CHAPTERS · 作品章节",
-  detail: "ARCHIVE · 作品档案",
-  about: "ABOUT · 关于",
-};
-
-const SCREEN_HINT: Record<PortfolioScreen, string> = {
-  menu: "点击贴纸开始浏览",
-  chapters: "↑↓ 切换作品 · 回车查看 · ESC 返回",
-  detail: "ESC 返回章节列表",
-  about: "ESC 返回主菜单",
-};
-
 export default function PortfolioExperience() {
   const [capable, setCapable] = useState(false);
-  const [screen, setScreen] = useState<PortfolioScreen>("menu");
-  const [index, setIndex] = useState(0);
+  const [mode, setMode] = useState<PortfolioMode>("journey");
+  const [section, setSection] = useState(0);
   const [glitchKey, setGlitchKey] = useState(0);
+  const scrollRef = useRef<ScrollState>({ p: 0, v: 0 });
+  const liveRef = useRef<HTMLDivElement>(null);
+  const sectionRef = useRef(0);
+
+  const N = works.length + 2; // S0 菜单 + 每作品一屏 + 关于
+  const ABOUT = N - 1;
+  const activeWork = Math.min(Math.max(section - 1, 0), works.length - 1);
 
   useEffect(() => {
     const ok = (() => {
@@ -99,41 +92,147 @@ export default function PortfolioExperience() {
     setCapable(ok);
   }, []);
 
-  const go = useCallback((s: PortfolioScreen) => {
-    setScreen(s);
+  const scrollToSection = useCallback(
+    (i: number) => {
+      const idx = Math.min(Math.max(i, 0), N - 1);
+      window.scrollTo({ top: idx * window.innerHeight, behavior: "smooth" });
+    },
+    [N]
+  );
+
+  const openDetail = useCallback(() => {
+    setMode("detail");
+    setGlitchKey((k) => k + 1);
+  }, []);
+  const closeDetail = useCallback(() => {
+    setMode("journey");
     setGlitchKey((k) => k + 1);
   }, []);
 
-  const step = useCallback((d: number) => {
-    setIndex((i) => (i + d + works.length) % works.length);
-    setGlitchKey((k) => k + 1);
-  }, []);
+  /* 滚动驱动核心（Shopify Editions 的做法：滚动位置驱动渲染参数，而不是驱动 React 渲染）。
+     这里用 rAF 把原生滚动平滑成「惯性滚动值」，同一份值喂给 WebGL 与 DOM 视差层。 */
+  useEffect(() => {
+    if (!capable) return;
+    let raf = 0;
+    let smooth = window.scrollY;
+    let prev = smooth;
+    let last = performance.now();
 
+    type PxItem = { el: HTMLElement; f: number; center: number };
+    let pxItems: PxItem[] = [];
+    const docTop = (el: HTMLElement) => {
+      let y = 0;
+      let n: HTMLElement | null = el;
+      while (n) {
+        y += n.offsetTop;
+        n = n.offsetParent as HTMLElement | null;
+      }
+      return y;
+    };
+    const measure = () => {
+      const vh = window.innerHeight;
+      pxItems = Array.from(
+        liveRef.current?.querySelectorAll<HTMLElement>("[data-px]") ?? []
+      ).map((el) => {
+        const sec = (el.closest("section") as HTMLElement | null) ?? el;
+        return {
+          el,
+          f: parseFloat(el.dataset.px || "0"),
+          center: docTop(sec) + sec.offsetHeight / 2 - vh / 2,
+        };
+      });
+    };
+    measure();
+    window.addEventListener("resize", measure);
+
+    const tick = (now: number) => {
+      raf = requestAnimationFrame(tick);
+      const dt = Math.min((now - last) / 1000, 0.05);
+      last = now;
+      const max = Math.max((N - 1) * window.innerHeight, 1);
+      const target = window.scrollY;
+      smooth += (target - smooth) * (1 - Math.exp(-dt * 5));
+      const vScreens =
+        (smooth - prev) / Math.max(dt, 1e-4) / Math.max(window.innerHeight, 1);
+      prev = smooth;
+      scrollRef.current.p = Math.min(Math.max(smooth / max, 0), 1);
+      scrollRef.current.v = vScreens;
+      for (const it of pxItems) {
+        const rel = smooth - it.center;
+        it.el.style.transform = `translate3d(0, ${(-rel * it.f).toFixed(1)}px, 0)`;
+      }
+    };
+    raf = requestAnimationFrame(tick);
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener("resize", measure);
+    };
+  }, [capable, N]);
+
+  /* 章节跟踪：跨越章节边界时触发一次故障尖峰（VHS 换碟感） */
+  useEffect(() => {
+    if (!capable) return;
+    const onScroll = () => {
+      const i = Math.min(
+        Math.max(Math.round(window.scrollY / window.innerHeight), 0),
+        N - 1
+      );
+      if (i !== sectionRef.current) {
+        sectionRef.current = i;
+        setSection(i);
+        setGlitchKey((k) => k + 1);
+      }
+    };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [capable, N]);
+
+  /* 档案模式锁定背景滚动 */
+  useEffect(() => {
+    if (!capable) return;
+    document.documentElement.style.overflow = mode === "detail" ? "hidden" : "";
+    return () => {
+      document.documentElement.style.overflow = "";
+    };
+  }, [capable, mode]);
+
+  /* 键盘：↑↓ 切屏 · 回车进档案 · ESC 返回 */
   useEffect(() => {
     if (!capable) return;
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
-        if (screen === "detail") go("chapters");
-        else if (screen !== "menu") go("menu");
+        if (mode === "detail") closeDetail();
+        else scrollToSection(0);
         return;
       }
-      if (screen === "chapters") {
-        if (e.key === "ArrowUp" || e.key === "ArrowLeft") {
-          e.preventDefault();
-          step(-1);
-        } else if (e.key === "ArrowDown" || e.key === "ArrowRight") {
-          e.preventDefault();
-          step(1);
-        } else if (e.key === "Enter") {
-          go("detail");
-        }
+      if (mode === "detail") return;
+      if (e.key === "ArrowUp" || e.key === "ArrowLeft") {
+        e.preventDefault();
+        scrollToSection(section - 1);
+      } else if (e.key === "ArrowDown" || e.key === "ArrowRight") {
+        e.preventDefault();
+        scrollToSection(section + 1);
+      } else if (e.key === "Enter" && section >= 1 && section <= works.length) {
+        openDetail();
       }
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [capable, screen, go, step]);
+  }, [capable, mode, section, scrollToSection, openDetail, closeDetail]);
 
-  const work = works[index];
+  const hudLabel =
+    mode === "detail"
+      ? "ARCHIVE · 作品档案"
+      : section === 0
+        ? "MENU · 主菜单"
+        : section === ABOUT
+          ? "ABOUT · 关于"
+          : `CHAPTER ${String(section).padStart(2, "0")} · 作品章节`;
+  const hudHint =
+    mode === "detail" ? "ESC 返回章节" : "滚动浏览 · ↑↓ 切换 · 回车档案 · ESC 回顶部";
+
+  const detailWork = works[activeWork];
 
   return (
     <>
@@ -141,174 +240,220 @@ export default function PortfolioExperience() {
       <StaticPortfolio hidden={capable} />
 
       {capable && (
-        <div className="portfolio-live fixed inset-0 z-40 overflow-hidden bg-black">
-          {/* 氛围光 */}
-          <div data-print-hidden="true" className="absolute inset-0 pointer-events-none">
-            <div className="absolute top-[-15%] left-[-10%] w-[55vw] h-[55vw] bg-indigo-900/25 rounded-full blur-[140px] animate-pulse" />
-            <div className="absolute bottom-[-15%] right-[-10%] w-[55vw] h-[55vw] bg-emerald-900/20 rounded-full blur-[140px] animate-pulse" style={{ animationDelay: "1.6s" }} />
+        <div ref={liveRef} className="portfolio-live relative z-40 overflow-clip bg-black text-white">
+          {/* 氛围光（固定视口，柔和取向） */}
+          <div data-print-hidden="true" className="fixed inset-0 z-0 pointer-events-none">
+            <div className="absolute top-[-15%] left-[-10%] w-[55vw] h-[55vw] bg-indigo-900/20 rounded-full blur-[140px] animate-pulse" />
+            <div className="absolute bottom-[-15%] right-[-10%] w-[55vw] h-[55vw] bg-emerald-900/15 rounded-full blur-[140px] animate-pulse" style={{ animationDelay: "1.6s" }} />
           </div>
 
-          <Scene3D screen={screen} index={index} glitchKey={glitchKey} works={works} />
+          {/* WebGL 层：固定在视口，滚动进度驱动全部布局 */}
+          <div data-print-hidden="true" className="fixed inset-0 z-0 pointer-events-none">
+            <Scene3D
+              mode={mode}
+              activeWork={activeWork}
+              glitchKey={glitchKey}
+              works={works}
+              scrollRef={scrollRef}
+            />
+          </div>
 
           {/* HUD */}
-          <div className="pointer-events-none absolute inset-0 z-10 flex flex-col justify-between pt-16 pb-4 px-4 sm:px-6">
+          <div className="pointer-events-none fixed inset-0 z-20 flex flex-col justify-between pt-16 pb-4 px-4 sm:px-6">
             <div className="flex justify-end">
               <div className="text-right font-mono text-[11px] tracking-[0.22em] text-zinc-500">
                 <div className="text-zinc-200 text-xs">RXQ · MIXTAPE</div>
-                <div>{SCREEN_LABEL[screen]}</div>
+                <div>{hudLabel}</div>
               </div>
             </div>
             <div className="flex items-end justify-between font-mono text-[11px] text-zinc-600">
               <div>液态像素艺术工作室 · 任玄奇作品集</div>
-              <div className="text-zinc-500">{SCREEN_HINT[screen]}</div>
+              <div className="text-zinc-500">{hudHint}</div>
             </div>
           </div>
 
-          {/* 主菜单：贴纸 */}
-          {screen === "menu" && (
-            <div className="absolute z-20 left-[7%] top-1/2 -translate-y-1/2 flex flex-col items-start gap-7">
+          {/* 章节进度轨道 */}
+          <div className="fixed right-4 top-1/2 -translate-y-1/2 z-20 flex flex-col gap-2.5">
+            {Array.from({ length: N }).map((_, i) => (
               <button
+                key={i}
                 type="button"
-                onClick={() => go("chapters")}
-                className="sticker-star pointer-events-auto"
-                aria-label="进入作品章节"
-              >
-                <span className="text-lg leading-snug">
-                  进入
-                  <br />
-                  作品
-                </span>
-              </button>
-              <button
-                type="button"
-                onClick={() => go("about")}
-                className="sticker-card pointer-events-auto"
-                aria-label="关于任玄奇"
-              >
-                <span className="sticker-card-title">关于任玄奇</span>
-                <span className="sticker-card-sub">REN XUANQI</span>
-                <span className="sticker-card-wave">～～～</span>
-              </button>
-              <a href="/" className="sticker-barcode pointer-events-auto" aria-label="返回工作室首页">
-                <span className="sticker-barcode-bars" />
-                <span className="sticker-barcode-label">返回首页 · EXIT</span>
-              </a>
-            </div>
-          )}
+                onClick={() => scrollToSection(i)}
+                aria-label={
+                  i === 0 ? "跳到主菜单" : i === ABOUT ? "跳到关于" : `跳到作品 ${i}`
+                }
+                className={`h-1.5 w-1.5 rounded-full transition-colors ${
+                  i === section ? "bg-white scale-125" : "bg-zinc-700 hover:bg-zinc-400"
+                }`}
+              />
+            ))}
+          </div>
 
-          {/* 章节选择 */}
-          {screen === "chapters" && (
-            <div className="absolute z-20 left-[7%] top-1/2 -translate-y-1/2 max-w-md">
-              <p className="font-mono text-[11px] tracking-[0.22em] text-zinc-500 mb-5">
-                CHAPTERS · 作品章节
-              </p>
-              <div className="flex flex-col items-start gap-1 mb-5">
-                <button
-                  type="button"
-                  onClick={() => step(-1)}
-                  className="pointer-events-auto text-zinc-400 hover:text-white transition-colors text-2xl leading-none px-1"
-                  aria-label="上一个作品"
+          {/* 滚动内容层 */}
+          <main className="relative z-10">
+            {/* S0 · 主菜单（贴纸） */}
+            <section className="relative h-screen">
+              <div className="absolute left-[7%] top-1/2 -translate-y-1/2">
+                <div data-px="0.05" className="flex flex-col items-start gap-7">
+                  <button
+                    type="button"
+                    onClick={() => scrollToSection(1)}
+                    className="sticker-star pointer-events-auto"
+                    aria-label="进入作品章节"
+                  >
+                    <span className="text-lg leading-snug">
+                      进入
+                      <br />
+                      作品
+                    </span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => scrollToSection(ABOUT)}
+                    className="sticker-card pointer-events-auto"
+                    aria-label="关于任玄奇"
+                  >
+                    <span className="sticker-card-title">关于任玄奇</span>
+                    <span className="sticker-card-sub">REN XUANQI</span>
+                    <span className="sticker-card-wave">～～～</span>
+                  </button>
+                  <a href="/" className="sticker-barcode pointer-events-auto" aria-label="返回工作室首页">
+                    <span className="sticker-barcode-bars" />
+                    <span className="sticker-barcode-label">返回首页 · EXIT</span>
+                  </a>
+                </div>
+              </div>
+              <div className="absolute bottom-8 left-1/2 -translate-x-1/2 font-mono text-[11px] tracking-[0.3em] text-zinc-500 animate-bounce">
+                SCROLL ↓
+              </div>
+            </section>
+
+            {/* S1..SW · 作品章节 */}
+            {works.map((w, i) => (
+              <section
+                key={w.id}
+                className="relative h-screen flex items-center overflow-hidden"
+              >
+                <div
+                  data-px="-0.2"
+                  aria-hidden="true"
+                  className="pointer-events-none select-none absolute right-[5%] top-[8%] text-[24vw] leading-none font-bold text-transparent [-webkit-text-stroke:2px_rgba(255,255,255,0.13)]"
                 >
-                  ∧
-                </button>
-                <h1 className="text-4xl md:text-5xl font-semibold tracking-tight leading-tight">
-                  {work.title}
+                  {String(i + 1).padStart(2, "0")}
+                </div>
+                <div className="px-[7%] max-w-xl">
+                  <p data-px="0.06" className="font-mono text-[11px] tracking-[0.22em] text-zinc-500 mb-5">
+                    CHAPTER {String(i + 1).padStart(2, "0")} · 作品章节
+                  </p>
+                  <h1 data-px="0.03" className="text-4xl md:text-6xl font-semibold tracking-tight leading-tight mb-5">
+                    {w.title}
+                  </h1>
+                  <p data-px="0.09" className="text-zinc-400 text-sm mb-2">
+                    {w.year} · {w.medium}
+                  </p>
+                  <p data-px="0.12" className="font-mono text-xs text-zinc-600 mb-9">
+                    {String(i + 1).padStart(2, "0")} / {String(works.length).padStart(2, "0")}
+                  </p>
+                  <div data-px="0.14" className="flex items-center gap-3">
+                    <button
+                      type="button"
+                      onClick={openDetail}
+                      className="bg-white text-black px-5 py-2.5 rounded-md text-sm font-medium hover:bg-zinc-200 transition-colors"
+                    >
+                      ▶ 查看档案
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => scrollToSection(i + 2)}
+                      className="border border-white/30 px-5 py-2.5 rounded-md text-sm hover:bg-white hover:text-black transition-colors"
+                    >
+                      下一屏 ↓
+                    </button>
+                  </div>
+                </div>
+              </section>
+            ))}
+
+            {/* S(N-1) · 关于 */}
+            <section className="relative h-screen flex items-center">
+              <div className="px-[7%] max-w-xl">
+                <p data-px="0.06" className="font-mono text-[11px] tracking-[0.22em] text-zinc-500 mb-5">
+                  ABOUT · 关于
+                </p>
+                <h1 data-px="0.03" className="text-3xl md:text-5xl font-semibold tracking-tight mb-6">
+                  任玄奇
                 </h1>
-                <button
-                  type="button"
-                  onClick={() => step(1)}
-                  className="pointer-events-auto text-zinc-400 hover:text-white transition-colors text-2xl leading-none px-1"
-                  aria-label="下一个作品"
-                >
-                  ∨
-                </button>
+                <p data-px="0.09" className="text-zinc-400 text-sm leading-relaxed mb-4">
+                  简介占位：任玄奇的创作方向、教育背景、展览与获奖经历将在这里呈现，正式文案确认后替换。
+                </p>
+                <p data-px="0.12" className="text-zinc-500 text-sm leading-relaxed mb-9">
+                  液态像素艺术工作室 · 企业团队与艺术家技术协作
+                </p>
+                <div data-px="0.14" className="flex items-center gap-3">
+                  <button
+                    type="button"
+                    onClick={() => scrollToSection(0)}
+                    className="border border-white/30 px-5 py-2.5 rounded-md text-sm hover:bg-white hover:text-black transition-colors"
+                  >
+                    ↑ 回到主菜单
+                  </button>
+                  <a
+                    href="/"
+                    className="border border-white/30 px-5 py-2.5 rounded-md text-sm hover:bg-white hover:text-black transition-colors"
+                  >
+                    返回工作室首页
+                  </a>
+                </div>
               </div>
-              <p className="text-zinc-400 text-sm mb-2">
-                {work.year} · {work.medium}
-              </p>
-              <p className="font-mono text-xs text-zinc-600 mb-8">
-                {String(index + 1).padStart(2, "0")} / {String(works.length).padStart(2, "0")}
-              </p>
-              <div className="flex items-center gap-3">
-                <button
-                  type="button"
-                  onClick={() => go("detail")}
-                  className="pointer-events-auto bg-white text-black px-5 py-2.5 rounded-md text-sm font-medium hover:bg-zinc-200 transition-colors"
-                >
-                  ▶ 进入作品
-                </button>
-                <button
-                  type="button"
-                  onClick={() => go("menu")}
-                  className="pointer-events-auto border border-white/30 px-5 py-2.5 rounded-md text-sm hover:bg-white hover:text-black transition-colors"
-                >
-                  ← 返回菜单
-                </button>
-              </div>
-            </div>
-          )}
+            </section>
+          </main>
 
-          {/* 作品档案（盒背） */}
-          {screen === "detail" && (
-            <div className="absolute z-20 left-[6%] top-1/2 -translate-y-1/2 w-[min(30rem,44vw)]">
-              <p className="font-mono text-[11px] tracking-[0.22em] text-zinc-500 mb-5">
-                ARCHIVE · 作品档案
-              </p>
-              <h1 className="text-3xl md:text-4xl font-semibold tracking-tight mb-6">{work.title}</h1>
-              <dl className="border-t border-zinc-800 divide-y divide-zinc-800/70 text-sm mb-6">
-                <div className="flex justify-between py-3">
-                  <dt className="text-zinc-500">年份</dt>
-                  <dd className="text-zinc-200 font-mono">{work.year}</dd>
+          {/* 作品档案（盒背特写） */}
+          {mode === "detail" && (
+            <div className="fixed inset-0 z-30">
+              <div className="absolute inset-0 bg-gradient-to-r from-black/95 via-black/70 to-transparent pointer-events-none" />
+              <div className="absolute left-[6%] top-1/2 -translate-y-1/2 w-[min(30rem,44vw)]">
+                <p className="font-mono text-[11px] tracking-[0.22em] text-zinc-500 mb-5">
+                  ARCHIVE · 作品档案
+                </p>
+                <h1 className="text-3xl md:text-4xl font-semibold tracking-tight mb-6">
+                  {detailWork.title}
+                </h1>
+                <dl className="border-t border-zinc-800 divide-y divide-zinc-800/70 text-sm mb-6">
+                  <div className="flex justify-between py-3">
+                    <dt className="text-zinc-500">年份</dt>
+                    <dd className="text-zinc-200 font-mono">{detailWork.year}</dd>
+                  </div>
+                  <div className="flex justify-between py-3">
+                    <dt className="text-zinc-500">媒介</dt>
+                    <dd className="text-zinc-200">{detailWork.medium}</dd>
+                  </div>
+                  <div className="flex justify-between py-3">
+                    <dt className="text-zinc-500">编号</dt>
+                    <dd className="text-zinc-200 font-mono">{detailWork.id.toUpperCase()}</dd>
+                  </div>
+                </dl>
+                <p className="text-zinc-400 text-sm leading-relaxed mb-8">{detailWork.description}</p>
+                <div className="flex items-center gap-3">
+                  <button
+                    type="button"
+                    onClick={closeDetail}
+                    className="pointer-events-auto bg-white text-black px-5 py-2.5 rounded-md text-sm font-medium hover:bg-zinc-200 transition-colors"
+                  >
+                    ← 返回章节
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      closeDetail();
+                      scrollToSection(0);
+                    }}
+                    className="pointer-events-auto border border-white/30 px-5 py-2.5 rounded-md text-sm hover:bg-white hover:text-black transition-colors"
+                  >
+                    菜单
+                  </button>
                 </div>
-                <div className="flex justify-between py-3">
-                  <dt className="text-zinc-500">媒介</dt>
-                  <dd className="text-zinc-200">{work.medium}</dd>
-                </div>
-                <div className="flex justify-between py-3">
-                  <dt className="text-zinc-500">编号</dt>
-                  <dd className="text-zinc-200 font-mono">{work.id.toUpperCase()}</dd>
-                </div>
-              </dl>
-              <p className="text-zinc-400 text-sm leading-relaxed mb-8">{work.description}</p>
-              <div className="flex items-center gap-3">
-                <button
-                  type="button"
-                  onClick={() => go("chapters")}
-                  className="pointer-events-auto bg-white text-black px-5 py-2.5 rounded-md text-sm font-medium hover:bg-zinc-200 transition-colors"
-                >
-                  ← 返回章节
-                </button>
-                <button
-                  type="button"
-                  onClick={() => go("menu")}
-                  className="pointer-events-auto border border-white/30 px-5 py-2.5 rounded-md text-sm hover:bg-white hover:text-black transition-colors"
-                >
-                  菜单
-                </button>
               </div>
-            </div>
-          )}
-
-          {/* 关于 */}
-          {screen === "about" && (
-            <div className="absolute z-20 left-[6%] top-1/2 -translate-y-1/2 w-[min(30rem,44vw)]">
-              <p className="font-mono text-[11px] tracking-[0.22em] text-zinc-500 mb-5">
-                ABOUT · 关于
-              </p>
-              <h1 className="text-3xl md:text-4xl font-semibold tracking-tight mb-6">任玄奇</h1>
-              <p className="text-zinc-400 text-sm leading-relaxed mb-4">
-                简介占位：任玄奇的创作方向、教育背景、展览与获奖经历将在这里呈现，正式文案确认后替换。
-              </p>
-              <p className="text-zinc-500 text-sm leading-relaxed mb-8">
-                液态像素艺术工作室 · 企业团队与艺术家技术协作
-              </p>
-              <button
-                type="button"
-                onClick={() => go("menu")}
-                className="pointer-events-auto border border-white/30 px-5 py-2.5 rounded-md text-sm hover:bg-white hover:text-black transition-colors"
-              >
-                ← 返回菜单
-              </button>
             </div>
           )}
         </div>
