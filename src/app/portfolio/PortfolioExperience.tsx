@@ -350,7 +350,7 @@ export default function PortfolioExperience() {
                 className="relative h-screen flex items-center overflow-hidden"
               >
                 <div
-                  data-px="-0.2"
+                  data-px="-0.32"
                   aria-hidden="true"
                   className="pointer-events-none select-none absolute right-[5%] top-[8%] text-[24vw] leading-none font-bold text-transparent [-webkit-text-stroke:2px_rgba(255,255,255,0.13)]"
                 >

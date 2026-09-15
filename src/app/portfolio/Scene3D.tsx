@@ -574,17 +574,55 @@ export default function Scene3D({ mode, activeWork, glitchKey, works, scrollRef 
     const caseZ: ReadonlyArray<readonly [number, number]> = [[0, 0], [s1, -4.2], [s6, -3.4], [1, 0]];
     const caseRot: ReadonlyArray<readonly [number, number]> = [[0, -0.18], [s1, 0.5], [s6, -0.9], [1, Math.PI + 0.12]];
 
-    // 黑胶：菜单屏藏在右侧 → 章节屏滑入成为主角 → 关于屏从左侧离场
-    const vinX: ReadonlyArray<readonly [number, number]> = [[0, 7.5], [s1, 1.15], [s6, 1.35], [1, -6.8]];
-    const vinY: ReadonlyArray<readonly [number, number]> = [[0, -0.2], [s1, -0.05], [s6, 0], [1, 0.4]];
-    const vinZ: ReadonlyArray<readonly [number, number]> = [[0, -1], [s1, 0], [s6, 0], [1, -2]];
+    // 黑胶（传送带式）：每一屏作品时间里，唱片从右侧飞入 → 台前展示 → 左侧飞出，
+    // 滚轮每滚一点唱片就随之移动，下一屏带着新作品图再飞进来
+    const smooth01 = (t: number) => t * t * (3 - 2 * t);
+    type VinylPose = { x: number; y: number; z: number; rotY: number; scale: number };
+    const vinylChapterPose = (q: number): VinylPose => {
+      const enter = smooth01(Math.min(q / 0.32, 1)); // 前 32% 屏：飞入
+      const exit = smooth01(Math.max(0, (q - 0.68) / 0.32)); // 后 32% 屏：飞出
+      return {
+        x: lerpNum(lerpNum(5.4, 1.05, enter), -5.4, exit),
+        y: lerpNum(lerpNum(-0.9, -0.05, enter), 0.9, exit),
+        z: lerpNum(lerpNum(-2.6, 0, enter), -2.6, exit),
+        rotY: lerpNum(lerpNum(-1.05, 0, enter), 1.05, exit),
+        scale: lerpNum(lerpNum(0.55, 1, enter), 0.55, exit),
+      };
+    };
+    // f = 当前屏浮点位置（0=菜单，i=第 i 个作品章节满屏，W+1=关于）。
+    // DOM 章节在 f=i±0.5 处切换（round），唱片姿态窗口与之一一对应：
+    // 章节文字进入视野时唱片同步从右侧飞入，文字离开时唱片飞出
+    const vinylPoseAt = (p: number): VinylPose => {
+      const f = p * (W + 1);
+      if (f < 0.5) {
+        // 菜单：藏在右侧 → 接近第一章时滑向入场预备位
+        const t = smooth01(f / 0.5);
+        const q0 = vinylChapterPose(0);
+        return {
+          x: lerpNum(7.5, q0.x, t), y: lerpNum(-0.2, q0.y, t), z: lerpNum(-1, q0.z, t),
+          rotY: lerpNum(0, q0.rotY, t), scale: lerpNum(1, q0.scale, t),
+        };
+      }
+      if (f >= W + 0.5) {
+        // 关于：从最后一章飞出位继续向左离场
+        const t = smooth01(Math.min((f - W - 0.5) / 0.5, 1));
+        const q1 = vinylChapterPose(1);
+        return {
+          x: lerpNum(q1.x, -6.8, t), y: lerpNum(q1.y, 0.4, t), z: lerpNum(q1.z, -2, t),
+          rotY: lerpNum(q1.rotY, 0.6, t), scale: lerpNum(q1.scale, 0.5, t),
+        };
+      }
+      const i = Math.min(Math.max(Math.round(f), 1), W);
+      return vinylChapterPose(f - (i - 0.5));
+    };
 
     // 相机：章节中段轻轻推近，结尾再拉回来
     const camZ: ReadonlyArray<readonly [number, number]> = [[0, 7.4], [s1 * 0.5, 6.8], [s6, 6.6], [1, 7.0]];
     const camY: ReadonlyArray<readonly [number, number]> = [[0, 0.1], [0.5, 0.28], [1, 0]];
 
     const caseBase = new THREE.Vector3(kf(caseX, 0), kf(caseY, 0), kf(caseZ, 0));
-    const vinylBase = new THREE.Vector3(kf(vinX, 0), kf(vinY, 0), kf(vinZ, 0));
+    const initPose = vinylPoseAt(0);
+    const vinylBase = new THREE.Vector3(initPose.x, initPose.y, initPose.z);
     caseGroup.position.copy(caseBase);
     vinylGroup.position.copy(vinylBase);
     caseGroup.rotation.y = kf(caseRot, 0);
@@ -636,21 +674,26 @@ export default function Scene3D({ mode, activeWork, glitchKey, works, scrollRef 
         lerpNum(kf(caseY, p), 0, detailT),
         lerpNum(kf(caseZ, p), 0, detailT)
       );
+      const vp = vinylPoseAt(p);
       vinylTarget.set(
-        lerpNum(kf(vinX, p), 7.5, detailT),
-        lerpNum(kf(vinY, p), -0.2, detailT),
-        lerpNum(kf(vinZ, p), -1, detailT)
+        lerpNum(vp.x, 7.5, detailT),
+        lerpNum(vp.y, -0.2, detailT),
+        lerpNum(vp.z, -1, detailT)
       );
       const caseRotTarget = lerpNum(jr, Math.PI + 0.12, detailT);
 
       caseBase.lerp(caseTarget, k);
-      vinylBase.lerp(vinylTarget, k);
+      // 章节边界处目标点会从「飞出左缘」瞬移到「飞入右缘」——两点都在画面外，
+      // 直接跳变，避免插值扫过画面中央
+      if (vinylTarget.distanceTo(vinylBase) > 8) vinylBase.copy(vinylTarget);
+      else vinylBase.lerp(vinylTarget, k);
       caseGroup.position.set(
         caseBase.x,
         caseBase.y + Math.sin(t * 0.9) * 0.06,
         caseBase.z
       );
       vinylGroup.position.copy(vinylBase);
+      vinylGroup.scale.setScalar(lerpNum(vp.scale, 1, detailT));
       caseGroup.rotation.y += (caseRotTarget - caseGroup.rotation.y) * k;
       // 滚动惯性侧倾：快速滚动时盒体顺着滚动方向压一下
       caseGroup.rotation.z +=
@@ -659,11 +702,12 @@ export default function Scene3D({ mode, activeWork, glitchKey, works, scrollRef 
       // 鼠标视差（菜单屏最明显，进入章节后收敛）
       const parallax = Math.max(0, 1 - p / (s1 * 0.7));
       caseGroup.rotation.x += (pointer.y * 0.1 * parallax - caseGroup.rotation.x) * k;
-      vinylGroup.rotation.y = Math.sin(t * 0.5) * 0.08;
+      // 唱片朝向随传送带姿态 + 轻微怠速摇摆
+      vinylGroup.rotation.y = vp.rotY * (1 - detailT) + Math.sin(t * 0.5) * 0.04;
 
-      // 盘面转速随滚动速度加快（惯性手感）
+      // 盘面转速随滚动速度加快（惯性手感，滚轮快转时碟面明显飞转）
       discFace.rotation.z -= dt * (0.45 + sv * 1.2);
-      vinylFace.rotation.z -= dt * (0.5 + sv * 2.2);
+      vinylFace.rotation.z -= dt * (0.6 + sv * 4.5);
 
       // 双层微尘差速漂移；近层随滚动反向窜动
       dustFar.rotation.z = t * 0.008;
@@ -694,7 +738,12 @@ export default function Scene3D({ mode, activeWork, glitchKey, works, scrollRef 
       glitchPass.uniforms.uTime.value = t;
 
       punch.multiplyScalar(1 - Math.min(dt * 5, 1));
-      camera.position.set(punch.x, kf(camY, p) + punch.y, kf(camZ, p));
+      // 每个章节中段相机轻推近，进出章节时拉回（配合传送带节奏）
+      const fNow = p * (W + 1);
+      const iNow = Math.min(Math.max(Math.round(fNow), 1), W);
+      const qNow = fNow >= 0.5 && fNow < W + 0.5 ? fNow - (iNow - 0.5) : 0;
+      const camPush = Math.sin(Math.min(Math.max(qNow, 0), 1) * Math.PI) * 0.35;
+      camera.position.set(punch.x, kf(camY, p) + punch.y, kf(camZ, p) - camPush);
       camera.lookAt(0.4, 0, 0);
 
       composer.render();
