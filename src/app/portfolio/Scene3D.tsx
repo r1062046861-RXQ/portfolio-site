@@ -148,8 +148,8 @@ function makeDiscTexture(): THREE.CanvasTexture {
   return tex;
 }
 
-/** 黑胶贴图：碟纹 + 当前作品标签；可重绘复用 */
-function drawVinylLabel(ctx: CanvasRenderingContext2D, work: Work) {
+/** 黑胶贴图：碟纹 + 当前作品标签（有代表图时以图入签）；可重绘复用 */
+function drawVinylLabel(ctx: CanvasRenderingContext2D, work: Work, img?: HTMLImageElement) {
   ctx.clearRect(0, 0, 512, 512);
   ctx.fillStyle = "#0a0a0a";
   ctx.beginPath();
@@ -189,18 +189,43 @@ function drawVinylLabel(ctx: CanvasRenderingContext2D, work: Work) {
   ctx.arc(256, 256, 246, 0, Math.PI * 2);
   ctx.stroke();
 
-  ctx.fillStyle = `hsl(${work.hue}, 58%, 46%)`;
+  // 标签芯：优先用作品代表图（圆形裁切 + 底部压暗），否则用色相兜底
+  ctx.save();
   ctx.beginPath();
   ctx.arc(256, 256, 108, 0, Math.PI * 2);
-  ctx.fill();
+  ctx.clip();
+  if (img && img.naturalWidth > 0) {
+    const s = Math.max(216 / img.naturalWidth, 216 / img.naturalHeight);
+    const dw = img.naturalWidth * s;
+    const dh = img.naturalHeight * s;
+    ctx.drawImage(img, 256 - dw / 2, 256 - dh / 2, dw, dh);
+    // 底部压暗，保证文字可读
+    const shade = ctx.createLinearGradient(0, 190, 0, 364);
+    shade.addColorStop(0, "rgba(0,0,0,0)");
+    shade.addColorStop(1, "rgba(0,0,0,0.55)");
+    ctx.fillStyle = shade;
+    ctx.fillRect(148, 148, 216, 216);
+  } else {
+    ctx.fillStyle = `hsl(${work.hue}, 58%, 46%)`;
+    ctx.fillRect(148, 148, 216, 216);
+  }
+  ctx.restore();
+  ctx.strokeStyle = "rgba(255,255,255,0.25)";
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.arc(256, 256, 108, 0, Math.PI * 2);
+  ctx.stroke();
 
-  ctx.fillStyle = "rgba(255,255,255,0.92)";
+  ctx.fillStyle = "rgba(255,255,255,0.95)";
+  ctx.shadowColor = "rgba(0,0,0,0.8)";
+  ctx.shadowBlur = 8;
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
-  ctx.font = "bold 40px 'Microsoft YaHei', 'PingFang SC', sans-serif";
-  ctx.fillText(work.title, 256, 236);
-  ctx.font = "22px monospace";
-  ctx.fillText(`${work.year} · ${work.id.toUpperCase()}`, 256, 290);
+  ctx.font = "bold 34px 'Microsoft YaHei', 'PingFang SC', sans-serif";
+  ctx.fillText(work.title, 256, 238, 200);
+  ctx.font = "20px monospace";
+  ctx.fillText(`${work.year} · ${work.id.toUpperCase()}`, 256, 292, 200);
+  ctx.shadowBlur = 0;
 
   ctx.globalCompositeOperation = "destination-out";
   ctx.beginPath();
@@ -223,28 +248,29 @@ function makeTrayTexture(works: Work[]): THREE.CanvasTexture {
   ctx.fillStyle = "#0c0c0e";
   ctx.fillRect(0, 0, 512, 576);
   ctx.fillStyle = "rgba(255,255,255,0.85)";
-  ctx.font = "bold 34px monospace";
+  ctx.font = "bold 28px monospace";
   ctx.textAlign = "left";
-  ctx.fillText("SIDE A", 48, 72);
+  ctx.fillText("SIDE A", 48, 54);
   ctx.fillStyle = "rgba(255,255,255,0.35)";
-  ctx.fillRect(48, 92, 416, 2);
+  ctx.fillRect(48, 72, 416, 2);
+  // 17 首曲目：行距 26.5px，起始 y=100，长标题限宽压缩
   works.forEach((w, i) => {
-    const y = 150 + i * 62;
+    const y = 100 + i * 26.5;
     ctx.fillStyle = `hsl(${w.hue}, 58%, 55%)`;
-    ctx.font = "bold 24px monospace";
+    ctx.font = "bold 15px monospace";
     ctx.fillText(String(i + 1).padStart(2, "0"), 48, y);
     ctx.fillStyle = "rgba(255,255,255,0.8)";
-    ctx.font = "24px 'Microsoft YaHei', 'PingFang SC', sans-serif";
-    ctx.fillText(w.title, 110, y);
+    ctx.font = "15px 'Microsoft YaHei', 'PingFang SC', sans-serif";
+    ctx.fillText(w.title, 96, y, 300);
     ctx.fillStyle = "rgba(255,255,255,0.35)";
-    ctx.font = "20px monospace";
+    ctx.font = "13px monospace";
     ctx.textAlign = "right";
-    ctx.fillText(w.year, 464, y);
+    ctx.fillText(w.year, 464, y, 70);
     ctx.textAlign = "left";
   });
   ctx.fillStyle = "rgba(255,255,255,0.3)";
-  ctx.font = "18px monospace";
-  ctx.fillText("RXQ STUDIO · LIQUID PIXEL", 48, 548);
+  ctx.font = "14px monospace";
+  ctx.fillText("RXQ STUDIO · LIQUID PIXEL", 48, 560);
   const tex = new THREE.CanvasTexture(canvas);
   tex.colorSpace = THREE.SRGBColorSpace;
   return tex;
@@ -393,6 +419,17 @@ export default function Scene3D({ mode, activeWork, glitchKey, works, scrollRef 
     const dustNear = makeDust(90, 0.1, [12, 7, 3], 2.2, 0xc7d2fe, 0.32);
 
     const maxAniso = renderer.capabilities.getMaxAnisotropy();
+
+    // 预加载全部作品代表图：每张加载完成后置脏，黑胶标签重绘时贴入
+    const imgCache = new Map<string, HTMLImageElement>();
+    worksRef.current.forEach((w) => {
+      const im = new Image();
+      im.src = w.image;
+      im.onload = () => {
+        imgCache.set(w.id, im);
+        vinylDirtyRef.current = true;
+      };
+    });
 
     /* ----- CD 盒 ----- */
     const caseGroup = new THREE.Group();
@@ -637,10 +674,11 @@ export default function Scene3D({ mode, activeWork, glitchKey, works, scrollRef 
       dustNear.rotation.y = t * 0.02;
       dustNear.position.y += (v * 0.9 - dustNear.position.y) * k;
 
-      // 切换作品时重绘黑胶标签
+      // 切换作品时重绘黑胶标签（代表图已加载则贴入标签芯）
       if (vinylDirtyRef.current) {
         vinylDirtyRef.current = false;
-        drawVinylLabel(vinyl.ctx, worksRef.current[activeWorkRef.current]);
+        const w = worksRef.current[activeWorkRef.current];
+        drawVinylLabel(vinyl.ctx, w, imgCache.get(w.id));
         vinyl.tex.needsUpdate = true;
       }
 

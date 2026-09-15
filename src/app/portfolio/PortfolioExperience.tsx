@@ -35,7 +35,8 @@ function StaticPortfolio({ hidden }: { hidden: boolean }) {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
             {works.map((w) => (
               <article key={w.id} className="site-card rounded-xl border border-zinc-800 bg-zinc-950/60 overflow-hidden">
-                <div className="h-36 w-full" style={{ background: `linear-gradient(135deg, hsl(${w.hue} 55% 42%), hsl(${(w.hue + 40) % 360} 60% 24%))` }} />
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={w.image} alt={w.title} className="h-36 w-full object-cover" />
                 <div className="p-5">
                   <h3 className="text-lg font-semibold mb-1">{w.title}</h3>
                   <p className="text-zinc-500 text-sm font-mono mb-3">{w.year} · {w.medium}</p>
@@ -50,8 +51,16 @@ function StaticPortfolio({ hidden }: { hidden: boolean }) {
       <section className="site-section py-20 md:py-28 px-4 sm:px-8 md:px-12 bg-black border-t border-zinc-900">
         <div className="max-w-4xl mx-auto">
           <h2 className="text-2xl sm:text-4xl font-semibold tracking-tight mb-5">关于任玄奇</h2>
-          <p className="text-zinc-400 text-sm md:text-base leading-relaxed">
-            简介占位：任玄奇的创作方向、教育背景、展览与获奖经历将在这里呈现，正式文案确认后替换。
+          <p className="text-zinc-400 text-sm md:text-base leading-relaxed mb-4">
+            数字艺术创作者、青年学者，硕士毕业于天津美术学院跨媒体艺术专业。创作立足于视觉文化研究与技术思维的交叉，以
+            AIGC、生成算法与扩展现实（XR）为主要工具，探索技术图像中的叙事结构与感知经验重构。
+          </p>
+          <p className="text-zinc-400 text-sm md:text-base leading-relaxed mb-4">
+            作品曾入选第十四届全国美展、中国数字艺术大展、首届青年影像艺术100展、CCF
+            计算艺术大展、海南岛国际电影节等展览，并多次参与国家艺术基金人才培养项目及省市级科研项目。
+          </p>
+          <p className="text-zinc-500 text-sm font-mono">
+            微信 r1062046861 · 邮箱 1062046861@qq.com
           </p>
         </div>
       </section>
@@ -100,13 +109,19 @@ export default function PortfolioExperience() {
     [N]
   );
 
+  const savedScrollRef = useRef(0);
   const openDetail = useCallback(() => {
+    savedScrollRef.current = window.scrollY;
     setMode("detail");
     setGlitchKey((k) => k + 1);
   }, []);
   const closeDetail = useCallback(() => {
     setMode("journey");
     setGlitchKey((k) => k + 1);
+    // overflow 锁定期间浏览器可能钳制 scrollY，解锁后恢复章节位置
+    setTimeout(() => {
+      window.scrollTo({ top: savedScrollRef.current, behavior: "instant" });
+    }, 30);
   }, []);
 
   /* 滚动驱动核心（Shopify Editions 的做法：滚动位置驱动渲染参数，而不是驱动 React 渲染）。
@@ -289,8 +304,8 @@ export default function PortfolioExperience() {
             ))}
           </div>
 
-          {/* 滚动内容层 */}
-          <main className="relative z-10">
+          {/* 滚动内容层（档案模式下隐藏，避免亮元素透过遮罩形成残影） */}
+          <main className={`relative z-10${mode === "detail" ? " invisible" : ""}`}>
             {/* S0 · 主菜单（贴纸） */}
             <section className="relative h-screen">
               <div className="absolute left-[7%] top-1/2 -translate-y-1/2">
@@ -384,10 +399,15 @@ export default function PortfolioExperience() {
                   任玄奇
                 </h1>
                 <p data-px="0.09" className="text-zinc-400 text-sm leading-relaxed mb-4">
-                  简介占位：任玄奇的创作方向、教育背景、展览与获奖经历将在这里呈现，正式文案确认后替换。
+                  数字艺术创作者、青年学者，硕士毕业于天津美术学院跨媒体艺术专业。以
+                  AIGC、生成算法与扩展现实（XR）为主要工具，探索技术图像中的叙事结构与感知经验重构。
                 </p>
-                <p data-px="0.12" className="text-zinc-500 text-sm leading-relaxed mb-9">
-                  液态像素艺术工作室 · 企业团队与艺术家技术协作
+                <p data-px="0.11" className="text-zinc-400 text-sm leading-relaxed mb-4">
+                  作品曾入选第十四届全国美展、中国数字艺术大展、首届青年影像艺术100展、CCF
+                  计算艺术大展、海南岛国际电影节等展览。
+                </p>
+                <p data-px="0.12" className="text-zinc-500 text-sm font-mono leading-relaxed mb-9">
+                  微信 r1062046861 · 邮箱 1062046861@qq.com
                 </p>
                 <div data-px="0.14" className="flex items-center gap-3">
                   <button
@@ -411,29 +431,35 @@ export default function PortfolioExperience() {
           {/* 作品档案（盒背特写） */}
           {mode === "detail" && (
             <div className="fixed inset-0 z-30">
-              <div className="absolute inset-0 bg-gradient-to-r from-black/95 via-black/70 to-transparent pointer-events-none" />
-              <div className="absolute left-[6%] top-1/2 -translate-y-1/2 w-[min(30rem,44vw)]">
-                <p className="font-mono text-[11px] tracking-[0.22em] text-zinc-500 mb-5">
+              <div className="absolute inset-0 bg-gradient-to-r from-black via-black/85 to-transparent pointer-events-none" />
+              <div className="absolute left-[6%] top-1/2 -translate-y-1/2 w-[min(30rem,44vw)] max-h-[86vh] overflow-y-auto pr-2">
+                <p className="font-mono text-[11px] tracking-[0.22em] text-zinc-500 mb-4">
                   ARCHIVE · 作品档案
                 </p>
-                <h1 className="text-3xl md:text-4xl font-semibold tracking-tight mb-6">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={detailWork.image}
+                  alt={detailWork.title}
+                  className="w-full max-h-36 object-cover rounded-lg border border-zinc-800 mb-4"
+                />
+                <h1 className="text-3xl md:text-4xl font-semibold tracking-tight mb-4">
                   {detailWork.title}
                 </h1>
-                <dl className="border-t border-zinc-800 divide-y divide-zinc-800/70 text-sm mb-6">
-                  <div className="flex justify-between py-3">
+                <dl className="border-t border-zinc-800 divide-y divide-zinc-800/70 text-sm mb-4">
+                  <div className="flex justify-between py-2">
                     <dt className="text-zinc-500">年份</dt>
                     <dd className="text-zinc-200 font-mono">{detailWork.year}</dd>
                   </div>
-                  <div className="flex justify-between py-3">
+                  <div className="flex justify-between py-2">
                     <dt className="text-zinc-500">媒介</dt>
                     <dd className="text-zinc-200">{detailWork.medium}</dd>
                   </div>
-                  <div className="flex justify-between py-3">
+                  <div className="flex justify-between py-2">
                     <dt className="text-zinc-500">编号</dt>
                     <dd className="text-zinc-200 font-mono">{detailWork.id.toUpperCase()}</dd>
                   </div>
                 </dl>
-                <p className="text-zinc-400 text-sm leading-relaxed mb-8">{detailWork.description}</p>
+                <p className="text-zinc-400 text-sm leading-relaxed mb-6">{detailWork.description}</p>
                 <div className="flex items-center gap-3">
                   <button
                     type="button"
