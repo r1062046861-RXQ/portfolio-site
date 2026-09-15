@@ -148,16 +148,33 @@ function makeDiscTexture(): THREE.CanvasTexture {
   return tex;
 }
 
-/** 黑胶贴图：碟纹 + 当前作品标签（有代表图时以图入签）；可重绘复用 */
+/** 黑胶贴图：图案碟（picture disc）——作品图铺满整个碟面，
+    碟纹与高光带压在图上，中心只留一枚小标签 + 中孔；可重绘复用 */
 function drawVinylLabel(ctx: CanvasRenderingContext2D, work: Work, img?: HTMLImageElement) {
   ctx.clearRect(0, 0, 512, 512);
-  ctx.fillStyle = "#0a0a0a";
-  ctx.beginPath();
-  ctx.arc(256, 256, 250, 0, Math.PI * 2);
-  ctx.fill();
 
-  for (let r = 118; r < 244; r += 5) {
-    ctx.strokeStyle = "rgba(255,255,255,0.16)";
+  // 作品图铺满碟面（圆形裁切、等比放大覆盖）；无图时用色相兜底
+  ctx.save();
+  ctx.beginPath();
+  ctx.arc(256, 256, 246, 0, Math.PI * 2);
+  ctx.clip();
+  if (img && img.naturalWidth > 0) {
+    const s = Math.max(492 / img.naturalWidth, 492 / img.naturalHeight);
+    const dw = img.naturalWidth * s;
+    const dh = img.naturalHeight * s;
+    ctx.drawImage(img, 256 - dw / 2, 256 - dh / 2, dw, dh);
+  } else {
+    ctx.fillStyle = `hsl(${work.hue}, 55%, 38%)`;
+    ctx.fillRect(10, 10, 492, 492);
+  }
+  // 整体压暗，让碟纹、高光与白色外缘读得出来
+  ctx.fillStyle = "rgba(0,0,0,0.30)";
+  ctx.fillRect(0, 0, 512, 512);
+  ctx.restore();
+
+  // 碟纹（满碟面，低透明度）
+  for (let r = 60; r < 244; r += 5) {
+    ctx.strokeStyle = "rgba(255,255,255,0.08)";
     ctx.lineWidth = 1;
     ctx.beginPath();
     ctx.arc(256, 256, r, 0, Math.PI * 2);
@@ -171,7 +188,7 @@ function drawVinylLabel(ctx: CanvasRenderingContext2D, work: Work, img?: HTMLIma
   sheen.addColorStop(0.58, "rgba(255,255,255,0)");
   ctx.fillStyle = sheen;
   ctx.beginPath();
-  ctx.arc(256, 256, 250, 0, Math.PI * 2);
+  ctx.arc(256, 256, 246, 0, Math.PI * 2);
   ctx.fill();
   const sheen2 = ctx.createLinearGradient(512, 0, 0, 512);
   sheen2.addColorStop(0.62, "rgba(255,255,255,0)");
@@ -179,7 +196,7 @@ function drawVinylLabel(ctx: CanvasRenderingContext2D, work: Work, img?: HTMLIma
   sheen2.addColorStop(0.78, "rgba(255,255,255,0)");
   ctx.fillStyle = sheen2;
   ctx.beginPath();
-  ctx.arc(256, 256, 250, 0, Math.PI * 2);
+  ctx.arc(256, 256, 246, 0, Math.PI * 2);
   ctx.fill();
 
   // 外缘亮圈，让碟形在黑场中立起来
@@ -189,43 +206,24 @@ function drawVinylLabel(ctx: CanvasRenderingContext2D, work: Work, img?: HTMLIma
   ctx.arc(256, 256, 246, 0, Math.PI * 2);
   ctx.stroke();
 
-  // 标签芯：优先用作品代表图（圆形裁切 + 底部压暗），否则用色相兜底
-  ctx.save();
+  // 中心小标签：编号 + 年份（标题由页面大字承担）
+  ctx.fillStyle = "rgba(8,8,10,0.88)";
   ctx.beginPath();
-  ctx.arc(256, 256, 108, 0, Math.PI * 2);
-  ctx.clip();
-  if (img && img.naturalWidth > 0) {
-    const s = Math.max(216 / img.naturalWidth, 216 / img.naturalHeight);
-    const dw = img.naturalWidth * s;
-    const dh = img.naturalHeight * s;
-    ctx.drawImage(img, 256 - dw / 2, 256 - dh / 2, dw, dh);
-    // 底部压暗，保证文字可读
-    const shade = ctx.createLinearGradient(0, 190, 0, 364);
-    shade.addColorStop(0, "rgba(0,0,0,0)");
-    shade.addColorStop(1, "rgba(0,0,0,0.55)");
-    ctx.fillStyle = shade;
-    ctx.fillRect(148, 148, 216, 216);
-  } else {
-    ctx.fillStyle = `hsl(${work.hue}, 58%, 46%)`;
-    ctx.fillRect(148, 148, 216, 216);
-  }
-  ctx.restore();
-  ctx.strokeStyle = "rgba(255,255,255,0.25)";
-  ctx.lineWidth = 2;
+  ctx.arc(256, 256, 54, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.strokeStyle = "rgba(255,255,255,0.35)";
+  ctx.lineWidth = 1.5;
   ctx.beginPath();
-  ctx.arc(256, 256, 108, 0, Math.PI * 2);
+  ctx.arc(256, 256, 54, 0, Math.PI * 2);
   ctx.stroke();
-
-  ctx.fillStyle = "rgba(255,255,255,0.95)";
-  ctx.shadowColor = "rgba(0,0,0,0.8)";
-  ctx.shadowBlur = 8;
+  ctx.fillStyle = "rgba(255,255,255,0.92)";
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
-  ctx.font = "bold 34px 'Microsoft YaHei', 'PingFang SC', sans-serif";
-  ctx.fillText(work.title, 256, 238, 200);
-  ctx.font = "20px monospace";
-  ctx.fillText(`${work.year} · ${work.id.toUpperCase()}`, 256, 292, 200);
-  ctx.shadowBlur = 0;
+  ctx.font = "bold 22px monospace";
+  ctx.fillText(work.no, 256, 244, 92);
+  ctx.font = "14px monospace";
+  ctx.fillStyle = "rgba(255,255,255,0.6)";
+  ctx.fillText(work.year, 256, 274, 92);
 
   ctx.globalCompositeOperation = "destination-out";
   ctx.beginPath();
