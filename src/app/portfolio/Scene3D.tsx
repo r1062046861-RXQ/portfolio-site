@@ -574,60 +574,69 @@ export default function Scene3D({ mode, activeWork, glitchKey, works, scrollRef 
     const caseZ: ReadonlyArray<readonly [number, number]> = [[0, 0], [s1, -4.2], [s6, -3.4], [1, 0]];
     const caseRot: ReadonlyArray<readonly [number, number]> = [[0, -0.18], [s1, 0.5], [s6, -0.9], [1, Math.PI + 0.12]];
 
-    // 黑胶（传送带式）：每一屏作品时间里，唱片从右侧飞入 → 台前展示 → 左侧飞出，
-    // 滚轮每滚一点唱片就随之移动，下一屏带着新作品图再飞进来
     const smooth01 = (t: number) => t * t * (3 - 2 * t);
-    type VinylPose = { x: number; y: number; z: number; rotY: number; scale: number };
-    const vinylChapterPose = (q: number): VinylPose => {
-      const enter = smooth01(Math.min(q / 0.32, 1)); // 前 32% 屏：飞入
-      const exit = smooth01(Math.max(0, (q - 0.68) / 0.32)); // 后 32% 屏：飞出
-      return {
-        x: lerpNum(lerpNum(5.4, 1.05, enter), -5.4, exit),
-        y: lerpNum(lerpNum(-0.9, -0.05, enter), 0.9, exit),
-        z: lerpNum(lerpNum(-2.6, 0, enter), -2.6, exit),
-        rotY: lerpNum(lerpNum(-1.05, 0, enter), 1.05, exit),
-        scale: lerpNum(lerpNum(0.55, 1, enter), 0.55, exit),
-      };
+
+    // 黑胶已退役：章节舞台交给作品分层内容。唱片永久停放在画面外。
+    const VINYL_PARK = { x: 9.5, y: -0.2, z: -3 } as const;
+    vinylGroup.position.set(VINYL_PARK.x, VINYL_PARK.y, VINYL_PARK.z);
+    vinylGroup.visible = false;
+
+    /* ----- 作品分层舞台：BG 整图 / 主体抠层 / 高光细节 -----
+       每个作品三层不同景深，滚动时以不同速度漂移（Shopify Editions 式刮擦视差），
+       章节边界处整体淡出淡入完成换作 */
+    const layerGroup = new THREE.Group();
+    scene.add(layerGroup);
+    const layerGeo = new THREE.PlaneGeometry(1, 1);
+    const mkLayer = (order: number) => {
+      const m = new THREE.Mesh(
+        layerGeo,
+        new THREE.MeshBasicMaterial({ transparent: true, opacity: 0, depthWrite: false })
+      );
+      m.renderOrder = order;
+      layerGroup.add(m);
+      return m;
     };
-    // f = 当前屏浮点位置（0=菜单，i=第 i 个作品章节满屏，W+1=关于）。
-    // DOM 章节在 f=i±0.5 处切换（round），唱片姿态窗口与之一一对应：
-    // 章节文字进入视野时唱片同步从右侧飞入，文字离开时唱片飞出
-    const vinylPoseAt = (p: number): VinylPose => {
-      const f = p * (W + 1);
-      if (f < 0.5) {
-        // 菜单：藏在右侧 → 接近第一章时滑向入场预备位
-        const t = smooth01(f / 0.5);
-        const q0 = vinylChapterPose(0);
-        return {
-          x: lerpNum(7.5, q0.x, t), y: lerpNum(-0.2, q0.y, t), z: lerpNum(-1, q0.z, t),
-          rotY: lerpNum(0, q0.rotY, t), scale: lerpNum(1, q0.scale, t),
-        };
-      }
-      if (f >= W + 0.5) {
-        // 关于：从最后一章飞出位继续向左离场
-        const t = smooth01(Math.min((f - W - 0.5) / 0.5, 1));
-        const q1 = vinylChapterPose(1);
-        return {
-          x: lerpNum(q1.x, -6.8, t), y: lerpNum(q1.y, 0.4, t), z: lerpNum(q1.z, -2, t),
-          rotY: lerpNum(q1.rotY, 0.6, t), scale: lerpNum(q1.scale, 0.5, t),
-        };
-      }
-      const i = Math.min(Math.max(Math.round(f), 1), W);
-      return vinylChapterPose(f - (i - 0.5));
+    const layerBG = mkLayer(1);
+    const layerMid = mkLayer(2);
+    const layerFG = mkLayer(3);
+    const layerMats = [layerBG, layerMid, layerFG].map((l) => l.material as THREE.MeshBasicMaterial);
+
+    type LayerEntry = { bg?: THREE.Texture; mid?: THREE.Texture; fg?: THREE.Texture; aspect: number };
+    const layerCache = new Map<string, LayerEntry>();
+    const texLoader = new THREE.TextureLoader();
+    const loadLayerTex = (w: Work) => {
+      let entry = layerCache.get(w.id);
+      if (entry) return entry;
+      entry = { aspect: 4 / 3 };
+      layerCache.set(w.id, entry);
+      const e = entry;
+      texLoader.load(`/works/layers/${w.id}-bg.jpg`, (t) => {
+        t.colorSpace = THREE.SRGBColorSpace;
+        t.anisotropy = maxAniso;
+        e.bg = t;
+        const img = t.image as HTMLImageElement;
+        if (img && img.width) e.aspect = img.width / img.height;
+      });
+      (["mid", "fg"] as const).forEach((k) => {
+        texLoader.load(`/works/layers/${w.id}-${k}.webp`, (t) => {
+          t.colorSpace = THREE.SRGBColorSpace;
+          t.anisotropy = maxAniso;
+          e[k] = t;
+        });
+      });
+      return e;
     };
+    worksRef.current.forEach(loadLayerTex);
+    let layerWorkIdx = -1; // 当前绑定的作品索引（-1 = 未绑定）
 
     // 相机：章节中段轻轻推近，结尾再拉回来
     const camZ: ReadonlyArray<readonly [number, number]> = [[0, 7.4], [s1 * 0.5, 6.8], [s6, 6.6], [1, 7.0]];
     const camY: ReadonlyArray<readonly [number, number]> = [[0, 0.1], [0.5, 0.28], [1, 0]];
 
     const caseBase = new THREE.Vector3(kf(caseX, 0), kf(caseY, 0), kf(caseZ, 0));
-    const initPose = vinylPoseAt(0);
-    const vinylBase = new THREE.Vector3(initPose.x, initPose.y, initPose.z);
     caseGroup.position.copy(caseBase);
-    vinylGroup.position.copy(vinylBase);
     caseGroup.rotation.y = kf(caseRot, 0);
     const caseTarget = new THREE.Vector3();
-    const vinylTarget = new THREE.Vector3();
 
     /* ----- 鼠标视差 ----- */
     const pointer = { x: 0, y: 0 };
@@ -674,26 +683,14 @@ export default function Scene3D({ mode, activeWork, glitchKey, works, scrollRef 
         lerpNum(kf(caseY, p), 0, detailT),
         lerpNum(kf(caseZ, p), 0, detailT)
       );
-      const vp = vinylPoseAt(p);
-      vinylTarget.set(
-        lerpNum(vp.x, 7.5, detailT),
-        lerpNum(vp.y, -0.2, detailT),
-        lerpNum(vp.z, -1, detailT)
-      );
       const caseRotTarget = lerpNum(jr, Math.PI + 0.12, detailT);
 
       caseBase.lerp(caseTarget, k);
-      // 章节边界处目标点会从「飞出左缘」瞬移到「飞入右缘」——两点都在画面外，
-      // 直接跳变，避免插值扫过画面中央
-      if (vinylTarget.distanceTo(vinylBase) > 8) vinylBase.copy(vinylTarget);
-      else vinylBase.lerp(vinylTarget, k);
       caseGroup.position.set(
         caseBase.x,
         caseBase.y + Math.sin(t * 0.9) * 0.06,
         caseBase.z
       );
-      vinylGroup.position.copy(vinylBase);
-      vinylGroup.scale.setScalar(lerpNum(vp.scale, 1, detailT));
       caseGroup.rotation.y += (caseRotTarget - caseGroup.rotation.y) * k;
       // 滚动惯性侧倾：快速滚动时盒体顺着滚动方向压一下
       caseGroup.rotation.z +=
@@ -702,12 +699,73 @@ export default function Scene3D({ mode, activeWork, glitchKey, works, scrollRef 
       // 鼠标视差（菜单屏最明显，进入章节后收敛）
       const parallax = Math.max(0, 1 - p / (s1 * 0.7));
       caseGroup.rotation.x += (pointer.y * 0.1 * parallax - caseGroup.rotation.x) * k;
-      // 唱片朝向随传送带姿态 + 轻微怠速摇摆
-      vinylGroup.rotation.y = vp.rotY * (1 - detailT) + Math.sin(t * 0.5) * 0.04;
 
-      // 盘面转速随滚动速度加快（惯性手感，滚轮快转时碟面明显飞转）
+      /* ----- 作品分层舞台驱动 -----
+         qLay: 章节内位置 0..1（0.5 = 章节满屏）；dq: 偏离中心的程度。
+         三层以不同速度随 dq 漂移 → 滚动时作品内容在景深里刮擦分离 */
+      const fLay = p * (W + 1);
+      const inChapter = fLay >= 0.5 && fLay < W + 0.5;
+      const iLay = Math.min(Math.max(Math.round(fLay), 1), W);
+      const qLay = inChapter ? fLay - (iLay - 0.5) : 0.5;
+      const dq = qLay - 0.5;
+
+      // 章节边界换绑当前作品贴图（此刻各层透明度为 0，换绑不可见）。
+      // 三层景深不同（z 不同），按相机距离反比补偿缩放，静止时严丝合缝对齐原图
+      const wIdx = iLay - 1;
+      if (inChapter && wIdx !== layerWorkIdx) {
+        layerWorkIdx = wIdx;
+        const entry = layerCache.get(worksRef.current[wIdx].id);
+        if (entry) {
+          const asp = entry.aspect;
+          const CAM0 = 6.8; // 章节段相机基准距离
+          const zs = [-1.35, -0.45, 0.55];
+          [layerBG, layerMid, layerFG].forEach((m, i) => {
+            const s = 3.3 * ((CAM0 - zs[i]) / CAM0) * (i === 2 ? 0.985 : 1);
+            m.scale.set(s * asp, s, 1);
+          });
+          if (entry.bg) layerMats[0].map = entry.bg;
+          if (entry.mid) layerMats[1].map = entry.mid;
+          if (entry.fg) layerMats[2].map = entry.fg;
+          layerMats.forEach((m) => (m.needsUpdate = true));
+        }
+      }
+
+      // 章节边缘淡入淡出；档案模式让位给盒背特写
+      const edge = inChapter
+        ? Math.min(smooth01(Math.min(qLay / 0.16, 1)), smooth01(Math.min((1 - qLay) / 0.16, 1)))
+        : 0;
+      const lvis = edge * (1 - detailT);
+      layerGroup.visible = lvis > 0.002;
+      const layerMax = [0.85, 1, 0.95];
+      layerMats.forEach((m, i) => {
+        m.opacity = m.map ? lvis * layerMax[i] : 0;
+      });
+
+      if (layerGroup.visible) {
+        const fl1 = Math.sin(t * 0.6) * 0.03;
+        const fl2 = Math.sin(t * 0.8 + 1.7) * 0.05;
+        // 背景最慢、主体中速、高光细节最快；滚动速度 v 给前景额外惯性甩尾
+        layerBG.position.set(
+          1.05 - dq * 0.55 + pointer.x * 0.03,
+          -dq * 0.22 - pointer.y * 0.025 + fl1 * 0.5,
+          -1.35
+        );
+        layerMid.position.set(
+          1.05 - dq * 1.15 + pointer.x * 0.08 + v * 0.05,
+          -dq * 0.5 - pointer.y * 0.06 + fl1,
+          -0.45
+        );
+        layerFG.position.set(
+          1.05 - dq * 2.3 + pointer.x * 0.16 + v * 0.13,
+          dq * 0.75 - pointer.y * 0.11 + fl2,
+          0.55
+        );
+        layerMid.rotation.z = dq * 0.05;
+        layerFG.rotation.z = -dq * 0.09;
+      }
+
+      // 盘面转速随滚动速度加快（惯性手感）
       discFace.rotation.z -= dt * (0.45 + sv * 1.2);
-      vinylFace.rotation.z -= dt * (0.6 + sv * 4.5);
 
       // 双层微尘差速漂移；近层随滚动反向窜动
       dustFar.rotation.z = t * 0.008;
