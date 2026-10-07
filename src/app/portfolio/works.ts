@@ -10,10 +10,18 @@ export type Work = {
   year: string;
   medium: string;
   description: string;
-  /** 代表图路径（public/works/），用于黑胶标签盘面与档案预览 */
-  image: string;
+  /** 代表图路径（public/works/），新增作品可先留空 */
+  image?: string;
+  /** 循环影像预览（public/works/） */
+  gif?: string;
+  /** 减弱动效时使用的静态帧（public/works/） */
+  poster?: string;
+  /** 多图自动播放组（public/works/） */
+  gallery?: string[];
   /** 标签主色相（0-360），图片加载失败时的兜底色 */
   hue: number;
+  /** 作品资料尚未完整时显示为可替换占位卡 */
+  reserved?: boolean;
 };
 
 export const works: Work[] = [
@@ -26,7 +34,7 @@ export const works: Work[] = [
     year: "2025",
     medium: "数字影像 / AIGC",
     description:
-      "以梦核美学重构千禧年记忆：Windows XP 开机画面、电子宠物、雪花屏电视等公共符号，与童年日记中的纸飞机、光盘、卡带等私密意象拼贴交织。保留噪点与畸变的「记忆晶体」，指向赛博空间中新型集体无意识的萌生。2025 天美毕业季优秀毕业作品，获天津美术学院学院奖。",
+      "以梦核美学重构千禧年记忆：Windows XP 开机画面、电子宠物、雪花屏电视等公共符号，与童年日记中的纸飞机、光盘、卡带等私密意象拼贴交织。保留噪点与畸变的「记忆晶体」，指向赛博空间中新型集体无意识的萌生。",
     image: "/works/work-01.jpg",
     hue: 215,
   },
@@ -50,8 +58,10 @@ export const works: Work[] = [
     year: "2024",
     medium: "实验影像 / AI 生成",
     description:
-      "融合 AI 生成技术与艺术想象，探索人工智能从无意识到自我觉醒的可能。以微观粒子为叙事主体，呼应博尔赫斯的巴别图书馆意象，构建无限延展的「影像图书馆」。入选首届光谷人工智能艺术大展、首届 CCF 计算艺术大展，获 AI 艺术季最佳美术效果奖。",
+      "融合 AI 生成技术与艺术想象，探索人工智能从无意识到自我觉醒的可能。以微观粒子为叙事主体，呼应博尔赫斯的巴别图书馆意象，构建无限延展的「影像图书馆」。",
     image: "/works/work-03.jpg",
+    gif: "/works/gif/wake.gif",
+    poster: "/works/gif/wake-poster.jpg",
     hue: 195,
   },
   {
@@ -59,11 +69,13 @@ export const works: Work[] = [
     no: "Ⅰ-04",
     category: "艺术创作",
     title: "坍缩",
-    year: "2023",
-    medium: "三联屏 AI 实验影像 · 3分45秒",
+    year: "2025",
+    medium: "三屏 AI 实验影像",
     description:
-      "以阿兹海默症患者的主观感受为叙事核心，三个章节对应病程早期、中期与晚期，呈现记忆与感知世界逐渐坍塌中的孤独与悲怆。入选第十四届全国美展暨天津市美术展览、首届青年影像艺术100展、首届光谷人工智能艺术大展。",
+      "以阿兹海默症患者的主观感受为叙事核心，三个章节对应病程早期、中期与晚期，呈现记忆与感知世界逐渐坍塌中的孤独与悲怆。",
     image: "/works/work-04.jpg",
+    gif: "/works/gif/collapse.gif",
+    poster: "/works/gif/collapse-poster.jpg",
     hue: 275,
   },
   {
@@ -86,8 +98,9 @@ export const works: Work[] = [
     year: "2024",
     medium: "AIGC 生成艺术",
     description:
-      "一场当代炼金实践：「原料」取自清代聂璜《海错图》中已被证伪的虚构生物，经 AI 算法之「火」炼制为新的生命形态。入选首届中国数字艺术大展、GUI 数字艺术展，荣获中国好创意国家一等奖。",
-    image: "/works/work-06.jpg",
+      "一场当代炼金实践：「原料」取自清代聂璜《海错图》中已被证伪的虚构生物，经 AI 算法之「火」炼制为新的生命形态。作品在古籍图像、生成模型与数字生命之间建立一条可变的形态链。",
+    image: "/works/work-06-cover.jpg",
+    gallery: ["/works/work-06-cover.jpg", "/works/layers/work-06-mid.webp", "/works/layers/work-06-bg.jpg"],
     hue: 35,
   },
   {
@@ -100,6 +113,7 @@ export const works: Work[] = [
     description:
       "国家艺术基金《数字博物馆数字艺术人才培训》驻地创作两组：《欲望之镜》数字拼贴以非叙事性符号拼接呈现人类欲望的多维全景；《虚拟交响》三维数字空间融合古典与现代、现实与虚拟，营造不断变化的超现实世界。",
     image: "/works/work-07.jpg",
+    gallery: ["/works/work-07.jpg", "/works/layers/work-07-bg.jpg", "/works/layers/work-07-mid.webp", "/works/layers/work-07-fg.webp"],
     hue: 30,
   },
   {
@@ -224,4 +238,77 @@ export const works: Work[] = [
     image: "/works/work-17.jpg",
     hue: 55,
   },
+  {
+    id: "work-18",
+    no: "Ⅰ-09",
+    category: "艺术创作",
+    title: "桥渡牵牛织女星",
+    year: "2026",
+    medium: "沉浸影像 / VR",
+    description: "以汉画像石与戏曲美学为视觉线索，将牛郎织女的分离与重逢转化为可进入的沉浸式空间。AI 参与角色、场景与动作的生成，观众通过移动和观看完成叙事的重新连接。",
+    gif: "/works/gif/bridge.gif",
+    poster: "/works/gif/bridge-poster.jpg",
+    hue: 188,
+    reserved: true,
+  },
+  {
+    id: "work-19",
+    no: "Ⅰ-10",
+    category: "艺术创作",
+    title: "一帧",
+    year: "2025",
+    medium: "ASCII 实验影像 · 1080 × 1080 / 30fps",
+    description: "将 ASCII 编码转化为动态编织的文本织物：字符矩阵成为像素单位与数字线纱，数据经线和算法纬线在循环影像中交织，追问编码如何重新定义纤维、图像与叙事。",
+    gif: "/works/gif/one-frame.gif",
+    poster: "/works/gif/one-frame-poster.jpg",
+    hue: 215,
+    reserved: true,
+  },
+  {
+    id: "work-20",
+    no: "Ⅰ-11",
+    category: "艺术创作",
+    title: "白日梦不在这里",
+    year: "2026",
+    medium: "实验影像 · 1280 × 720 / 24fps",
+    description: "从一张童年照片出发，把不倒翁、小熊软糖与鸭子重新放进明亮柔和的糖果塑料梦核空间。物件靠近、接触又分开，白日梦只在借旧物返回过去的一刻成立。",
+    gif: "/works/gif/white-daydream.gif",
+    poster: "/works/gif/white-daydream-poster.jpg",
+    hue: 32,
+    reserved: true,
+  },
+  {
+    id: "work-21",
+    no: "Ⅰ-12",
+    category: "艺术创作",
+    title: "五行医道",
+    year: "2026",
+    medium: "交互影像 / 游戏化中医药体验",
+    description: "以中医五行关系为结构，将药材、卡牌、巡诊路线与事件选择组织成可探索的视觉系统。观众在游戏化的交互中理解生克关系，也在图像与规则之间观察传统知识如何被重新编排。",
+    gif: "/works/gif/wuxing.gif",
+    poster: "/works/gif/wuxing-poster.jpg",
+    hue: 150,
+    reserved: true,
+  },
 ];
+
+// 原始目录保留；新版主页只派生当前保留作品与待补资料的预留卡。
+const removedFromPage = new Set(["work-01", "work-02", "work-05", "work-06", "work-07", "work-08"]);
+const portfolioDescriptionOverrides: Record<string, string> = {
+  "work-01": "以梦核美学重构千禧年记忆：Windows XP 开机画面、电子宠物、雪花屏电视等公共符号，与童年日记中的纸飞机、光盘、卡带等私密意象拼贴交织。保留噪点与畸变的「记忆晶体」，指向赛博空间中新型集体无意识的萌生。2025 天美毕业季优秀毕业作品。",
+  "work-03": "融合 AI 生成技术与艺术想象，探索人工智能从无意识到自我觉醒的可能。以微观粒子为叙事主体，呼应博尔赫斯的巴别图书馆意象，构建无限延展的「影像图书馆」。",
+  "work-04": "以阿兹海默症患者的主观感受为叙事核心，三个章节对应病程早期、中期与晚期，呈现记忆与感知世界逐渐坍塌中的孤独与悲怆。",
+  "work-06": "一场当代炼金实践：「原料」取自清代聂璜《海错图》中已被证伪的虚构生物，经 AI 算法之「火」炼制为新的生命形态。作品在古籍图像、生成模型与数字生命之间建立一条可变的形态链。",
+};
+const pageWorks = works
+  .filter((work) => work.category === "艺术创作" && !removedFromPage.has(work.id) && !work.reserved)
+  .map((work) => portfolioDescriptionOverrides[work.id] ? { ...work, description: portfolioDescriptionOverrides[work.id] } : work);
+const reservedWorks = works.filter((work) => work.category === "艺术创作" && work.reserved);
+export const studioWorks = [...pageWorks, ...reservedWorks].map((work, index) => ({
+  ...work,
+  no: `Ⅰ-${String(index + 1).padStart(2, "0")}`,
+}));
+export const artWorks = studioWorks;
+export const heroWorks = ["work-03", "work-04"].flatMap((id) =>
+  studioWorks.filter((work) => work.id === id)
+);
