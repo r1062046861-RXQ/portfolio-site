@@ -1,836 +1,384 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import type { MutableRefObject } from "react";
 import * as THREE from "three";
-import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js";
-import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer.js";
-import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass.js";
-import { ShaderPass } from "three/examples/jsm/postprocessing/ShaderPass.js";
-import { UnrealBloomPass } from "three/examples/jsm/postprocessing/UnrealBloomPass.js";
-import { OutputPass } from "three/examples/jsm/postprocessing/OutputPass.js";
-import type { Work } from "./works";
+import { heroWorks } from "./works";
 
-export type PortfolioMode = "journey" | "detail";
-
-/** 滚动状态：p = 全程进度 0..1（已平滑），v = 滚动速度（屏/秒，带方向） */
-export type ScrollState = { p: number; v: number };
-
-/* ---------------- VHS 故障 / RGB 色散后处理 ---------------- */
-const GlitchShader = {
-  uniforms: {
-    tDiffuse: { value: null as THREE.Texture | null },
-    uTime: { value: 0 },
-    uAmount: { value: 0.035 },
-  },
-  vertexShader: /* glsl */ `
-    varying vec2 vUv;
-    void main() {
-      vUv = uv;
-      gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-    }
-  `,
-  fragmentShader: /* glsl */ `
-    uniform sampler2D tDiffuse;
-    uniform float uTime;
-    uniform float uAmount;
-    varying vec2 vUv;
-
-    float rand(vec2 co) {
-      return fract(sin(dot(co, vec2(12.9898, 78.233))) * 43758.5453);
-    }
-
-    void main() {
-      vec2 uv = vUv;
-      float a = uAmount;
-
-      // 横向切片撕裂（转场与快速滚动时明显）
-      float slice = floor(uv.y * 24.0);
-      float seed = rand(vec2(slice, floor(uTime * 24.0)));
-      if (seed > 1.0 - a * 0.55) {
-        uv.x += (rand(vec2(slice, uTime)) - 0.5) * 0.18 * a;
-      }
-
-      // RGB 色散（常开一点点，转场时加剧）
-      float shift = 0.0009 + 0.016 * a;
-      float r = texture2D(tDiffuse, uv + vec2(shift, 0.0)).r;
-      float g = texture2D(tDiffuse, uv).g;
-      float b = texture2D(tDiffuse, uv - vec2(shift, 0.0)).b;
-      vec3 col = vec3(r, g, b);
-
-      // 噪点
-      col += (rand(uv * (uTime + 1.0)) - 0.5) * 0.1 * a;
-
-      // 常开胶片颗粒 + 暗角
-      col += (rand(uv * (uTime + 7.0)) - 0.5) * 0.02;
-      float vig = distance(vUv, vec2(0.5, 0.5));
-      col *= 1.0 - smoothstep(0.52, 0.98, vig) * 0.5;
-
-      gl_FragColor = vec4(col, 1.0);
-    }
-  `,
+type SceneProps = {
+  paused: boolean;
+  artworkIndex: number;
+  form: "flow" | "image";
+  onReady: () => void;
+  onFailure: () => void;
 };
 
-/* ---------------- Canvas 贴图生成 ---------------- */
-function createCanvas(w: number, h: number) {
-  const canvas = document.createElement("canvas");
-  canvas.width = w;
-  canvas.height = h;
-  const ctx = canvas.getContext("2d")!;
-  return { canvas, ctx };
-}
-
-/** CD 盘面贴图：金色碟面 + 彩虹光泽 + 手写标签 */
-function makeDiscTexture(): THREE.CanvasTexture {
-  const { canvas, ctx } = createCanvas(512, 512);
-  const gold = ctx.createRadialGradient(256, 256, 40, 256, 256, 250);
-  gold.addColorStop(0, "#f7e7b0");
-  gold.addColorStop(0.55, "#e8c979");
-  gold.addColorStop(1, "#b98a3e");
-  ctx.fillStyle = gold;
-  ctx.beginPath();
-  ctx.arc(256, 256, 248, 0, Math.PI * 2);
-  ctx.fill();
-
-  // 细密数据纹
-  for (let r = 128; r < 244; r += 3) {
-    ctx.strokeStyle = "rgba(120, 84, 30, 0.07)";
-    ctx.lineWidth = 1;
-    ctx.beginPath();
-    ctx.arc(256, 256, r, 0, Math.PI * 2);
-    ctx.stroke();
-  }
-
-  ctx.globalAlpha = 0.32;
-  for (let i = 0; i < 6; i++) {
-    ctx.strokeStyle = `hsl(${i * 60}, 90%, 65%)`;
-    ctx.lineWidth = 10;
-    ctx.beginPath();
-    ctx.arc(256, 256, 150 + i * 14, i, i + 2.2);
-    ctx.stroke();
-  }
-  ctx.globalAlpha = 1;
-
-  ctx.fillStyle = "#f5efdd";
-  ctx.beginPath();
-  ctx.arc(256, 256, 118, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.strokeStyle = "#d8cdb4";
-  ctx.lineWidth = 3;
-  ctx.beginPath();
-  ctx.arc(256, 256, 118, 0, Math.PI * 2);
-  ctx.stroke();
-
-  ctx.fillStyle = "#26221a";
-  ctx.textAlign = "center";
-  ctx.textBaseline = "middle";
-  ctx.font = "bold 62px 'Microsoft YaHei', 'PingFang SC', sans-serif";
-  ctx.fillText("任玄奇", 256, 222);
-  ctx.font = "bold 27px monospace";
-  ctx.fillText("RXQ · MIXTAPE", 256, 284);
-  ctx.font = "20px monospace";
-  ctx.fillText("SIDE A · 2026", 256, 324);
-
-  // 中心孔 + 金属轴圈
-  ctx.globalCompositeOperation = "destination-out";
-  ctx.beginPath();
-  ctx.arc(256, 256, 34, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.globalCompositeOperation = "source-over";
-  ctx.strokeStyle = "rgba(70, 58, 34, 0.65)";
-  ctx.lineWidth = 5;
-  ctx.beginPath();
-  ctx.arc(256, 256, 36, 0, Math.PI * 2);
-  ctx.stroke();
-
-  const tex = new THREE.CanvasTexture(canvas);
-  tex.colorSpace = THREE.SRGBColorSpace;
-  return tex;
-}
-
-/** 黑胶贴图：图案碟（picture disc）——作品图铺满整个碟面，
-    碟纹与高光带压在图上，中心只留一枚小标签 + 中孔；可重绘复用 */
-function drawVinylLabel(ctx: CanvasRenderingContext2D, work: Work, img?: HTMLImageElement) {
-  ctx.clearRect(0, 0, 512, 512);
-
-  // 作品图铺满碟面（圆形裁切、等比放大覆盖）；无图时用色相兜底
-  ctx.save();
-  ctx.beginPath();
-  ctx.arc(256, 256, 246, 0, Math.PI * 2);
-  ctx.clip();
-  if (img && img.naturalWidth > 0) {
-    const s = Math.max(492 / img.naturalWidth, 492 / img.naturalHeight);
-    const dw = img.naturalWidth * s;
-    const dh = img.naturalHeight * s;
-    ctx.drawImage(img, 256 - dw / 2, 256 - dh / 2, dw, dh);
-  } else {
-    ctx.fillStyle = `hsl(${work.hue}, 55%, 38%)`;
-    ctx.fillRect(10, 10, 492, 492);
-  }
-  // 整体压暗，让碟纹、高光与白色外缘读得出来
-  ctx.fillStyle = "rgba(0,0,0,0.30)";
-  ctx.fillRect(0, 0, 512, 512);
-  ctx.restore();
-
-  // 碟纹（满碟面，低透明度）
-  for (let r = 60; r < 244; r += 5) {
-    ctx.strokeStyle = "rgba(255,255,255,0.08)";
-    ctx.lineWidth = 1;
-    ctx.beginPath();
-    ctx.arc(256, 256, r, 0, Math.PI * 2);
-    ctx.stroke();
-  }
-
-  // 斜向高光带，模拟黑胶油亮反光（一主一辅两道弧）
-  const sheen = ctx.createLinearGradient(0, 0, 512, 512);
-  sheen.addColorStop(0.42, "rgba(255,255,255,0)");
-  sheen.addColorStop(0.5, "rgba(255,255,255,0.22)");
-  sheen.addColorStop(0.58, "rgba(255,255,255,0)");
-  ctx.fillStyle = sheen;
-  ctx.beginPath();
-  ctx.arc(256, 256, 246, 0, Math.PI * 2);
-  ctx.fill();
-  const sheen2 = ctx.createLinearGradient(512, 0, 0, 512);
-  sheen2.addColorStop(0.62, "rgba(255,255,255,0)");
-  sheen2.addColorStop(0.7, "rgba(255,255,255,0.08)");
-  sheen2.addColorStop(0.78, "rgba(255,255,255,0)");
-  ctx.fillStyle = sheen2;
-  ctx.beginPath();
-  ctx.arc(256, 256, 246, 0, Math.PI * 2);
-  ctx.fill();
-
-  // 外缘亮圈，让碟形在黑场中立起来
-  ctx.strokeStyle = "rgba(255,255,255,0.28)";
-  ctx.lineWidth = 2;
-  ctx.beginPath();
-  ctx.arc(256, 256, 246, 0, Math.PI * 2);
-  ctx.stroke();
-
-  // 中心小标签：编号 + 年份（标题由页面大字承担）
-  ctx.fillStyle = "rgba(8,8,10,0.88)";
-  ctx.beginPath();
-  ctx.arc(256, 256, 54, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.strokeStyle = "rgba(255,255,255,0.35)";
-  ctx.lineWidth = 1.5;
-  ctx.beginPath();
-  ctx.arc(256, 256, 54, 0, Math.PI * 2);
-  ctx.stroke();
-  ctx.fillStyle = "rgba(255,255,255,0.92)";
-  ctx.textAlign = "center";
-  ctx.textBaseline = "middle";
-  ctx.font = "bold 22px monospace";
-  ctx.fillText(work.no, 256, 244, 92);
-  ctx.font = "14px monospace";
-  ctx.fillStyle = "rgba(255,255,255,0.6)";
-  ctx.fillText(work.year, 256, 274, 92);
-
-  ctx.globalCompositeOperation = "destination-out";
-  ctx.beginPath();
-  ctx.arc(256, 256, 16, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.globalCompositeOperation = "source-over";
-}
-
-function makeVinylTexture(work: Work) {
-  const { canvas, ctx } = createCanvas(512, 512);
-  drawVinylLabel(ctx, work);
-  const tex = new THREE.CanvasTexture(canvas);
-  tex.colorSpace = THREE.SRGBColorSpace;
-  return { tex, canvas, ctx };
-}
-
-/** 盒背托盘贴图：SIDE A 曲目表 */
-function makeTrayTexture(works: Work[]): THREE.CanvasTexture {
-  const { canvas, ctx } = createCanvas(512, 576);
-  ctx.fillStyle = "#0c0c0e";
-  ctx.fillRect(0, 0, 512, 576);
-  ctx.fillStyle = "rgba(255,255,255,0.85)";
-  ctx.font = "bold 28px monospace";
-  ctx.textAlign = "left";
-  ctx.fillText("SIDE A", 48, 54);
-  ctx.fillStyle = "rgba(255,255,255,0.35)";
-  ctx.fillRect(48, 72, 416, 2);
-  // 17 首曲目：行距 26.5px，起始 y=100，长标题限宽压缩
-  works.forEach((w, i) => {
-    const y = 100 + i * 26.5;
-    ctx.fillStyle = `hsl(${w.hue}, 58%, 55%)`;
-    ctx.font = "bold 15px monospace";
-    ctx.fillText(String(i + 1).padStart(2, "0"), 48, y);
-    ctx.fillStyle = "rgba(255,255,255,0.8)";
-    ctx.font = "15px 'Microsoft YaHei', 'PingFang SC', sans-serif";
-    ctx.fillText(w.title, 96, y, 300);
-    ctx.fillStyle = "rgba(255,255,255,0.35)";
-    ctx.font = "13px monospace";
-    ctx.textAlign = "right";
-    ctx.fillText(w.year, 464, y, 70);
-    ctx.textAlign = "left";
-  });
-  ctx.fillStyle = "rgba(255,255,255,0.3)";
-  ctx.font = "14px monospace";
-  ctx.fillText("RXQ STUDIO · LIQUID PIXEL", 48, 560);
-  const tex = new THREE.CanvasTexture(canvas);
-  tex.colorSpace = THREE.SRGBColorSpace;
-  return tex;
-}
-
-/** 价格标签贴纸 */
-function makePriceTagTexture(): THREE.CanvasTexture {
-  const { canvas, ctx } = createCanvas(256, 128);
-  ctx.fillStyle = "#d9f24f";
-  ctx.fillRect(0, 0, 256, 128);
-  ctx.fillStyle = "#1a1a1a";
-  ctx.font = "bold 26px monospace";
-  ctx.textAlign = "left";
-  ctx.fillText("08/99", 20, 40);
-  ctx.font = "bold 30px 'Microsoft YaHei', sans-serif";
-  ctx.fillText("任玄奇", 20, 82);
-  ctx.font = "bold 24px monospace";
-  ctx.fillText("RXQ-001", 20, 112);
-  const tex = new THREE.CanvasTexture(canvas);
-  tex.colorSpace = THREE.SRGBColorSpace;
-  return tex;
-}
-
-/* ---------------- 关键帧插值：滚动进度 → 场景布局 ---------------- */
-const lerpNum = (a: number, b: number, t: number) => a + (b - a) * t;
-
-/** 分段线性关键帧：stops 为 [进度, 值][]，p 之外取端点 */
-function kf(stops: ReadonlyArray<readonly [number, number]>, p: number) {
-  if (p <= stops[0][0]) return stops[0][1];
-  for (let i = 1; i < stops.length; i++) {
-    if (p <= stops[i][0]) {
-      const t = (p - stops[i - 1][0]) / (stops[i][0] - stops[i - 1][0]);
-      return lerpNum(stops[i - 1][1], stops[i][1], t);
-    }
-  }
-  return stops[stops.length - 1][1];
-}
-
-/* ---------------- 场景组件 ---------------- */
-type Props = {
-  mode: PortfolioMode;
-  activeWork: number;
-  glitchKey: number;
-  works: Work[];
-  scrollRef: MutableRefObject<ScrollState>;
+const FIELD = {
+  seed: 7031,
+  desktop: { columns: 256, rows: 168, pixelRatio: 1.6 },
+  mobile: { columns: 144, rows: 96, pixelRatio: 1.15 },
+  cameraDistance: 11,
+  pointerRadius: 0.85,
 };
 
-export default function Scene3D({ mode, activeWork, glitchKey, works, scrollRef }: Props) {
-  const mountRef = useRef<HTMLDivElement>(null);
-  const modeRef = useRef(mode);
-  const vinylDirtyRef = useRef(false);
-  const glitchSpikeRef = useRef(1); // 入场即一次故障
-  const worksRef = useRef(works);
-  const activeWorkRef = useRef(activeWork);
+// One UV field owns the fragments, their normals, and the contour threads.
+const surfaceShader = /* glsl */ `
+  uniform sampler2D uMap;
+  uniform float uTime;
+  uniform float uForm;
+  uniform vec2 uImageSize;
+  uniform vec3 uPointer;
+  uniform float uPointerRadius;
+  const float PI = 3.14159265359;
+
+  vec3 surface(vec2 st) {
+    float phase = uTime * 0.38;
+    float span = st.x * 2.0 - 1.0;
+    float band = (st.y - 0.5) * uImageSize.y;
+    float brightness = dot(texture2D(uMap, st).rgb, vec3(0.2126, 0.7152, 0.0722));
+    float twist = span * 0.78 + sin(phase * 0.65) * 0.14;
+    vec3 current = vec3(
+      span * uImageSize.x * 0.5 + 0.16 * sin(band * 1.4 + phase),
+      band * cos(twist) + 0.40 * sin(span * 3.0 - phase),
+      band * sin(twist) + 0.72 * sin(span * 3.2 + phase)
+    );
+    current.z += 0.32 * cos(band * 1.7 - phase) + brightness * 0.55;
+    vec3 image = vec3((st - 0.5) * uImageSize, brightness * 0.40);
+    image.z += sin(st.x * 6.0 + phase) * 0.08;
+    vec3 p = mix(image, current, uForm);
+
+    vec2 away = p.xy - uPointer.xy;
+    float influence = exp(-dot(away, away) / (uPointerRadius * uPointerRadius));
+    influence *= uPointer.z;
+    p.xy += normalize(away + vec2(0.001)) * influence * 0.25;
+    p.z += influence * 0.75;
+    return p;
+  }
+`;
+
+const fragmentVertex = /* glsl */ `
+  ${surfaceShader}
+  attribute vec2 aCell;
+  attribute float aSeed;
+  uniform vec2 uCellSize;
+  varying vec2 vUv;
+  varying vec2 vCell;
+  varying vec3 vNormal;
+  varying vec3 vView;
+  varying float vSeed;
+  void main() {
+    vec3 p = surface(aCell);
+    vec3 alongU = surface(aCell + vec2(0.002, 0.0)) - p;
+    vec3 alongV = surface(aCell + vec2(0.0, 0.002)) - p;
+    vec3 n = normalize(cross(alongU, alongV));
+    float breathing = mix(0.99, 0.95 + 0.03 * sin(aCell.x * 18.0 - uTime * 0.45), uForm);
+    p += alongU * position.x * uCellSize.x / 0.002 * breathing;
+    p += alongV * position.y * uCellSize.y / 0.002 * breathing;
+    p += n * (aSeed - 0.5) * 0.055 * uForm;
+    vec4 viewPosition = modelViewMatrix * vec4(p, 1.0);
+    vNormal = normalize(normalMatrix * n);
+    vView = viewPosition.xyz;
+    vUv = uv;
+    vCell = aCell;
+    vSeed = aSeed;
+    gl_Position = projectionMatrix * viewPosition;
+  }
+`;
+
+const fragmentColor = /* glsl */ `
+  uniform sampler2D uMap;
+  uniform float uForm;
+  uniform int uDebug;
+  varying vec2 vUv;
+  varying vec2 vCell;
+  varying vec3 vNormal;
+  varying vec3 vView;
+  varying float vSeed;
+  void main() {
+    vec2 edge = abs(vUv - 0.5);
+    float footprint = max(fwidth(edge.x), fwidth(edge.y));
+    float alpha = 1.0 - smoothstep(0.47, 0.5 + footprint, max(edge.x, edge.y));
+    if (alpha < 0.02) discard;
+
+    vec3 photo = texture2D(uMap, vCell).rgb;
+    vec3 n = normalize(vNormal);
+    vec3 view = normalize(-vView);
+    vec3 reflected = reflect(-view, n);
+    float facing = abs(dot(n, view));
+    float softbox = pow(max(0.0, dot(reflected, normalize(vec3(-0.5, 0.8, 1.2)))), 18.0);
+    float strip = pow(max(0.0, 1.0 - abs(reflected.x * 0.7 + reflected.y * 0.5)), 28.0);
+    float light = 0.70 + 0.30 * abs(dot(n, normalize(vec3(-0.4, 0.9, 0.7))));
+    vec3 silver = vec3(0.64, 0.72, 0.74) * (softbox * 0.16 + strip * 0.045);
+    vec3 spectral = 0.5 + 0.5 * cos(vec3(0.0, 2.1, 4.2) + facing * 6.5 + vCell.x * 2.0);
+    vec3 color = mix(photo, photo * light + silver, uForm);
+    vec3 accent = mix(vec3(0.10, 0.45, 0.40), vec3(0.62, 0.16, 0.10), smoothstep(0.35, 0.86, vCell.x));
+    color += spectral * pow(1.0 - facing, 2.0) * 0.16 * uForm;
+    color += accent * pow(1.0 - facing, 3.0) * 0.13 * uForm;
+    color *= 0.96 + vSeed * 0.08;
+
+    if (uDebug == 1) color = n * 0.5 + 0.5;
+    if (uDebug == 2) color = vec3(dot(photo, vec3(0.2126, 0.7152, 0.0722)));
+    if (uDebug == 3) color = vec3(vCell, 0.3);
+    gl_FragColor = vec4(color, alpha);
+    #include <tonemapping_fragment>
+    #include <colorspace_fragment>
+  }
+`;
+
+export default function Scene3D({ paused, artworkIndex, form, onReady, onFailure }: SceneProps) {
+  const hostRef = useRef<HTMLDivElement>(null);
+  const stateRef = useRef({ paused, artworkIndex, form });
+  useEffect(() => {
+    stateRef.current = { paused, artworkIndex, form };
+  }, [paused, artworkIndex, form]);
 
   useEffect(() => {
-    modeRef.current = mode;
-  }, [mode]);
-  useEffect(() => {
-    activeWorkRef.current = activeWork;
-    vinylDirtyRef.current = true;
-  }, [activeWork]);
-  useEffect(() => {
-    glitchSpikeRef.current = 1;
-  }, [glitchKey]);
-
-  useEffect(() => {
-    const mount = mountRef.current;
-    if (!mount) return;
-
+    const host = hostRef.current;
+    if (!host) return;
+    const params = new URLSearchParams(window.location.search);
+    const fixedTime = params.has("hero-time") ? Number(params.get("hero-time")) : null;
+    const debug = ({ normals: 1, luminance: 2, uv: 3 } as Record<string, number>)[params.get("hero-debug") ?? ""] ?? 0;
+    const mobile = window.innerWidth < 700;
+    const quality = mobile ? FIELD.mobile : FIELD.desktop;
     let renderer: THREE.WebGLRenderer;
     try {
-      renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+      renderer = new THREE.WebGLRenderer({
+        antialias: true,
+        alpha: true,
+        powerPreference: mobile ? "low-power" : "high-performance",
+        preserveDrawingBuffer: params.has("hero-capture"),
+      });
     } catch {
+      onFailure();
       return;
     }
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    renderer.setSize(mount.clientWidth, mount.clientHeight);
-    mount.appendChild(renderer.domElement);
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.22;
+    renderer.setClearColor(0x000000, 0);
+    renderer.domElement.setAttribute("aria-hidden", "true");
+    host.appendChild(renderer.domElement);
+    let shaderFailed = false;
+    renderer.debug.onShaderError = () => {
+      shaderFailed = true;
+      onFailure();
+    };
 
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(
-      38,
-      mount.clientWidth / mount.clientHeight,
-      0.1,
-      100
-    );
-    camera.position.set(0, 0.1, 7.4);
+    const camera = new THREE.PerspectiveCamera(34, 1, 0.1, 40);
+    camera.position.z = FIELD.cameraDistance;
+    const sculpture = new THREE.Group();
+    scene.add(sculpture);
+    const textures: THREE.Texture<HTMLImageElement>[] = [];
+    const emptyTexture = new THREE.DataTexture(new Uint8Array([120, 170, 180, 255]), 1, 1);
+    emptyTexture.needsUpdate = true;
+    const uniforms = {
+      uMap: { value: emptyTexture as THREE.Texture },
+      uTime: { value: 0 },
+      uForm: { value: 1 },
+      uImageSize: { value: new THREE.Vector2(5.6, 4.2) },
+      uCellSize: { value: new THREE.Vector2(1 / quality.columns, 1 / quality.rows) },
+      uPointer: { value: new THREE.Vector3(0, 0, 0) },
+      uPointerRadius: { value: FIELD.pointerRadius },
+      uDebug: { value: debug },
+    };
 
-    const pmrem = new THREE.PMREMGenerator(renderer);
-    scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
-    scene.environmentIntensity = 0.5;
-
-    // 摄影棚式三点布光 + 工作室紫绿双色轮廓光（柔和取向，避免刺眼光斑）
-    const keyLight = new THREE.DirectionalLight(0xffffff, 0.5);
-    keyLight.position.set(2.5, 3, 5.5);
-    scene.add(keyLight);
-    const rimIndigo = new THREE.PointLight(0x6366f1, 22, 25, 2);
-    rimIndigo.position.set(-5.5, 2.5, -2.5);
-    scene.add(rimIndigo);
-    const rimEmerald = new THREE.PointLight(0x10b981, 18, 25, 2);
-    rimEmerald.position.set(5.5, -1.5, -2);
-    scene.add(rimEmerald);
-    const frontFill = new THREE.PointLight(0xc4b5fd, 6, 20, 2);
-    frontFill.position.set(-2.5, -1, 4);
-    scene.add(frontFill);
-    // 黑胶补光：擦出碟面高光弧，而非整体打亮
-    const vinylLight = new THREE.PointLight(0xfff5e0, 5, 12, 2);
-    vinylLight.position.set(1.6, 2.4, 2.6);
-    scene.add(vinylLight);
-
-    // 双层漂浮微尘：远层细密、近层稀疏，滚动时近层窜动形成纵深视差
-    const makeDust = (count: number, size: number, spread: [number, number, number], zBase: number, color: number, opacity: number) => {
-      const pos = new Float32Array(count * 3);
-      for (let i = 0; i < count; i++) {
-        pos[i * 3] = (Math.random() - 0.5) * spread[0];
-        pos[i * 3 + 1] = (Math.random() - 0.5) * spread[1];
-        pos[i * 3 + 2] = (Math.random() - 0.5) * spread[2] + zBase;
+    let seed = FIELD.seed;
+    const cells = new Float32Array(quality.columns * quality.rows * 2);
+    const seeds = new Float32Array(quality.columns * quality.rows);
+    for (let row = 0; row < quality.rows; row += 1) {
+      for (let column = 0; column < quality.columns; column += 1) {
+        const index = row * quality.columns + column;
+        seed = (seed * 1664525 + 1013904223) >>> 0;
+        const random = seed / 4294967296;
+        cells[index * 2] = (column + 0.5 + (random - 0.5) * 0.18) / quality.columns;
+        cells[index * 2 + 1] = (row + 0.5) / quality.rows;
+        seeds[index] = random;
       }
-      const geo = new THREE.BufferGeometry();
-      geo.setAttribute("position", new THREE.BufferAttribute(pos, 3));
-      const c = createCanvas(64, 64);
-      const grad = c.ctx.createRadialGradient(32, 32, 0, 32, 32, 32);
-      grad.addColorStop(0, "rgba(255,255,255,0.9)");
-      grad.addColorStop(0.4, "rgba(255,255,255,0.25)");
-      grad.addColorStop(1, "rgba(255,255,255,0)");
-      c.ctx.fillStyle = grad;
-      c.ctx.fillRect(0, 0, 64, 64);
-      const tex = new THREE.CanvasTexture(c.canvas);
-      const points = new THREE.Points(
-        geo,
-        new THREE.PointsMaterial({
-          size,
-          map: tex,
-          transparent: true,
-          opacity,
-          blending: THREE.AdditiveBlending,
-          depthWrite: false,
-          color,
-        })
-      );
-      scene.add(points);
-      return points;
-    };
-    const dustFar = makeDust(240, 0.06, [16, 8, 6], -1, 0x9fb3ff, 0.5);
-    const dustNear = makeDust(90, 0.1, [12, 7, 3], 2.2, 0xc7d2fe, 0.32);
-
-    const maxAniso = renderer.capabilities.getMaxAnisotropy();
-
-    // 预加载全部作品代表图：每张加载完成后置脏，黑胶标签重绘时贴入
-    const imgCache = new Map<string, HTMLImageElement>();
-    worksRef.current.forEach((w) => {
-      const im = new Image();
-      im.src = w.image;
-      im.onload = () => {
-        imgCache.set(w.id, im);
-        vinylDirtyRef.current = true;
-      };
+    }
+    const quad = new THREE.PlaneGeometry(1, 1);
+    const fragments = new THREE.InstancedBufferGeometry();
+    fragments.index = quad.index;
+    fragments.attributes.position = quad.attributes.position;
+    fragments.attributes.uv = quad.attributes.uv;
+    fragments.setAttribute("aCell", new THREE.InstancedBufferAttribute(cells, 2));
+    fragments.setAttribute("aSeed", new THREE.InstancedBufferAttribute(seeds, 1));
+    fragments.instanceCount = seeds.length;
+    const material = new THREE.ShaderMaterial({
+      uniforms,
+      vertexShader: fragmentVertex,
+      fragmentShader: fragmentColor,
+      side: THREE.DoubleSide,
+      transparent: true,
+      depthWrite: true,
     });
+    const fragmentMesh = new THREE.Mesh(fragments, material);
+    fragmentMesh.frustumCulled = false;
+    sculpture.add(fragmentMesh);
 
-    /* ----- CD 盒 ----- */
-    const caseGroup = new THREE.Group();
-    const shell = new THREE.Mesh(
-      new THREE.BoxGeometry(3.4, 3.8, 0.3),
-      // 透射塑料：真实折射 + 表面反射，呈现 CD 盒的有机玻璃质感
-      new THREE.MeshPhysicalMaterial({
-        transmission: 1,
-        thickness: 0.35,
-        roughness: 0.08,
-        ior: 1.5,
-        clearcoat: 0.22,
-        clearcoatRoughness: 0.35,
-        attenuationColor: new THREE.Color(0xdde6ff),
-        attenuationDistance: 2.5,
-        envMapIntensity: 1.0,
-      })
-    );
-    caseGroup.add(shell);
-    // 盒体轮廓线，勾勒透明塑料边缘
-    const shellEdges = new THREE.LineSegments(
-      new THREE.EdgesGeometry(shell.geometry),
-      new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.22 })
-    );
-    caseGroup.add(shellEdges);
-
-    const trayTex = makeTrayTexture(worksRef.current);
-    trayTex.anisotropy = maxAniso;
-    const trayDark = new THREE.MeshStandardMaterial({ color: 0x0c0c0e, roughness: 0.85 });
-    // 曲目表轻微自发光，盒背在暗光下仍可读
-    const trayBack = new THREE.MeshStandardMaterial({
-      map: trayTex,
-      roughness: 0.7,
-      emissive: 0xffffff,
-      emissiveMap: trayTex,
-      emissiveIntensity: 0.3,
-    });
-    const tray = new THREE.Mesh(
-      new THREE.BoxGeometry(3.05, 3.45, 0.14),
-      [trayDark, trayDark, trayDark, trayDark, trayDark, trayBack]
-    );
-    tray.position.z = -0.06;
-    caseGroup.add(tray);
-
-    const discTex = makeDiscTexture();
-    discTex.anisotropy = maxAniso;
-    // CD 碟体（金色边缘）+ 正面贴图圆片（平面 UV，文字不镜像）
-    const discBodyGeo = new THREE.CylinderGeometry(1.45, 1.45, 0.05, 72);
-    discBodyGeo.rotateX(Math.PI / 2);
-    const discBody = new THREE.Mesh(
-      discBodyGeo,
-      new THREE.MeshPhysicalMaterial({
-        color: 0xd9b96a,
-        roughness: 0.36,
-        metalness: 0.7,
-        envMapIntensity: 0.55,
-      })
-    );
-    discBody.position.z = 0.045;
-    caseGroup.add(discBody);
-    const discFace = new THREE.Mesh(
-      new THREE.CircleGeometry(1.45, 72),
-      // 不透明 + alphaTest：在实体渲染通道绘制，避免被透明外壳的深度写入遮挡；
-      // 略降亮度避免金色盘面过曝刺眼
-      new THREE.MeshBasicMaterial({
-        map: discTex,
-        alphaTest: 0.5,
-        color: 0xded8ca,
-      })
-    );
-    discFace.position.z = 0.045 + 0.027;
-    caseGroup.add(discFace);
-
-    const tagTex = makePriceTagTexture();
-    tagTex.anisotropy = maxAniso;
-    const priceTag = new THREE.Mesh(
-      new THREE.PlaneGeometry(0.95, 0.48),
-      new THREE.MeshStandardMaterial({
-        map: tagTex,
-        roughness: 0.9,
-        transparent: true,
-      })
-    );
-    priceTag.position.set(0.98, -1.32, 0.17);
-    priceTag.rotation.z = -0.16;
-    caseGroup.add(priceTag);
-    caseGroup.scale.setScalar(0.88);
-    scene.add(caseGroup);
-
-    /* ----- 黑胶唱片 ----- */
-    const vinylGroup = new THREE.Group();
-    const vinyl = makeVinylTexture(worksRef.current[activeWorkRef.current]);
-    vinyl.tex.anisotropy = maxAniso;
-    const vinylBodyGeo = new THREE.CylinderGeometry(1.62, 1.62, 0.05, 72);
-    vinylBodyGeo.rotateX(Math.PI / 2);
-    const vinylBody = new THREE.Mesh(
-      vinylBodyGeo,
-      new THREE.MeshPhysicalMaterial({
-        color: 0x0a0a0c,
-        roughness: 0.5,
-        metalness: 0.1,
-        clearcoat: 0.3,
-        clearcoatRoughness: 0.3,
-        envMapIntensity: 0.15,
-      })
-    );
-    vinylGroup.add(vinylBody);
-    // 正面贴图圆片（平面 UV，标签文字不镜像）；无光照模型 + alphaTest：
-    // 碟面完全按贴图呈现（墨黑 + 手绘高光带），不会被灯光广谱高光洗白
-    const vinylFace = new THREE.Mesh(
-      new THREE.CircleGeometry(1.62, 72),
-      new THREE.MeshBasicMaterial({
-        map: vinyl.tex,
-        alphaTest: 0.5,
-      })
-    );
-    vinylFace.position.z = 0.027;
-    vinylGroup.add(vinylFace);
-    scene.add(vinylGroup);
-
-    /* ----- 后处理 ----- */
-    const composer = new EffectComposer(renderer);
-    composer.addPass(new RenderPass(scene, camera));
-    const bloomPass = new UnrealBloomPass(
-      new THREE.Vector2(mount.clientWidth, mount.clientHeight),
-      0.16,
-      0.45,
-      0.92
-    );
-    composer.addPass(bloomPass);
-    const glitchPass = new ShaderPass(GlitchShader);
-    composer.addPass(glitchPass);
-    composer.addPass(new OutputPass());
-
-    /* ----- 滚动旅程关键帧（Shopify Editions 式：滚动进度驱动布局） -----
-       站点结构：S0 菜单 · S1..SW 作品章节 · S(W+1) 关于 */
-    const W = worksRef.current.length;
-    const s1 = 1 / (W + 1); // 第一屏作品章节的进度位置
-    const s6 = W / (W + 1); // 最后一屏作品章节的进度位置
-
-    // CD 盒：菜单主角 → 章节时推出画面左侧深处当远景层 → 关于屏回到台前展示盒背
-    const caseX: ReadonlyArray<readonly [number, number]> = [[0, 0.9], [s1, -6.4], [s6, -4.6], [1, 1.5]];
-    const caseY: ReadonlyArray<readonly [number, number]> = [[0, 0], [s1, 0.6], [s6, -0.4], [1, 0]];
-    const caseZ: ReadonlyArray<readonly [number, number]> = [[0, 0], [s1, -4.2], [s6, -3.4], [1, 0]];
-    const caseRot: ReadonlyArray<readonly [number, number]> = [[0, -0.18], [s1, 0.5], [s6, -0.9], [1, Math.PI + 0.12]];
-
-    const smooth01 = (t: number) => t * t * (3 - 2 * t);
-
-    // 黑胶已退役：章节舞台交给作品分层内容。唱片永久停放在画面外。
-    const VINYL_PARK = { x: 9.5, y: -0.2, z: -3 } as const;
-    vinylGroup.position.set(VINYL_PARK.x, VINYL_PARK.y, VINYL_PARK.z);
-    vinylGroup.visible = false;
-
-    /* ----- 作品分层舞台：BG 整图 / 主体抠层 / 高光细节 -----
-       每个作品三层不同景深，滚动时以不同速度漂移（Shopify Editions 式刮擦视差），
-       章节边界处整体淡出淡入完成换作 */
-    const layerGroup = new THREE.Group();
-    scene.add(layerGroup);
-    const layerGeo = new THREE.PlaneGeometry(1, 1);
-    const mkLayer = (order: number) => {
-      const m = new THREE.Mesh(
-        layerGeo,
-        new THREE.MeshBasicMaterial({ transparent: true, opacity: 0, depthWrite: false })
-      );
-      m.renderOrder = order;
-      layerGroup.add(m);
-      return m;
-    };
-    const layerBG = mkLayer(1);
-    const layerMid = mkLayer(2);
-    const layerFG = mkLayer(3);
-    const layerMats = [layerBG, layerMid, layerFG].map((l) => l.material as THREE.MeshBasicMaterial);
-
-    type LayerEntry = { bg?: THREE.Texture; mid?: THREE.Texture; fg?: THREE.Texture; aspect: number };
-    const layerCache = new Map<string, LayerEntry>();
-    const texLoader = new THREE.TextureLoader();
-    const loadLayerTex = (w: Work) => {
-      let entry = layerCache.get(w.id);
-      if (entry) return entry;
-      entry = { aspect: 4 / 3 };
-      layerCache.set(w.id, entry);
-      const e = entry;
-      texLoader.load(`/works/layers/${w.id}-bg.jpg`, (t) => {
-        t.colorSpace = THREE.SRGBColorSpace;
-        t.anisotropy = maxAniso;
-        e.bg = t;
-        const img = t.image as HTMLImageElement;
-        if (img && img.width) e.aspect = img.width / img.height;
-      });
-      (["mid", "fg"] as const).forEach((k) => {
-        texLoader.load(`/works/layers/${w.id}-${k}.webp`, (t) => {
-          t.colorSpace = THREE.SRGBColorSpace;
-          t.anisotropy = maxAniso;
-          e[k] = t;
-        });
-      });
-      return e;
-    };
-    worksRef.current.forEach(loadLayerTex);
-    let layerWorkIdx = -1; // 当前绑定的作品索引（-1 = 未绑定）
-
-    // 相机：章节中段轻轻推近，结尾再拉回来
-    const camZ: ReadonlyArray<readonly [number, number]> = [[0, 7.4], [s1 * 0.5, 6.8], [s6, 6.6], [1, 7.0]];
-    const camY: ReadonlyArray<readonly [number, number]> = [[0, 0.1], [0.5, 0.28], [1, 0]];
-
-    const caseBase = new THREE.Vector3(kf(caseX, 0), kf(caseY, 0), kf(caseZ, 0));
-    caseGroup.position.copy(caseBase);
-    caseGroup.rotation.y = kf(caseRot, 0);
-    const caseTarget = new THREE.Vector3();
-
-    /* ----- 鼠标视差 ----- */
-    const pointer = { x: 0, y: 0 };
-    const onPointer = (e: PointerEvent) => {
-      pointer.x = (e.clientX / window.innerWidth) * 2 - 1;
-      pointer.y = (e.clientY / window.innerHeight) * 2 - 1;
-    };
-    window.addEventListener("pointermove", onPointer);
-
-    const onResize = () => {
-      const w = mount.clientWidth;
-      const h = mount.clientHeight;
-      camera.aspect = w / h;
-      camera.updateProjectionMatrix();
-      renderer.setSize(w, h);
-      composer.setSize(w, h);
-    };
-    window.addEventListener("resize", onResize);
-
-    /* ----- 动画循环 ----- */
-    const clock = new THREE.Clock();
-    let raf = 0;
-    let glitchAmount = 0.035;
-    let detailT = 0; // 档案模式混合权重
-    const punch = new THREE.Vector3();
-
-    const animate = () => {
-      raf = requestAnimationFrame(animate);
-      const dt = Math.min(clock.getDelta(), 0.05);
-      const t = clock.elapsedTime;
-      const k = 1 - Math.exp(-dt * 3.2);
-
-      // 滚动进度与速度（由外层 rAF 平滑后写入）
-      const p = scrollRef.current.p;
-      const v = scrollRef.current.v;
-      const sv = Math.min(Math.abs(v), 4);
-
-      // 档案模式：叠加混合到盒背特写
-      detailT += ((modeRef.current === "detail" ? 1 : 0) - detailT) * (1 - Math.exp(-dt * 4));
-
-      const jr = kf(caseRot, p);
-      caseTarget.set(
-        lerpNum(kf(caseX, p), 1.5, detailT),
-        lerpNum(kf(caseY, p), 0, detailT),
-        lerpNum(kf(caseZ, p), 0, detailT)
-      );
-      const caseRotTarget = lerpNum(jr, Math.PI + 0.12, detailT);
-
-      caseBase.lerp(caseTarget, k);
-      caseGroup.position.set(
-        caseBase.x,
-        caseBase.y + Math.sin(t * 0.9) * 0.06,
-        caseBase.z
-      );
-      caseGroup.rotation.y += (caseRotTarget - caseGroup.rotation.y) * k;
-      // 滚动惯性侧倾：快速滚动时盒体顺着滚动方向压一下
-      caseGroup.rotation.z +=
-        (Math.max(-0.08, Math.min(0.08, v * 0.05)) - caseGroup.rotation.z) * k;
-
-      // 鼠标视差（菜单屏最明显，进入章节后收敛）
-      const parallax = Math.max(0, 1 - p / (s1 * 0.7));
-      caseGroup.rotation.x += (pointer.y * 0.1 * parallax - caseGroup.rotation.x) * k;
-
-      /* ----- 作品分层舞台驱动 -----
-         qLay: 章节内位置 0..1（0.5 = 章节满屏）；dq: 偏离中心的程度。
-         三层以不同速度随 dq 漂移 → 滚动时作品内容在景深里刮擦分离 */
-      const fLay = p * (W + 1);
-      const inChapter = fLay >= 0.5 && fLay < W + 0.5;
-      const iLay = Math.min(Math.max(Math.round(fLay), 1), W);
-      const qLay = inChapter ? fLay - (iLay - 0.5) : 0.5;
-      const dq = qLay - 0.5;
-
-      // 章节边界换绑当前作品贴图（此刻各层透明度为 0，换绑不可见）。
-      // 三层景深不同（z 不同），按相机距离反比补偿缩放，静止时严丝合缝对齐原图
-      const wIdx = iLay - 1;
-      if (inChapter && wIdx !== layerWorkIdx) {
-        layerWorkIdx = wIdx;
-        const entry = layerCache.get(worksRef.current[wIdx].id);
-        if (entry) {
-          const asp = entry.aspect;
-          const CAM0 = 6.8; // 章节段相机基准距离
-          const zs = [-1.35, -0.45, 0.55];
-          [layerBG, layerMid, layerFG].forEach((m, i) => {
-            const s = 3.3 * ((CAM0 - zs[i]) / CAM0) * (i === 2 ? 0.985 : 1);
-            m.scale.set(s * asp, s, 1);
-          });
-          if (entry.bg) layerMats[0].map = entry.bg;
-          if (entry.mid) layerMats[1].map = entry.mid;
-          if (entry.fg) layerMats[2].map = entry.fg;
-          layerMats.forEach((m) => (m.needsUpdate = true));
+    const contourPositions: number[] = [];
+    const contourUvs: number[] = [];
+    const contourColors: number[] = [];
+    for (let row = 0; row <= 8; row += 1) {
+      const tint = new THREE.Color(row === 1 ? 0xb54a37 : row === 7 ? 0x277e88 : 0x9aa7aa);
+      for (let column = 0; column < 240; column += 1) {
+        for (const x of [column / 240, (column + 1) / 240]) {
+          contourPositions.push(0, 0, 0);
+          contourUvs.push(x, row / 8);
+          contourColors.push(tint.r, tint.g, tint.b);
         }
       }
+    }
+    const contourGeometry = new THREE.BufferGeometry();
+    contourGeometry.setAttribute("position", new THREE.Float32BufferAttribute(contourPositions, 3));
+    contourGeometry.setAttribute("uv", new THREE.Float32BufferAttribute(contourUvs, 2));
+    contourGeometry.setAttribute("color", new THREE.Float32BufferAttribute(contourColors, 3));
+    const contourMaterial = new THREE.ShaderMaterial({
+      uniforms,
+      vertexShader: `${surfaceShader}
+        varying vec3 vColor;
+        void main() {
+          vColor = color;
+          gl_Position = projectionMatrix * modelViewMatrix * vec4(surface(uv), 1.0);
+        }`,
+      fragmentShader: `uniform float uForm; varying vec3 vColor;
+        void main() {
+          gl_FragColor = vec4(vColor, 0.22 * uForm);
+          #include <tonemapping_fragment>
+          #include <colorspace_fragment>
+        }`,
+      vertexColors: true,
+      transparent: true,
+      depthWrite: false,
+      depthTest: false,
+      blending: THREE.AdditiveBlending,
+    });
+    const contours = new THREE.LineSegments(contourGeometry, contourMaterial);
+    contours.frustumCulled = false;
+    sculpture.add(contours);
 
-      // 章节边缘淡入淡出；档案模式让位给盒背特写
-      const edge = inChapter
-        ? Math.min(smooth01(Math.min(qLay / 0.16, 1)), smooth01(Math.min((1 - qLay) / 0.16, 1)))
-        : 0;
-      const lvis = edge * (1 - detailT);
-      layerGroup.visible = lvis > 0.002;
-      const layerMax = [0.85, 1, 0.95];
-      layerMats.forEach((m, i) => {
-        m.opacity = m.map ? lvis * layerMax[i] : 0;
-      });
+    let disposed = false;
+    let inView = true;
+    let ready = false;
+    let firstFrame = true;
+    let frame = 0;
+    let previousTime = 0;
+    let elapsed = 0;
+    let selectedArtwork = -1;
+    const pointerTarget = new THREE.Vector3();
+    const pointerNdc = new THREE.Vector2();
+    const pointerLocal = new THREE.Vector3();
+    const ray = new THREE.Raycaster();
+    const plane = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0);
 
-      if (layerGroup.visible) {
-        const fl1 = Math.sin(t * 0.6) * 0.03;
-        const fl2 = Math.sin(t * 0.8 + 1.7) * 0.05;
-        // 背景最慢、主体中速、高光细节最快；滚动速度 v 给前景额外惯性甩尾
-        layerBG.position.set(
-          1.05 - dq * 0.55 + pointer.x * 0.03,
-          -dq * 0.22 - pointer.y * 0.025 + fl1 * 0.5,
-          -1.35
-        );
-        layerMid.position.set(
-          1.05 - dq * 1.15 + pointer.x * 0.08 + v * 0.05,
-          -dq * 0.5 - pointer.y * 0.06 + fl1,
-          -0.45
-        );
-        layerFG.position.set(
-          1.05 - dq * 2.3 + pointer.x * 0.16 + v * 0.13,
-          dq * 0.75 - pointer.y * 0.11 + fl2,
-          0.55
-        );
-        layerMid.rotation.z = dq * 0.05;
-        layerFG.rotation.z = -dq * 0.09;
-      }
-
-      // 盘面转速随滚动速度加快（惯性手感）
-      discFace.rotation.z -= dt * (0.45 + sv * 1.2);
-
-      // 双层微尘差速漂移；近层随滚动反向窜动
-      dustFar.rotation.z = t * 0.008;
-      dustFar.rotation.y = t * 0.012;
-      dustNear.rotation.z = -t * 0.014;
-      dustNear.rotation.y = t * 0.02;
-      dustNear.position.y += (v * 0.9 - dustNear.position.y) * k;
-
-      // 切换作品时重绘黑胶标签（代表图已加载则贴入标签芯）
-      if (vinylDirtyRef.current) {
-        vinylDirtyRef.current = false;
-        const w = worksRef.current[activeWorkRef.current];
-        drawVinylLabel(vinyl.ctx, w, imgCache.get(w.id));
-        vinyl.tex.needsUpdate = true;
-      }
-
-      // 故障强度：换屏尖峰后衰减回底噪；快速滚动时追加速度噪声
-      if (glitchSpikeRef.current > 0) {
-        glitchAmount = 0.6;
-        glitchSpikeRef.current = 0;
-        punch.set((Math.random() - 0.5) * 0.25, (Math.random() - 0.5) * 0.2, 0);
-      }
-      glitchAmount += (0.035 - glitchAmount) * (1 - Math.exp(-dt * 2.2));
-      glitchPass.uniforms.uAmount.value = Math.min(
-        glitchAmount + Math.min(sv * 0.1, 0.28),
-        0.9
-      );
-      glitchPass.uniforms.uTime.value = t;
-
-      punch.multiplyScalar(1 - Math.min(dt * 5, 1));
-      // 每个章节中段相机轻推近，进出章节时拉回（配合传送带节奏）
-      const fNow = p * (W + 1);
-      const iNow = Math.min(Math.max(Math.round(fNow), 1), W);
-      const qNow = fNow >= 0.5 && fNow < W + 0.5 ? fNow - (iNow - 0.5) : 0;
-      const camPush = Math.sin(Math.min(Math.max(qNow, 0), 1) * Math.PI) * 0.35;
-      camera.position.set(punch.x, kf(camY, p) + punch.y, kf(camZ, p) - camPush);
-      camera.lookAt(0.4, 0, 0);
-
-      composer.render();
+    const resize = () => {
+      const { width, height } = host.getBoundingClientRect();
+      if (!width || !height) return;
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, quality.pixelRatio));
+      renderer.setSize(width, height, false);
+      camera.aspect = width / height;
+      camera.updateProjectionMatrix();
+      const viewHeight = 2 * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)) * camera.position.z;
+      const viewWidth = viewHeight * camera.aspect;
+      const compact = window.innerWidth < 700;
+      const scale = Math.min(viewHeight * 0.76 / 5.3, viewWidth * (compact ? 0.93 : 0.49) / 6.8);
+      sculpture.scale.setScalar(scale);
+      sculpture.position.set(compact ? 0 : viewWidth * 0.185, viewHeight * 0.035, 0);
     };
-    animate();
+    const onPointerMove = (event: PointerEvent) => {
+      if (event.pointerType === "touch") return;
+      const rect = host.getBoundingClientRect();
+      pointerNdc.set((event.clientX - rect.left) / rect.width * 2 - 1, -(event.clientY - rect.top) / rect.height * 2 + 1);
+      ray.setFromCamera(pointerNdc, camera);
+      if (ray.ray.intersectPlane(plane, pointerLocal)) {
+        sculpture.worldToLocal(pointerLocal);
+        pointerTarget.set(pointerLocal.x, pointerLocal.y, 1);
+      }
+    };
+    const onPointerLeave = () => { pointerTarget.z = 0; };
+    const onVisibility = () => { previousTime = 0; };
+    const observer = new IntersectionObserver(([entry]) => {
+      inView = entry.isIntersecting;
+      previousTime = 0;
+    }, { rootMargin: "-110px 0px 0px 0px", threshold: 0.01 });
+    observer.observe(host);
+    const onContextLost = (event: Event) => { event.preventDefault(); onFailure(); };
+    host.addEventListener("pointermove", onPointerMove, { passive: true });
+    host.addEventListener("pointerleave", onPointerLeave);
+    window.addEventListener("resize", resize);
+    document.addEventListener("visibilitychange", onVisibility);
+    renderer.domElement.addEventListener("webglcontextlost", onContextLost);
+    resize();
+
+    const render = (now: number) => {
+      frame = requestAnimationFrame(render);
+      if (disposed || shaderFailed || !ready || !inView || document.visibilityState !== "visible") { previousTime = 0; return; }
+      const delta = previousTime ? Math.min((now - previousTime) / 1000, 0.05) : 0;
+      previousTime = now;
+      const state = stateRef.current;
+      if (state.paused) { previousTime = 0; return; }
+      const changedArtwork = selectedArtwork !== state.artworkIndex;
+      if (changedArtwork) {
+        selectedArtwork = state.artworkIndex;
+        const texture = textures[selectedArtwork];
+        uniforms.uMap.value = texture;
+        const aspect = texture.image.width / texture.image.height;
+        uniforms.uImageSize.value.set(aspect > 1.22 ? 5.6 : 4.6 * aspect, aspect > 1.22 ? 5.6 / aspect : 4.6);
+      }
+      const desiredForm = state.form === "flow" ? 1 : 0;
+      elapsed += delta;
+      uniforms.uTime.value = fixedTime !== null && Number.isFinite(fixedTime) ? fixedTime : elapsed;
+      uniforms.uForm.value = fixedTime !== null ? desiredForm : THREE.MathUtils.damp(uniforms.uForm.value, desiredForm, 3.8, delta || 0.016);
+      uniforms.uPointer.value.lerp(pointerTarget, 1 - Math.exp(-delta * 7));
+      const seconds = uniforms.uTime.value;
+      const tilt = uniforms.uForm.value;
+      sculpture.rotation.set((0.20 + Math.sin(seconds * 0.17) * 0.10) * tilt, (-0.30 + Math.sin(seconds * 0.12) * 0.12) * tilt, (-0.16 + Math.sin(seconds * 0.09) * 0.05) * tilt);
+      renderer.render(scene, camera);
+      if (firstFrame && !shaderFailed) {
+        firstFrame = false;
+        onReady();
+      }
+      host.dataset.frame = String(Number(host.dataset.frame ?? 0) + 1);
+      host.dataset.elapsed = uniforms.uTime.value.toFixed(3);
+      host.dataset.form = uniforms.uForm.value.toFixed(3);
+      host.dataset.drawCalls = String(renderer.info.render.calls);
+    };
+
+    const loader = new THREE.TextureLoader();
+    const loads = heroWorks.map((work) => new Promise<THREE.Texture<HTMLImageElement>>((resolve, reject) => {
+      loader.load(work.image!, (texture) => {
+        if (disposed) { texture.dispose(); resolve(texture); return; }
+        textures.push(texture);
+        resolve(texture);
+      }, undefined, reject);
+    }));
+    Promise.all(loads).then((loaded) => {
+      if (disposed) return;
+      textures.splice(0, textures.length, ...loaded);
+      textures.forEach((texture) => { texture.colorSpace = THREE.SRGBColorSpace; });
+      ready = true;
+      render(performance.now());
+    }).catch(() => { if (!disposed) onFailure(); });
 
     return () => {
-      cancelAnimationFrame(raf);
-      window.removeEventListener("pointermove", onPointer);
-      window.removeEventListener("resize", onResize);
-      scene.traverse((obj) => {
-        if (obj instanceof THREE.Mesh || obj instanceof THREE.Points) {
-          obj.geometry.dispose();
-          const mats = Array.isArray(obj.material) ? obj.material : [obj.material];
-          mats.forEach((m) => {
-            const mat = m as THREE.MeshStandardMaterial;
-            if (mat.map) mat.map.dispose();
-            mat.dispose();
-          });
-        }
-      });
-      composer.dispose();
+      disposed = true;
+      cancelAnimationFrame(frame);
+      observer.disconnect();
+      host.removeEventListener("pointermove", onPointerMove);
+      host.removeEventListener("pointerleave", onPointerLeave);
+      window.removeEventListener("resize", resize);
+      document.removeEventListener("visibilitychange", onVisibility);
+      renderer.domElement.removeEventListener("webglcontextlost", onContextLost);
+      textures.forEach((texture) => texture.dispose());
+      emptyTexture.dispose();
+      quad.dispose();
+      fragments.dispose();
+      contourGeometry.dispose();
+      material.dispose();
+      contourMaterial.dispose();
       renderer.dispose();
-      if (renderer.domElement.parentElement === mount) {
-        mount.removeChild(renderer.domElement);
-      }
+      renderer.domElement.remove();
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [onFailure, onReady]);
 
-  return <div ref={mountRef} className="absolute inset-0" data-print-hidden="true" />;
+  return <div ref={hostRef} className="studio-scene" data-hero-seed={FIELD.seed} data-hero-design="image-current" aria-hidden="true" />;
 }
