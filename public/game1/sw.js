@@ -1,8 +1,8 @@
-const SCOPE=new URL('./',self.location.href);
+﻿const SCOPE=new URL('./',self.location.href);
 const PREFIX=`who-works-${SCOPE.pathname}-`;
-const CACHE=PREFIX+'v6-1';
-const FILES=['./','index.html','app.js?v=0.6.1','engine.js','style.css','portrait.css','art-direction.css','fixed-stage.css','floating-ui.css','manifest.webmanifest','vendor/lucide.min.js','assets/paper.png','assets/apartment.webp','assets/town.webp','assets/characters-0.webp','assets/characters-1.webp','assets/characters-2.webp','assets/characters-3.webp','assets/furniture-0.webp','assets/furniture-1.webp','assets/furniture-2.webp','assets/furniture-3.webp','assets/furniture-4.webp','assets/furniture-5.webp','assets/icon-192.png','assets/icon-512.png','assets/music.wav','assets/day.wav','assets/ui/window.webp','assets/ui/button.webp','assets/ui/label.webp','assets/ui/tool.webp','assets/ui/selected.webp','assets/ui/tile.webp'];
-FILES.push('assets/ui/title-lettering.webp','menu.css','assets/menu-cover.webp','assets/ui/menu-title.webp');
+const CACHE=PREFIX+'v8';
+const FILES=['./','index.html','app.js?v=0.8','engine.js','style.css','portrait.css','art-direction.css','fixed-stage.css','floating-ui.css','manifest.webmanifest','vendor/lucide.min.js','assets/paper.png','assets/apartment.webp','assets/town.webp','assets/characters-0.webp','assets/characters-1.webp','assets/characters-2.webp','assets/characters-3.webp','assets/furniture-0.webp','assets/furniture-1.webp','assets/furniture-2.webp','assets/furniture-3.webp','assets/furniture-4.webp','assets/furniture-5.webp','assets/icon-192.png','assets/icon-512.png','assets/music.wav','assets/day.wav','assets/ui/window.webp','assets/ui/button.webp','assets/ui/label.webp','assets/ui/tool.webp','assets/ui/selected.webp','assets/ui/tile.webp'];
+FILES.push('assets/ui/title-lettering.webp','menu.css','gameplay.css','assets/menu-cover.webp','assets/ui/menu-title.webp');
 self.addEventListener('install',event=>{event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(FILES)).then(()=>self.skipWaiting()));});
 self.addEventListener('activate',event=>{event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k.startsWith(PREFIX)&&k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim()));});
 self.addEventListener('fetch',event=>{
