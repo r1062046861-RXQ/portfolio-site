@@ -1,0 +1,183 @@
+:root{--ink:#1d3639;--white:#dce3ce;--coral:#b73627}
+.topbar{inset:calc(10px + env(safe-area-inset-top)) 10px auto;height:54px;padding:0;gap:8px;background:none;border:0;align-items:center}
+.brand{width:162px;height:54px;border:7px solid transparent;border-image:url('assets/ui/label.webp') 30 fill / 7px stretch;padding:0 3px;display:block;text-align:center;flex:none}
+.brand-mark{display:none}.brand h1{font-size:20px;line-height:23px;margin:0}.brand p{font-size:8px;line-height:10px;margin:2px 0 0;letter-spacing:0}
+.header-actions{gap:4px;align-items:center;margin-left:auto}.wallet{height:43px;width:81px;margin:0;padding:2px;border:7px solid transparent;border-image:url('assets/ui/label.webp') 30 fill / 7px stretch;justify-content:center;gap:3px}.wallet span{font-size:16px;line-height:20px}.wallet svg{width:13px;height:13px}
+.icon-button{background:url('assets/ui/tool.webp') center / 100% 100% no-repeat;color:var(--ink);border:0}
+.header-actions .icon-button{width:32px;height:34px;padding:7px}.header-actions .icon-button svg{width:17px;height:17px}
+.icon-button:hover{background:url('assets/ui/tool.webp') center / 100% 100% no-repeat}
+.people-strip{top:78px;left:11px;right:11px;height:54px;background:none;border:0;gap:9px}
+.person,.person+.person{border:8px solid transparent;border-image:url('assets/ui/label.webp') 30 fill / 8px stretch;padding:1px 4px;background:none}
+.person-head b{font-size:12px}.person-head small{font-size:9px}.person:hover{background:none;filter:brightness(1.05)}.meter-track{background:#798f7955}.meter-track span{background:#245955}.meter.mood .meter-track span{background:#b84932}
+.wish-band{top:137px;left:12px;height:31px;padding:2px 5px;border:5px solid transparent;border-image:url('assets/ui/label.webp') 30 fill / 5px stretch;background:none}
+.wish-band .icon-button{width:20px;height:20px;padding:4px}.wish-band b{font-size:10px}.wish-band small{font-size:8px}
+.scene-top{top:177px;left:12px;right:12px}.date-ribbon{background:none;border:7px solid transparent;border-image:url('assets/ui/button.webp') 25 fill / 7px stretch;color:#f2ebd8;padding:2px 4px;gap:7px;box-shadow:none}.date-ribbon span{color:#f2ebd8;opacity:1}.date-ribbon b{font-size:12px}.date-ribbon svg{color:#f0cf55;width:13px;height:13px}
+.scene-switch{background:none;border:0;gap:5px;padding:0}.scene-switch button{width:33px;height:35px;padding:8px;background:url('assets/ui/tool.webp') center / 100% 100% no-repeat;color:var(--ink)}.scene-switch button.active{background:url('assets/ui/selected.webp') center / 100% 100% no-repeat;color:var(--ink)}
+.scene-caption{top:220px;bottom:auto;left:12px;padding:3px 7px;background:#132e31c9;font-size:9px;border-left:2px solid #cbb961}
+.actor{bottom:max(22%,154px);height:30dvh;width:36%}.actor-a{left:12%}.actor-b{left:45%;height:40dvh;width:43%}.scene.town .actor-a{left:12%}.scene.town .actor-b{left:45%}
+.actor span{background:none;border:4px solid transparent;border-image:url('assets/ui/label.webp') 30 fill / 4px stretch;padding:0 4px;line-height:12px;min-width:42px}
+.speech{bottom:calc(max(22%,154px) + 27px);top:auto;left:12px;max-width:62%;background:none;border:6px solid transparent;border-image:url('assets/ui/label.webp') 30 fill / 6px stretch;padding:2px 4px;color:var(--ink);font-size:10px;line-height:14px;box-shadow:none}
+.prop-plant{bottom:calc(max(22%,154px) + 8px)}.prop-lamp{bottom:calc(max(22%,154px) + 6px)}.prop-shelf{bottom:calc(max(22%,154px) + 25px)}.prop-sofa{bottom:max(22%,154px)}.prop-coffee{bottom:calc(max(22%,154px) + 14px)}.prop-balcony{bottom:calc(max(22%,154px) + 17px)}
+.tabs{bottom:calc(79px + env(safe-area-inset-bottom));left:50%;right:auto;transform:translateX(-50%);width:min(330px,calc(100% - 24px));height:68px;display:flex;justify-content:center;gap:14px;padding:0;margin:0;background:none;border:0}
+.tabs button{flex:none;position:relative;width:63px;min-height:64px;height:64px;display:flex;flex-direction:column;justify-content:center;gap:3px;padding:10px 4px 8px;background:url('assets/ui/tool.webp') center / 100% 100% no-repeat;color:var(--ink);font-size:10px;line-height:12px}
+.tabs button svg{width:22px;height:22px;stroke-width:2}.tabs button.active{background:url('assets/ui/selected.webp') center / 100% 100% no-repeat;color:var(--ink)}.tabs button:hover:not(.active){background:url('assets/ui/tool.webp') center / 100% 100% no-repeat}.tabs button:before,.tabs button:after{display:none!important}
+.planner,.content-area{top:auto;bottom:calc(161px + env(safe-area-inset-bottom));left:14px;right:14px;width:auto;height:278px;max-height:calc(100dvh - 210px);margin:0;padding:8px 10px;border:19px solid transparent;border-image:url('assets/ui/window.webp') 45 fill / 19px stretch;background:none;box-shadow:3px 5px 0 #10272855;overflow:hidden}
+.panel-tools{display:flex;gap:5px;align-items:center}.planner-heading .icon-button,.section-heading .icon-button{width:27px;height:28px;min-height:0;padding:6px;flex:none}.planner-heading h2{font-size:17px}.planner-heading{height:28px}.section-heading{height:28px}.section-heading h3{font-size:15px}.section-heading span{margin-left:auto;font-size:9px}.section-heading .icon-button{margin-left:6px}
+.contract{background:none;border:7px solid transparent;border-image:url('assets/ui/tile.webp') 25 fill / 7px stretch;height:36px;padding:0 5px;border-left-width:7px;color:var(--ink)}.contract strong{font-size:17px}.contract-icon{width:20px;height:20px}
+.schedule-labels{height:17px;padding-top:3px}.schedule-action{background:none!important;border:4px solid transparent;border-image:url('assets/ui/tile.webp') 25 fill / 4px stretch;height:35px;min-height:35px;padding:0;gap:0;font-size:8px;color:var(--ink)}.schedule-action.sunday{height:73px;min-height:73px;gap:3px;border-style:solid}.schedule-action.blue{color:#16556a}.schedule-action.yellow{color:#715820}.schedule-action.pink{color:#aa3828}.schedule-action.green{color:#245945}.schedule-action.done{opacity:.48}
+.forecast{border-top:1px solid #294b48;border-bottom:0;margin-top:6px;padding:3px 0;height:24px;min-height:24px}.forecast strong{font-size:18px}
+.run-area{bottom:calc(12px + env(safe-area-inset-bottom));left:50%;right:auto;transform:translateX(-50%);height:64px;width:min(300px,calc(100% - 40px));padding:0;background:none;border:0}
+.primary-button{background:none!important;border:12px solid transparent;border-image:url('assets/ui/button.webp') 30 fill / 12px stretch;padding:0 8px;min-height:43px;height:43px;color:#f4ead8;font-size:15px;letter-spacing:0;box-shadow:none}.primary-button svg{width:17px;height:17px}
+.save-status{display:table;margin:3px auto 0;padding:1px 6px;background:#163333cc;color:#e2e9d5;font-size:8px;line-height:10px}
+.pager{border-top-color:#7a9689;gap:13px}.pager .icon-button{background:url('assets/ui/tool.webp') center / 100% 100% no-repeat;padding:6px;width:30px;height:27px}.pager span{color:#245049;font-size:10px}
+.furniture-image{background:none;border:8px solid transparent;border-image:url('assets/ui/tile.webp') 25 fill / 8px stretch;padding:0;height:79px}.furniture-image img{max-height:60px}.furniture-copy{gap:3px}.furniture-grid{height:148px}
+.text-button,.buy-button{background:none!important;border:6px solid transparent;border-image:url('assets/ui/tile.webp') 25 fill / 6px stretch;color:var(--ink);padding:1px 5px}.buy-button{height:29px;min-height:29px;font-size:9px}.buy-button.owned{border-image-source:url('assets/ui/label.webp');color:#54756a}.job-item .text-button{padding:0 3px;min-height:29px;height:29px}.job-symbol{background:none}.board-action .text-button{padding:0 5px}.report-button{padding:0 5px}.memory{border:6px solid transparent;border-image:url('assets/ui/tile.webp') 25 fill / 6px stretch;background:none}
+dialog{border:20px solid transparent;border-image:url('assets/ui/window.webp') 45 fill / 20px stretch;background:none;padding:10px 13px;height:min(650px,calc(100dvh - 26px));width:min(450px,calc(100% - 20px));box-shadow:5px 8px 0 #10272855}
+dialog::backdrop{background:#10292c70}.modal-top{border-bottom:1px solid #38615a;padding-bottom:9px}.modal-top h2{font-size:21px}.modal-top small{color:#4f7367}.modal-top .icon-button{width:31px;height:33px;padding:8px;margin:0;flex:none}
+.action-option{border:8px solid transparent;border-image:url('assets/ui/tile.webp') 25 fill / 8px stretch;background:none!important;padding:3px 5px;min-height:59px}.action-option.active{border-left-width:8px;border-image-source:url('assets/ui/label.webp')}.action-option b{font-size:12px}.action-option small{font-size:10px}.ledger-total>div{background:#b4caba;border:1px solid #36594c}.ledger-total>div:nth-child(2){background:#d9b390;border-color:#815b42}.badge{border-color:#456e5d;background:#c8d7be}.toggle-row input{accent-color:#b7442c}.modal-actions .primary-button{height:auto;min-height:43px}
+.toast{bottom:157px;border:8px solid transparent;border-image:url('assets/ui/button.webp') 30 fill / 8px stretch;background:none;padding:1px 7px;color:#f4ead8}
+@media(max-height:700px){.topbar{top:8px;height:50px}.brand{height:49px}.brand h1{font-size:18px}.brand p{display:block}.people-strip{top:70px;height:46px}.person,.person+.person{padding:0 3px;border-width:6px}.scene-top{top:121px}.scene-caption{top:163px}.actor{bottom:max(22%,154px);height:28dvh}.actor-b{height:39dvh}.speech{bottom:calc(max(22%,154px) + 27px);font-size:9px;line-height:12px}.planner,.content-area{bottom:151px;left:12px;right:12px;height:236px;max-height:calc(100dvh - 180px);border-width:14px;border-image-width:14px;padding:5px 6px}.planner-heading,.section-heading{height:24px;margin-bottom:3px}.planner-heading h2{font-size:15px}.section-heading h3{font-size:13px}.planner-heading .icon-button,.section-heading .icon-button{width:24px;height:25px;padding:5px}.contract{height:28px;border-width:5px;border-image-width:5px}.schedule-action{height:29px;min-height:29px;border-width:3px;border-image-width:3px}.schedule-action.sunday{height:61px;min-height:61px}.schedule-labels{height:15px}.forecast{height:24px;min-height:24px;margin-top:3px}.tabs{bottom:78px;height:63px;gap:11px}.tabs button{height:60px;min-height:60px;width:59px}.furniture-grid{height:117px}.furniture-image{height:55px;border-width:5px;border-image-width:5px}.furniture-image img{max-height:43px}.buy-button{height:26px;min-height:26px}.board-action{height:29px}.job-item{height:32px}.report-button{height:25px!important;min-height:25px!important}.modal-top h2{font-size:18px}.action-option{min-height:55px}.toast{bottom:146px}}
+@media(max-width:360px){.brand{width:128px;padding:0}.brand h1{font-size:18px}.brand p{font-size:7px}.header-actions{gap:2px}.wallet{width:76px}.header-actions .icon-button{width:29px;height:31px;padding:7px}.person-head b{font-size:11px}.person-head small{font-size:8px}.furniture-copy b{font-size:9px}.schedule-action span{font-size:7px}}
+.speech{top:max(190px,30dvh);bottom:auto}
+
+/* Keep small-screen text legible without fading entire completed controls. */
+:root{--muted:#354b42}
+body,button{font-family:"Microsoft YaHei","PingFang SC",sans-serif}
+button:disabled,.schedule-action.done,.job-item.locked{opacity:1}
+.brand p{font-size:11px;line-height:13px;color:var(--ink)}
+.person-head b{font-size:14px}.person-head small{font-size:12px;color:var(--ink)}
+.meters{margin-top:3px}.meter b{font-size:12px}
+.wish-band{height:36px}.wish-band small{font-size:11px;color:var(--ink)}.wish-band b{font-size:12px}
+.scene-top{top:181px}.date-ribbon{font-size:12px}.scene-caption{top:226px;font-size:12px;opacity:1;background:#132e31f2}
+.actor span{font-size:12px;line-height:16px;font-weight:700}
+.actor img{height:calc(100% - 24px)}
+.speech{top:max(184px,30dvh);font-size:12px;line-height:18px;max-width:82%;padding:4px 6px;font-weight:500}
+.tabs button{font-size:13px;line-height:17px;font-weight:700}
+.planner,.content-area{height:330px;padding:8px 10px}
+.planner-heading h2{font-size:18px}.section-heading h3{font-size:17px}
+.content-area .section-heading span{font-size:11px;color:var(--ink)}
+.contract{height:38px}.contract b{font-size:13px}.contract strong small{display:inline;font-size:11px;color:var(--ink);margin-left:3px}
+.schedule-labels{height:22px;font-size:12px}.label-b{color:#862b20}
+.day-name{height:19px;line-height:19px;font-size:11px;color:var(--ink)}
+.schedule-action,.schedule-action span,.schedule-action.sunday span{font-size:11px;line-height:14px;font-weight:700}
+.schedule-action{height:37px;min-height:37px;border-width:3px;border-image-width:3px}
+.schedule-action.sunday{height:77px;min-height:77px}
+.schedule-action.blue{color:#15434e}.schedule-action.yellow{color:#594415}.schedule-action.pink{color:#862b20}.schedule-action.green{color:#18483f}
+.schedule-action.done{color:#354b42}.schedule-action.done:after{top:2px;right:2px;width:3px;height:3px}
+.forecast{height:30px;min-height:30px;font-size:12px;color:var(--ink)}.forecast strong small{font-size:11px}
+.save-status{font-size:11px;line-height:15px;margin-top:3px;background:#132e31f2;color:#f4f3e3}
+.pager{height:30px}.pager span{font-size:12px;color:var(--ink)}
+.furniture-grid{height:195px}.furniture-copy{gap:4px;padding:5px 0}
+.furniture-copy b{font-family:inherit;font-size:13px;line-height:18px}
+.furniture-copy p{font-size:12px;line-height:17px;color:var(--muted)}
+.buy-button{height:auto;min-height:33px;font-size:12px;padding:2px 0;gap:3px;flex-shrink:0}
+.buy-button.owned{color:#18483f}.buy-button svg{flex-shrink:0}
+.board-action{height:34px}.board-action p,.board-action .text-button{font-size:12px}
+.job-item{height:48px;gap:6px;padding:3px 0}.job-copy b{font-family:inherit;font-size:13px;line-height:18px}
+.job-copy p{font-size:11px;line-height:16px;margin-top:0;color:var(--muted)}
+.job-wage small{font-size:11px}.job-item .text-button{min-width:44px;font-size:12px}
+.diary-log li{height:64px;font-size:13px;line-height:19px;gap:8px}.diary-date{font-size:11px;min-width:42px}
+.report-button{font-size:12px}.memory p{font-size:12px;line-height:18px}
+.modal-top small{font-size:12px;color:var(--muted);letter-spacing:0}
+.modal-top h2{line-height:1.4;overflow-wrap:anywhere}
+.action-option{min-height:72px;gap:8px}.action-option b{font-family:inherit;font-size:14px}
+.action-option small{font-size:13px;color:var(--muted)}
+.action-option>svg{flex-shrink:0}.action-option>svg:first-child{width:18px;height:18px}
+.modal-caption,.option-note,.skill-person p,.skill-label,.toggle-row,.report-hero p,.ledger-row{font-size:14px;color:var(--ink)}
+.skill-row small,.badge,.ledger-total small{font-size:13px;color:var(--muted)}
+.negative,.danger-button{color:#862b20}.positive{color:#18483f}
+.report-hero:has(>img+div+img){gap:8px}.report-hero:has(>img+div+img)>img{max-width:20%}
+.toast{font-size:13px}.run-area{height:67px}
+@media(max-height:700px){
+  .brand p{font-size:11px}.people-strip{height:54px}.person,.person+.person{padding:0 3px}
+  .scene-top{top:130px}.scene-caption{top:172px}
+  .planner,.content-area{height:292px;padding:5px 6px}
+  .planner-heading,.section-heading{height:26px}.planner-heading h2{font-size:17px}.section-heading h3{font-size:16px}
+  .contract{height:34px}.schedule-labels{height:22px}.forecast{height:28px;min-height:28px}
+  .furniture-grid{height:172px}.furniture-image{height:52px}
+  .buy-button{min-height:32px;height:auto}.board-action{height:34px}.job-item{height:48px}
+  .diary-log li{height:64px;font-size:13px;line-height:19px}
+  .report-button{height:30px!important;min-height:30px!important}
+  .speech{font-size:12px;line-height:18px}.action-option{min-height:72px}
+}
+@media(max-width:360px){
+  .brand p{display:none}.brand{display:grid;align-items:center}
+  .person-head b{font-size:14px}.person-head small{font-size:12px}
+  .furniture-copy b{font-size:13px}.schedule-action span{font-size:11px}
+  .job-symbol{display:none}.job-item{gap:5px}
+}
+.brand{display:grid;align-items:center;padding:0 3px}
+.brand>div{width:100%;min-width:0}.brand h1{height:34px;line-height:0;letter-spacing:0}
+.brand p{display:none}.title-lettering{display:block;width:100%;height:34px;object-fit:contain}
+
+/* Reserve the label's painted corners and hanging tab, not just its PNG bounds. */
+.brand,.wallet,.person,.person+.person,.wish-band,.speech,.actor span{
+  border:8px solid transparent;border-left-width:20px;border-right-width:26px;
+  border-image:url('assets/ui/label.webp') 30 85 30 70 fill / 8px 26px 8px 20px stretch;
+}
+.brand{width:172px;padding:0 3px}.brand h1,.title-lettering{height:32px}
+.wallet{width:auto;min-width:85px;max-width:112px;padding:0 2px;gap:3px}
+.wallet span{font-size:16px;min-width:0}.wallet svg{width:11px;height:11px}
+.person,.person+.person{min-width:0;padding:0 3px}
+.person-head{gap:4px;line-height:18px}.person-head small{white-space:nowrap;display:flex;align-items:center;gap:3px}
+.person-head .status-dot{margin:0;flex-shrink:0}
+.meters{gap:5px;margin-top:2px}.meter{gap:3px}.meter-track{min-width:0}
+.meter b{min-width:0;line-height:14px}.meter svg{width:10px;height:10px}
+.wish-band{width:calc(100% - 24px);max-width:365px;height:40px;padding:1px 4px;gap:6px}
+.wish-band>div{min-width:0;gap:6px}.wish-band b{line-height:17px;white-space:normal}
+.wish-band>svg{width:13px;height:13px}
+.speech{max-width:calc(100% - 24px);padding:2px 5px;line-height:18px}
+.actor span{padding:0 3px;min-width:78px;border-top-width:5px;border-bottom-width:5px;border-image-width:5px 26px 5px 20px}
+.actor img{height:calc(100% - 28px)}
+.action-option.active{border-image-slice:30 85 30 70;border-left-width:20px;border-right-width:26px;border-image-width:8px 26px 8px 20px}
+.buy-button.owned{border-image-source:url('assets/ui/tile.webp')}
+.icon-button,.header-actions .icon-button,.planner-heading .icon-button,.section-heading .icon-button,
+.modal-top .icon-button,.pager .icon-button,.wish-band .icon-button,.scene-switch button{
+  padding:0;display:grid;place-items:center;
+}
+.icon-button svg,.header-actions .icon-button svg,.planner-heading .icon-button svg,
+.section-heading .icon-button svg,.modal-top .icon-button svg,.pager .icon-button svg,
+.wish-band .icon-button svg,.scene-switch button svg{width:52%;height:52%;display:block}
+@media(max-width:360px){
+  .brand{width:154px}.wallet{min-width:70px;max-width:86px;border-left-width:12px;border-right-width:18px;border-image-width:8px 18px 8px 12px}
+  .wallet span{font-size:15px}.wallet svg{width:10px;height:10px}
+}
+@media(max-height:700px){
+  .scene-caption{display:none}.speech{top:172px}
+}
+
+/* Keep painted silhouettes through hover and press; old background shorthands erase them. */
+.scene-switch button:hover:not(.active){background:url('assets/ui/tool.webp') center / 100% 100% no-repeat}
+button:hover:not(:disabled){filter:brightness(1.06)}
+button:active:not(:disabled){filter:brightness(.9)!important}
+button:disabled:hover,button:disabled:active{filter:none}
+.primary-button:hover:not(:disabled),.primary-button:active:not(:disabled){transform:none;box-shadow:none}
+.schedule-action:hover:not(:disabled),.action-option:hover:not(:disabled){border-color:transparent}
+
+.scene-messages{position:absolute;top:max(221px,calc(30dvh - 24px));left:12px;right:12px;display:flex;flex-direction:column;align-items:flex-start;gap:4px;z-index:5}
+.scene-messages .scene-caption,.scene-messages .speech{position:static;inset:auto;max-width:100%}
+.scene-messages .speech{padding:0 5px;border-top-width:6px;border-bottom-width:6px;border-image-width:6px 26px 6px 20px}
+@media(max-height:700px){.scene-messages{top:172px}}
+@media(max-height:700px){.scene.weekend .scene-messages{top:166px}.scene.weekend .speech{border-top-width:3px;border-bottom-width:3px;border-image-width:3px 26px 3px 20px}}
+
+/* Keep the whole HUD together below the notch and above the home indicator. */
+:root{--safe-top:env(safe-area-inset-top,0px);--safe-bottom:env(safe-area-inset-bottom,0px)}
+.topbar{top:calc(10px + var(--safe-top))}
+.people-strip{top:calc(78px + var(--safe-top))}
+.wish-band{top:calc(137px + var(--safe-top))}
+.scene-top{top:calc(181px + var(--safe-top))}
+.scene-messages{top:calc(max(221px,30dvh - 24px) + var(--safe-top))}
+.tabs{bottom:calc(79px + var(--safe-bottom))}
+.run-area{bottom:calc(12px + var(--safe-bottom))}
+.planner,.content-area{bottom:calc(161px + var(--safe-bottom));max-height:calc(100dvh - 210px - var(--safe-top) - var(--safe-bottom))}
+dialog{height:min(650px,calc(100dvh - 26px - var(--safe-top) - var(--safe-bottom)));max-height:calc(100dvh - 26px - var(--safe-top) - var(--safe-bottom));margin-top:calc(13px + var(--safe-top))}
+.toast{bottom:calc(146px + var(--safe-bottom))}
+@media(max-height:700px){
+  .topbar{top:calc(8px + var(--safe-top))}
+  .people-strip{top:calc(70px + var(--safe-top))}
+  .scene-top{top:calc(130px + var(--safe-top))}
+  .scene-messages{top:calc(172px + var(--safe-top))}
+  .scene.weekend .scene-messages{top:calc(166px + var(--safe-top))}
+  .tabs{bottom:calc(78px + var(--safe-bottom))}
+  .planner,.content-area{bottom:calc(151px + var(--safe-bottom));max-height:calc(100dvh - 180px - var(--safe-top) - var(--safe-bottom))}
+}

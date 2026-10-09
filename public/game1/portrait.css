@@ -1,0 +1,53 @@
+/* Portrait-first presentation: desktop browsers use the same phone-width canvas. */
+@media (min-width: 681px) {
+  body { background: #dfe8df; }
+  .app-shell { width: 100%; max-width: 480px; min-height: 100dvh; margin: 0 auto; padding: 0 0 96px; background: #f3f5ef; box-shadow: 0 0 32px #29423822; }
+  .topbar { padding: 15px 16px 12px; }
+  .brand { gap: 8px; }
+  .brand h1 { font-size: 22px; white-space: nowrap; }
+  .brand p { font-size: 10px; margin-top: 3px; }
+  .brand-mark { width: 31px; height: 36px; }
+  .brand-mark svg { width: 22px; height: 22px; }
+  .header-actions { gap: 2px; }
+  .header-actions .icon-button { width: 29px; height: 32px; }
+  .header-actions .icon-button svg { width: 18px; height: 18px; }
+  .wallet { margin-right: 2px; padding: 7px 8px; gap: 4px; border-radius: 4px; }
+  .wallet span { font-size: 18px; }
+  .wallet svg { width: 17px; height: 17px; }
+  .wallet small { display: none; }
+  .workspace { display: flex; flex-direction: column; gap: 0; }
+  .scene { aspect-ratio: 1.5; }
+  .scene-top { top: 12px; left: 14px; right: 14px; }
+  .date-ribbon { padding: 7px 9px; gap: 8px; font-size: 11px; }
+  .date-ribbon b { font-size: 13px; }
+  .scene-switch button { width: 27px; height: 27px; }
+  .scene-switch svg { width: 17px; height: 17px; }
+  .actor { height: 45%; bottom: 5%; }
+  .actor-a { left: 35%; } .actor-b { left: 56%; }
+  .actor span { font-size: 9px; padding: 1px 5px; line-height: 14px; }
+  .speech { top: 37%; left: 22%; font-size: 10px; padding: 5px 7px; max-width: 74%; line-height: 1.5; }
+  .scene-caption { font-size: 9px; bottom: 10px; left: 12px; }
+  .scene-caption svg { width: 11px; height: 11px; }
+  .person { padding: 11px 16px; }
+  .person-head b { font-size: 14px; } .person-head small { font-size: 10px; }
+  .meters { gap: 9px; margin-top: 8px; }
+  .wish-band { padding: 12px 17px 10px; }
+  .wish-band > svg { width: 20px; height: 20px; }
+  .wish-band small { font-size: 9px; } .wish-band b { font-size: 12px; }
+  .wish-band .icon-button { width: 28px; height: 28px; }
+  .tabs { padding: 0 12px; gap: 0; }
+  .tabs button { padding: 12px 5px; font-size: 12px; gap: 5px; }
+  .tabs svg { width: 17px; height: 17px; }
+  .content-area { padding: 16px; min-height: 0; }
+  .planner { width: calc(100% - 32px); margin: 15px 16px 0; position: static; padding: 17px 15px 13px; box-shadow: 2px 3px 0 #e0e7db; }
+  .planner-heading { margin-bottom: 14px; } .planner-heading h2 { font-size: 19px; } .planner-heading small { font-size: 10px; }
+  .schedule-action { height: 40px; font-size: 12px; }
+  .forecast { margin-top: 14px; }
+  .run-area { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: min(100%, 480px); z-index: 10; background: #f3f5eff5; border-top: 1px solid var(--line); padding: 10px 16px calc(8px + env(safe-area-inset-bottom)); backdrop-filter: blur(8px); }
+  .save-status { margin-top: 7px; font-size: 9px; }
+  .primary-button { min-height: 43px; padding: 11px 15px; font-size: 14px; }
+  .page-footer { padding: 24px 17px 0; font-size: 9px; } .page-footer span:last-child { display: none; }
+}
+@media (orientation: landscape) and (max-height: 600px) {
+  body::before { content: "请把手机转为竖屏继续游戏"; position: fixed; inset: 0; z-index: 100; background: #eaf2eb; color: #2d403b; display: grid; place-items: center; text-align: center; font-size: 18px; font-weight: 700; padding: 24px; }
+}

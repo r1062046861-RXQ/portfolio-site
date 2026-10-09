@@ -812,6 +812,7 @@ export default function Home() {
 
       {/* Footer */}
       <footer className="site-footer py-6 text-center text-zinc-600 text-xs md:text-sm border-t border-zinc-900 bg-black">
+        <a href="/game1/" className="inline-flex min-h-11 items-center px-4 text-zinc-300 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2">今天谁上班 · 游戏试玩</a>
         <p>© {new Date().getFullYear()} 液态像素艺术工作室 · 企业团队与艺术家技术协作</p>
       </footer>
     </main>
