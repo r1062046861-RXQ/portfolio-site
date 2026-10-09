@@ -1,0 +1,140 @@
+/* Approved everyday objects replace the remaining generic green windows. */
+#modal.legacy-window{height:430px!important;background-position:center;background-size:100% 100%;color:#24494f}
+#modal.legacy-window .modal-top{position:static!important;height:auto!important}
+#modal.legacy-window .modal-top>div{position:absolute;top:var(--title-top,3%);left:var(--title-left,18%);right:var(--title-right,18%);height:var(--title-height,14%);display:flex;align-items:center;justify-content:center}
+#modal.legacy-window .modal-top>div{width:auto;padding:0;text-align:center}
+#modal.legacy-window .modal-top h2{font-size:23px;line-height:27px;white-space:normal;overflow-wrap:anywhere}
+#modal.legacy-window #close-modal{left:var(--close-x,88%);top:var(--close-y,16%);right:auto;transform:translate(-50%,-50%)!important;width:34px;height:36px;min-height:36px;z-index:2}
+#modal.legacy-window.has-close-marker #close-modal{background:transparent!important;clip-path:none}
+#modal.legacy-window #modal-body{left:10%!important;right:10%!important;top:29%!important;bottom:15%!important}
+#modal.legacy-window #modal-pager{bottom:5%;left:28%;right:28%;height:30px}
+#modal.legacy-window .action-option{display:flex;align-items:center;gap:8px;width:100%;min-height:62px;border:0;border-image:none;background:#eee0bc!important;color:#24494f;padding:6px 8px;text-align:left;clip-path:polygon(1% 0,100% 3%,98% 93%,2% 100%,0 65%)}
+#modal.legacy-window .action-option.active{background:#ccdcd6!important}
+#modal.legacy-window .action-option:disabled{opacity:1;color:#5e625b}
+#modal.legacy-window .action-option>span{min-width:0;flex:1}
+#modal.legacy-window .action-option b{display:block;font-family:var(--art-font);font-size:16px;line-height:21px;font-weight:400}
+#modal.legacy-window .action-option small{display:block;font-size:12px;line-height:18px;margin:3px 0 0;color:#3e5c57}
+#modal.legacy-window .action-option>svg:first-child{width:23px;height:23px;color:#2d6070;flex:none}
+#modal.legacy-window .action-option>svg:last-child{width:16px;height:16px;flex:none}
+#modal.legacy-window .text-button,#modal.legacy-window .primary-button{min-height:34px;line-height:19px;font-size:14px;padding:4px 6px;gap:5px}
+#modal.legacy-window .primary-button{background:#a33f2b!important;color:#fff0cf}
+#modal.legacy-window button:hover:not(:disabled){filter:brightness(1.06)}
+#modal.legacy-window button:active:not(:disabled){filter:brightness(.86)}
+#modal.legacy-window .modal-caption,#modal.legacy-window .option-note{font-size:13px;line-height:20px;color:#2c4f53;margin:0 0 7px}
+#modal.legacy-window .modal-actions{display:flex;gap:7px;margin:4px 0 0}
+#modal.legacy-window .modal-actions>*{min-width:0;flex:1}
+#modal.legacy-window .swap-button{width:100%;margin:0 0 6px;background:#d6dfcc!important}
+#modal[data-art="free-time"]{background-image:url('assets/ui-v14/free-time-frame.webp')!important}
+#modal[data-art="free-time"] .modal-top{left:18%!important;right:8%!important}
+#modal[data-art="free-time"] #modal-body{left:18%!important;right:8%!important}
+#modal[data-art="sunday"]{background-image:url('assets/ui-v14/sunday-frame.webp')!important}
+#modal[data-art="sunday"] #modal-body{left:12%!important;right:13%!important;bottom:18%!important}
+#modal[data-art="preset"]{background-image:url('assets/ui-v14/preset-frame.webp')!important}
+#modal[data-art="preset"] #modal-body{top:29%!important;bottom:18%!important;left:13%!important;right:10%!important}
+#modal[data-art="preset"] .action-option{background:transparent!important;padding:6px 3px}
+#modal[data-art="course"]{background-image:url('assets/ui-v14/course-frame.webp')!important}
+#modal[data-art="course"] .modal-top{left:13%!important}
+#modal[data-art="course"] #modal-body{left:13%!important;right:12%!important}
+#modal[data-art="draw"]{background-image:url('assets/ui-v14/draw-frame.webp')!important}
+#modal[data-art="draw"] #modal-body{left:13%!important;right:13%!important;top:28%!important;bottom:18%!important}
+#modal[data-art="draw"] .draw-reveal{background:transparent;padding:0 0 6px;text-align:center;border-bottom:1px dashed #8ca196}
+#modal[data-art="draw"] .draw-reveal>svg{width:24px;height:24px;color:#2c6070}
+#modal[data-art="draw"] .draw-reveal h3{font-family:var(--art-font);font-size:20px;line-height:25px;margin:3px 0;color:#24494f}
+#modal[data-art="draw"] .draw-reveal p{font-size:13px;line-height:20px;margin:2px 0}
+#modal[data-art="draw"] .draw-reveal small{font-size:12px;line-height:18px;display:block}
+#modal[data-art="event"]{background-image:url('assets/ui-v14/event-frame.webp')!important}
+#modal[data-art="event"] .event-art{width:100%;height:70px;object-fit:cover;object-position:center 30%;margin:0 0 5px}
+#modal[data-art="reward"]{background-image:url('assets/ui-v14/reward-frame.webp')!important}
+#modal[data-art="reward"] .modal-top{top:16%!important}
+#modal[data-art="reward"] #modal-body{top:31%!important;bottom:16%!important;left:12%!important;right:12%!important}
+#modal[data-art="reward"] .goal-paper{background:transparent;border:0;padding:0;margin:0 0 7px}
+#modal[data-art="reward"] .goal-paper small{font-size:12px;line-height:18px;color:#3c5a5e}
+#modal[data-art="reward"] .goal-paper h3{font-family:var(--art-font);font-size:20px;line-height:25px;font-weight:400;margin:4px 0}
+#modal[data-art="reward"] .goal-paper p{font-size:13px;line-height:20px;margin:4px 0}
+#modal[data-art="reward"] .reward-label{font-size:16px;line-height:22px}
+#modal[data-art="reward"] .milestone-note{background:#ece0bc;font-size:12px;line-height:18px;padding:5px;margin:0 0 5px}
+#modal[data-art="report"]{background-image:url('assets/ui-v14/report-frame.webp')!important}
+#modal[data-art="report"] .report-hero{gap:6px;padding:0;margin:0 0 5px;align-items:center}
+#modal[data-art="report"] .report-hero img{height:75px;max-width:23%;object-fit:contain}
+#modal[data-art="report"] .report-hero h3{font-family:var(--art-font);font-weight:400;font-size:18px;line-height:24px;margin:0}
+#modal[data-art="report"] .report-hero p{font-size:12px;line-height:18px;margin:3px 0}
+#modal[data-art="report"] .badge-row{gap:4px;margin:4px 0}
+#modal[data-art="report"] .badge{background:transparent;border:1px dashed #6a8b80;font-size:11px;line-height:16px;padding:3px}
+#modal[data-art="report"] .ledger-total{gap:8px;margin:5px 0}
+#modal[data-art="report"] .ledger-total>div{border:0;background:transparent;padding:3px}
+#modal[data-art="report"] .ledger-total small{font-size:12px;margin:0}
+#modal[data-art="report"] .ledger-total b{font-family:var(--art-font);font-weight:400;font-size:26px;line-height:30px}
+#modal[data-art="report"] .ledger-row{padding:4px 0;font-size:13px;line-height:20px;border-bottom:1px dashed #83978a;gap:6px}
+#modal[data-art="tutorial"]{background-image:url('assets/ui-v14/tutorial-frame.webp')!important}
+#modal[data-art="tutorial"] .modal-top{top:15%!important}
+#modal[data-art="tutorial"] #modal-tools{position:absolute;left:10%;right:10%;top:0;bottom:0;pointer-events:none}
+.tutorial-tools{display:contents}.tutorial-steps{position:absolute;top:4%;left:0;right:0;display:flex;justify-content:space-around;font-family:var(--art-font);font-size:17px;line-height:22px;color:#244d53}
+.tutorial-steps span{display:block;padding:1px 5px}.tutorial-steps .current{background:#a33f2b;color:#fff0cf;clip-path:polygon(0 5%,98% 0,100% 93%,4% 100%)}
+#modal[data-art="tutorial"] .tutorial-actions{position:absolute;left:0;right:0;bottom:5%;display:flex;gap:6px;pointer-events:auto}
+#modal[data-art="tutorial"] .tutorial-actions button{flex:1;min-width:0;font-size:13px;min-height:34px;padding:3px}
+#modal[data-art="tutorial"] #modal-body{top:29%!important;bottom:26%!important}
+#modal[data-art="tutorial"] #modal-pager{bottom:16%}
+#modal[data-art="tutorial"] .tutorial-card>svg{width:24px;height:24px;color:#2b5c6e}
+#modal[data-art="tutorial"] .tutorial-card h3{font-family:var(--art-font);font-weight:400;font-size:18px;line-height:23px;margin:3px 0}
+#modal[data-art="tutorial"] .tutorial-card p{font-size:13px;line-height:20px;margin:5px 0}
+#modal[data-art="tutorial"] .tutorial-card .tutorial-hint{font-size:12px;line-height:18px;border-left:2px solid #c19a38;padding-left:7px;color:#3b5d57}
+#modal[data-art="buy"]{background-image:url('assets/ui-v14/buy-frame.webp')!important;height:360px!important}
+#modal[data-art="buy"] #modal-body{top:28%!important;bottom:19%!important;left:13%!important;right:13%!important}
+#modal[data-art="buy"] .report-hero{display:flex;gap:8px;padding:0;margin:0 0 7px;align-items:center}
+#modal[data-art="buy"] .report-hero img{height:100px;max-width:33%;object-fit:contain}
+#modal[data-art="buy"] .report-hero h3{font-family:var(--art-font);font-weight:400;font-size:23px;line-height:28px;margin:0}
+#modal[data-art="buy"] .report-hero p{font-size:13px;line-height:19px;margin:4px 0}
+#modal[data-art="buy"] .hint-price{color:#963b27}
+#modal[data-art="import"]{background-image:url('assets/ui-v14/import-frame.webp')!important;height:335px!important}
+#modal[data-art="import"] .modal-top{top:15%!important;left:13%!important;right:12%!important}
+#modal[data-art="import"] #modal-body{left:13%!important;right:13%!important;top:35%!important;bottom:25%!important}
+#modal[data-art="import"] #modal-body .primary-button{width:100%}
+#modal[data-art="ad"]{background-image:url('assets/ui-v14/ad-frame.webp')!important;height:320px!important}
+#modal[data-art="ad"] .modal-top{top:12%!important;left:14%!important;right:14%!important}
+#modal[data-art="ad"] #modal-body{left:14%!important;right:14%!important;top:29%!important;bottom:14%!important}
+#modal[data-art="ad"] .ad-timer{font-family:var(--art-font);font-size:64px;line-height:75px;padding:0;margin:0;color:#28586a}
+#decorator{height:165px;bottom:calc(10px + var(--safe-bottom));left:6px;right:6px;padding:0;border:0;border-image:none;background:url('assets/ui-v14/decorate-frame.webp') center/100% 100% no-repeat;color:#244c54}
+#decorator .decorator-title{position:absolute;left:9%;right:8%;top:11%;height:26px;gap:6px}
+#decorator .decorator-title b{font-family:var(--art-font);font-weight:400;font-size:18px;line-height:24px}
+#decorator .decorator-title .icon-button{display:flex;align-items:center;gap:3px;width:auto;min-width:80px;height:28px;min-height:28px;padding:2px 4px;font-family:var(--art-font);font-size:13px;line-height:18px;border:0;background:#ddbb58!important;color:#28545c;transform:none!important}
+#decorator .decorator-title .icon-button svg{width:16px;height:16px}
+#decorator p{position:absolute;left:9%;right:8%;top:34%;font-size:12px;line-height:18px;margin:0}
+#decorator .decorator-spots{position:absolute;left:13%;right:10%;top:50%;height:35px;gap:8px}
+#decorator .decorator-spots .text-button{min-height:35px;font-family:var(--art-font);font-size:14px;line-height:18px;gap:5px;padding:2px 5px;border:0;border-image:none;background:#ece0bc!important;color:#2b5460;transform:none!important;clip-path:polygon(1% 0,98% 4%,100% 83%,96% 100%,3% 94%,0 25%)}
+#decorator .decorator-spots .chosen{background:#28586b!important;color:#fff0cf}
+#decorator .decorator-spots .text-button svg{width:16px;height:16px;flex:none}
+#decorator small{position:absolute;left:9%;right:8%;bottom:10%;font-size:11px;line-height:16px;margin:0;text-align:center}
+#decorator button:active:not(:disabled){filter:brightness(.86)}
+@media(max-width:360px){
+ #modal.legacy-window .modal-top h2{font-size:20px;line-height:24px}
+ #modal.legacy-window .action-option b{font-size:15px;line-height:20px}
+ #modal.legacy-window .action-option small{font-size:11px;line-height:17px}
+ #modal.legacy-window .action-option{gap:5px;padding:5px 6px}
+ #modal.legacy-window .text-button,#modal.legacy-window .primary-button{font-size:13px}
+ #modal[data-art="tutorial"] .tutorial-card p{font-size:12px;line-height:18px}
+ #modal[data-art="tutorial"] .tutorial-card .tutorial-hint{font-size:11px;line-height:17px}
+ #decorator p{font-size:11px;line-height:17px}#decorator small{font-size:10px;line-height:14px}
+ #decorator .decorator-title b{font-size:16px}#decorator .decorator-spots .text-button{font-size:13px}
+}
+
+#modal[data-art="free-time"]{--title-left:27%;--title-right:18%;--title-top:2%;--title-height:13%;--close-x:94%;--close-y:16%}
+#modal[data-art="sunday"]{--title-top:4%;--title-height:14%;--title-left:20%;--title-right:20%;--close-x:87%;--close-y:18%}
+#modal[data-art="sunday"] #modal-body{top:29%!important;left:19%!important;right:16%!important}
+#modal[data-art="preset"]{--title-top:1%;--title-height:13%;--title-left:22%;--title-right:22%;--close-x:88%;--close-y:12%}
+#modal[data-art="preset"] #modal-body{top:18%!important;bottom:14%!important;left:13%!important;right:10%!important;display:flex;flex-direction:column;gap:0!important}
+#modal[data-art="preset"] .action-option{height:calc((100% - 18px)/3);min-height:0;flex:none;padding:9px 6px!important;margin:0!important}
+#modal[data-art="course"]{--title-top:2%;--title-height:13%;--title-left:25%;--title-right:21%;--close-x:94%;--close-y:9%}
+#modal[data-art="draw"]{--title-top:5%;--title-height:15%;--title-left:23%;--title-right:23%;--close-x:88%;--close-y:12%}
+#modal[data-art="event"]{--title-top:17%;--title-height:12%;--title-left:23%;--title-right:13%;--close-x:94%;--close-y:7%}
+#modal[data-art="event"] #modal-body{top:33%!important;left:23%!important;right:10%!important;bottom:10%!important}
+#modal[data-art="reward"]{--title-top:1%;--title-height:14%;--title-left:23%;--title-right:23%;--close-x:94%;--close-y:11%}
+#modal[data-art="reward"] #modal-body{top:24%!important}
+#modal[data-art="report"]{--title-top:2%;--title-height:13%;--title-left:14%;--title-right:44%;--close-x:87%;--close-y:16%}
+#modal[data-art="report"] #modal-body{top:23%!important;left:11%!important;right:10%!important}
+#modal[data-art="tutorial"]{--title-top:16%;--title-height:11%;--title-left:10%;--title-right:23%;--close-x:85%;--close-y:19%}
+#modal[data-art="tutorial"] .modal-top>div{justify-content:flex-start;text-align:left}
+#modal[data-art="buy"]{--title-top:9%;--title-height:16%;--title-left:26%;--title-right:25%;--close-x:94%;--close-y:17%}
+#modal[data-art="import"]{--title-top:15%;--title-height:17%;--title-left:13%;--title-right:20%;--close-x:94%;--close-y:7%}
+#modal[data-art="import"] .modal-top>div{justify-content:flex-start;text-align:left}
+#modal[data-art="ad"]{--title-top:4%;--title-height:17%;--title-left:24%;--title-right:23%;--close-x:82%;--close-y:17%}
+body:has(.decoration-mode) #toast{bottom:calc(190px + var(--safe-bottom))}

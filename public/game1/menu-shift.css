@@ -1,0 +1,58 @@
+/* Approved door plaque, folded letter and work-ticket clipboard. */
+.main-menu .menu-actions{left:3%;right:3%;bottom:calc(10px + var(--safe-bottom));height:min(300px,42dvh);padding:0;border:0;border-image:none;display:block;background:url('assets/ui-v13/menu-frame.webp') center/100% 100% no-repeat;filter:none}
+.main-menu .menu-save{position:absolute;top:20%;left:24%;right:10%;margin:0;font-family:var(--art-font);font-weight:400;font-size:14px;line-height:19px;text-align:center;color:#234b50}
+.main-menu .menu-button{position:absolute;left:23%;right:11%;width:66%;height:20%;min-height:0;padding:0 5px;border:0;border-image:none;box-shadow:none;gap:9px;transform:none!important;clip-path:polygon(4% 4%,95% 0,100% 15%,98% 88%,93% 100%,5% 96%,0 80%,0 15%)}
+.main-menu .menu-continue{top:35%;color:#fff0ce}.main-menu .menu-new{top:61%;color:#234b50}
+.main-menu .menu-button span{font-family:var(--art-font);font-weight:400;font-size:27px;line-height:32px;letter-spacing:1px}
+.main-menu .menu-button svg{width:19px;height:19px;flex:none}
+.main-menu .menu-button:hover:not(:disabled){background:#f9e2a915!important}
+.main-menu .menu-button:active:not(:disabled){background:#152d3940!important}
+.main-menu .menu-button:disabled{background:#243e4b80!important;color:#ddd8c4;filter:none}
+.main-menu .menu-storage{position:absolute;top:87%;left:18%;right:8%;font-size:11px;line-height:16px;margin:0;text-align:center;color:#2b4d51}
+.main-menu .menu-button:focus-visible{outline:2px solid #963b27;outline-offset:-4px}
+#modal[data-art="new-game"]{background-image:url('assets/ui-v13/new-game-frame.webp')!important;height:325px!important}
+#modal[data-art="new-game"] .modal-top{top:14%!important;left:13%!important;right:14%!important;height:22%!important;justify-content:flex-start!important}
+#modal[data-art="new-game"] .modal-top>div{text-align:center;width:100%}
+#modal[data-art="new-game"] .modal-top small{display:block;font-size:12px;line-height:18px;margin:0 0 3px;color:#284d52}
+#modal[data-art="new-game"] .modal-top h2{font-size:24px;line-height:30px;white-space:normal}
+#modal[data-art="new-game"] #close-modal{top:-45%;right:-8%}
+#modal[data-art="new-game"] #modal-body{left:13%!important;right:13%!important;top:43%!important;bottom:19%!important}
+#modal[data-art="new-game"] .modal-caption{font-size:14px;line-height:22px;margin:0 0 12px;color:#28464b}
+#modal[data-art="new-game"] .modal-caption strong{color:#963b27}
+#modal[data-art="new-game"] .modal-actions{display:flex;gap:12px;margin:0}
+#modal[data-art="new-game"] .modal-actions button{flex:1;min-width:0;min-height:40px;line-height:18px;font-size:15px;padding:3px 5px}
+#modal[data-art="new-game"] .modal-actions .text-button{background:#c9dad2!important}
+#modal[data-art="new-game"] .modal-actions .primary-button{background:#a6402c!important;color:#fff0cf}
+#modal[data-art="shift"]{background-image:url('assets/ui-v13/shift-frame.webp')!important;height:450px!important}
+#modal[data-art="shift"] .modal-top{top:15%!important;left:12%!important;right:15%!important;height:10%!important;justify-content:flex-start!important}
+#modal[data-art="shift"] .modal-top>div{text-align:center;padding-right:0;width:100%}
+#modal[data-art="shift"] .modal-top h2{font-size:21px;line-height:27px;white-space:normal}
+#modal[data-art="shift"] #close-modal{right:-6%;top:0}
+#modal[data-art="shift"] #modal-tools{position:absolute;top:27%;left:12%;right:12%;height:25%}
+.shift-tools{height:100%}.shift-tools .shift-summary{padding:0;margin:0;height:69%;background:transparent;border-bottom:1px dashed #829383;color:#23494e;overflow:hidden}
+.shift-tools .shift-summary small{font-family:var(--art-font);font-size:12px;background:#e4c567;padding:1px 4px;margin-right:5px;display:inline}
+.shift-tools .shift-summary>b{font-family:var(--art-font);font-weight:400;font-size:16px;line-height:21px}
+.shift-tools .shift-summary p{font-size:12px;line-height:18px;margin:5px 0 0}
+.shift-shortcuts{height:31%;display:flex;align-items:center;gap:5px}
+#modal[data-art="shift"] .shift-shortcuts .text-button{font-size:12px;line-height:16px;min-height:30px;padding:2px 4px;gap:3px}
+#modal[data-art="shift"] .shift-shortcuts .swap-button{flex:1;width:auto;margin:0;background:#c9dcd5!important}
+#modal[data-art="shift"] #modal-body{top:54%!important;bottom:12%!important;left:12%!important;right:12%!important}
+#modal[data-art="shift"] .action-option{display:flex;align-items:center;gap:6px;min-height:64px;padding:5px;border:0;border-image:none;background:#ece0bd!important;color:#23484f;clip-path:polygon(1% 0,100% 3%,99% 20%,100% 47%,98% 90%,2% 100%,0 70%,1% 30%)}
+#modal[data-art="shift"] .action-option.active{background:#d7dfca!important;opacity:1}
+#modal[data-art="shift"] .action-option:disabled{color:#4c625e;opacity:1}
+#modal[data-art="shift"] .offer-icon{flex:0 0 25px}.offer-icon svg{width:25px;height:25px}
+#modal[data-art="shift"] .action-option>span:nth-child(2){min-width:0;flex:1}
+#modal[data-art="shift"] .action-option b{display:block;font-family:var(--art-font);font-weight:400;font-size:15px;line-height:20px}
+#modal[data-art="shift"] .action-option small{font-size:11px;line-height:16px;margin:2px 0 0;color:#395c5a}
+#modal[data-art="shift"] .action-option .claim-label{flex:none;max-width:40px;min-width:24px;font-family:var(--art-font);font-size:12px;line-height:15px;color:#305d68}
+#modal[data-art="shift"] .claim-label svg{width:20px;height:20px}
+#modal[data-art="shift"] #modal-pager{bottom:4%;left:28%;right:28%;height:30px}
+@media(max-width:360px){
+ .main-menu .menu-save{font-size:12px;line-height:17px}.main-menu .menu-button span{font-size:23px;line-height:28px}.main-menu .menu-storage{font-size:10px;line-height:14px}
+ #modal[data-art="new-game"] .modal-top h2{font-size:21px;line-height:26px}
+ #modal[data-art="new-game"] .modal-caption{font-size:13px;line-height:20px}
+ #modal[data-art="new-game"] .modal-actions button{font-size:13px}
+ #modal[data-art="shift"] .modal-top h2{font-size:18px;line-height:24px}
+ #modal[data-art="shift"] .shift-summary>b{font-size:14px}.shift-tools .shift-summary p{font-size:11px;line-height:17px}
+ #modal[data-art="shift"] .action-option b{font-size:14px;line-height:19px}
+}

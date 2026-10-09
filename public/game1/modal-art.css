@@ -1,0 +1,103 @@
+/* Only these four approved windows use object-shaped frames; other dialogs keep their layout. */
+#modal-tools[hidden]{display:none}
+body:has(#modal[open]) .secondary-panel{visibility:hidden;pointer-events:none}
+body:has(#modal[open]) .top-dock,body:has(#modal[open]) .bottom-dock{opacity:.2}
+dialog[data-art]:not([data-art=""]){width:min(450px,calc(100% - 12px));height:385px;max-height:calc(100dvh - 25px - var(--safe-top) - var(--safe-bottom));padding:0;border:0;border-image:none;background:transparent center/100% 100% no-repeat;box-shadow:none;overflow:visible}
+dialog[data-art]:not([data-art=""]) .modal-top{position:absolute;top:8%;left:8%;right:8%;height:14%;padding:0;margin:0;border:0;align-items:center;justify-content:center}
+dialog[data-art]:not([data-art=""]) .modal-top>div{min-width:0;text-align:center}
+dialog[data-art]:not([data-art=""]) .modal-top small{display:none}
+dialog[data-art]:not([data-art=""]) .modal-top h2{font-family:var(--art-font);font-weight:400;font-size:25px;line-height:30px;margin:0;white-space:nowrap;color:#1d4855}
+dialog[data-art]:not([data-art=""]) #close-modal{position:absolute;right:0;top:0;width:32px;height:32px;min-height:32px;padding:6px;border:0;background:#a1402c!important;color:#fff0cb;clip-path:polygon(10% 3%,80% 0,100% 22%,96% 89%,77% 100%,6% 94%,0 65%)}
+dialog[data-art]:not([data-art=""]) #modal-body{position:absolute;left:8%;right:8%;top:28%;bottom:15%;padding:0;overflow:hidden}
+dialog[data-art]:not([data-art=""]) .modal-block{margin-bottom:5px}
+dialog[data-art]:not([data-art=""]) #modal-pager{position:absolute;left:30%;right:30%;bottom:5%;height:32px;margin:0;border:0;gap:7px;font-family:var(--art-font);font-size:13px;color:#24494e}
+dialog[data-art]:not([data-art=""]) #modal-pager[hidden]{display:none}
+dialog[data-art]:not([data-art=""]) .pager .icon-button{background:#dcb757!important;border:0;min-height:32px;width:34px;height:32px;padding:7px;clip-path:polygon(5% 0,93% 7%,100% 25%,93% 90%,7% 100%,0 70%)}
+dialog[data-art]:not([data-art=""]) .pager span{min-width:42px;text-align:center;color:#24494e;background:#f3e5bf;padding:2px 4px;line-height:20px}
+dialog[data-art]:not([data-art=""]) button{transform:none!important;box-shadow:none;transition:filter .12s}
+dialog[data-art]:not([data-art=""]) button:active:not(:disabled){filter:brightness(.86)}
+dialog[data-art]:not([data-art=""]) button:hover:not(:disabled){filter:brightness(1.06)}
+dialog[data-art]:not([data-art=""]) .text-button,dialog[data-art]:not([data-art=""]) .primary-button{background:#dfbe62!important;border:0;border-image:none;padding:4px 7px;min-height:32px;font-family:var(--art-font);font-size:13px;line-height:18px;color:#25484a;clip-path:polygon(3% 4%,97% 0,100% 20%,97% 96%,5% 100%,0 60%)}
+dialog[data-art]:not([data-art=""]) button:focus-visible{outline:2px solid #963b27;outline-offset:2px}
+dialog[data-art]:not([data-art=""]) .text-button svg,dialog[data-art]:not([data-art=""]) .primary-button svg{width:15px;height:15px;flex:none}
+dialog[data-art="settings"]{background-image:url('assets/ui-v12/settings-frame.webp')!important;height:370px!important}
+dialog[data-art="settings"] .modal-top{top:10%!important;left:27%!important;right:23%!important;height:12%!important}
+dialog[data-art="settings"] #close-modal{right:-33%!important;top:75%!important}
+dialog[data-art="settings"] #modal-tools{position:absolute;top:31%;left:28%;right:6%;height:9%}
+.settings-nav{display:flex;gap:4px;width:100%;height:100%}
+.settings-nav .text-button{flex:1;min-width:0;font-size:12px!important;padding:2px 3px!important}
+.settings-nav .text-button:not(.selected){background:#e4dcc1!important}
+dialog[data-art="settings"] #modal-body{left:28%!important;right:6%!important;top:42%!important;bottom:15%!important}
+dialog[data-art="settings"] .toggle-row{font-size:14px;line-height:19px;min-height:32px;padding:5px 0;border-bottom:1px solid #9b8f6a;gap:6px;color:#214650}
+dialog[data-art="settings"] .toggle-row input{appearance:none;flex:none;width:36px;height:22px;background:#b6baa7;border-radius:12px;position:relative;accent-color:#255970;margin:0}
+dialog[data-art="settings"] .toggle-row input:after{content:"";position:absolute;left:3px;top:3px;width:16px;height:16px;border-radius:50%;background:#f2e6c6;transition:left .12s}
+dialog[data-art="settings"] .toggle-row input:checked{background:#245a71}
+dialog[data-art="settings"] .toggle-row input:checked:after{left:17px;background:#e1b74e}
+dialog[data-art="settings"] .toggle-row input:focus-visible{outline:2px solid #963b27;outline-offset:2px}
+dialog[data-art="settings"] .volume-control{font-size:14px;line-height:18px;padding:5px 0 2px;border-bottom:1px solid #9b8f6a}
+dialog[data-art="settings"] .volume-control input{width:100%;height:20px;margin:2px 0;accent-color:#245a71}
+.settings-shortcuts{display:flex;gap:5px;margin-top:5px}.settings-shortcuts .text-button{flex:1;font-size:12px!important;padding:3px!important}
+dialog[data-art="settings"] .settings-buttons{display:flex;gap:5px;flex-wrap:wrap;padding:0;margin:0 0 5px}
+dialog[data-art="settings"] .settings-buttons .text-button{font-size:12px;min-height:32px;padding:3px 5px}
+dialog[data-art="settings"] .danger-button{color:#963b27!important;background:#ead3b4!important}
+dialog[data-art="settings"] .option-note{font-size:12px;line-height:18px;margin:4px 0;color:#25454b}
+dialog[data-art="settings"] .ledger-row{font-size:13px;padding:5px 0;border-bottom:1px dashed #6c7b6a}
+dialog[data-art="settings"] #modal-pager{bottom:3%;left:45%;right:8%}
+dialog[data-art="goals"]{background-image:url('assets/ui-v12/goals-frame.webp')!important;height:430px!important}
+dialog[data-art="goals"] .modal-top{top:3%!important;left:8%!important;right:8%!important;height:12%!important;justify-content:flex-start!important}
+dialog[data-art="goals"] .modal-top>div{position:absolute;left:0;right:58%;text-align:center}
+dialog[data-art="goals"] .modal-top h2{font-size:24px!important}
+dialog[data-art="goals"] #close-modal{right:0;top:0}
+dialog[data-art="goals"] #modal-tools{position:absolute;top:16%;left:10%;right:10%;height:9%}
+dialog[data-art="goals"] .goal-nav{padding:0;height:100%;gap:5px}
+dialog[data-art="goals"] .goal-nav .text-button{font-size:13px;flex:1;min-width:0;padding:2px}
+dialog[data-art="goals"] .goal-nav .selected{background:#245a73!important;color:#fff0cf}
+dialog[data-art="goals"] #modal-body{top:28%!important;bottom:16%!important;left:13%!important;right:13%!important;padding:7px 8px!important;background:#f7edcf;clip-path:polygon(1% 0,99% 1%,100% 97%,98% 100%,0 99%)}
+dialog[data-art="goals"] .goal-paper{background:transparent;border:0;padding:0;margin:0 0 5px;color:#21434b}
+dialog[data-art="goals"] .goal-paper small{font-size:11px;line-height:16px;color:#425c5c}
+dialog[data-art="goals"] .goal-paper h3{font-family:var(--art-font);font-size:18px;font-weight:400;line-height:23px;margin:2px 0 3px}
+dialog[data-art="goals"] .goal-paper p{font-size:13px;line-height:19px;margin:3px 0 5px}
+dialog[data-art="goals"] .reward-label{font-size:14px;line-height:20px;color:#963b27}
+dialog[data-art="goals"] .objective-row{font-size:12px;line-height:17px;padding:4px 0;gap:3px;border-bottom:1px dashed #829894}
+dialog[data-art="goals"] .objective-row svg{width:14px;height:14px;flex:none}
+dialog[data-art="goals"] .objective-row b{font-size:12px;white-space:nowrap}
+dialog[data-art="goals"] .objective-row progress{height:6px;accent-color:#285b70}
+dialog[data-art="goals"] .stamp-list{gap:5px;margin:3px 0;grid-template-columns:1fr 1fr}
+dialog[data-art="goals"] .stamp-list span{background:#dce4d5;padding:5px;border:1px dashed #618484;font-family:var(--art-font);font-size:12px}
+dialog[data-art="goals"] .stamp-list .earned{background:#dbc572;border:1px solid #73663c}
+dialog[data-art="goals"] .option-note{font-size:12px;line-height:18px;margin:4px 0;color:#29494b}
+dialog[data-art="goals"] .goal-card-footer{gap:5px}
+dialog[data-art="xian"]{background-image:url('assets/ui-v12/xian-frame.webp')!important;height:350px!important}
+dialog[data-art="mang"]{background-image:url('assets/ui-v12/mang-frame.webp')!important;height:350px!important}
+dialog[data-art="xian"] .modal-top,dialog[data-art="mang"] .modal-top{top:12%!important;left:26%!important;right:22%!important;height:12%!important}
+dialog[data-art="xian"] .modal-top>div,dialog[data-art="mang"] .modal-top>div{margin-right:0;width:100%}
+dialog[data-art="xian"] .modal-top,dialog[data-art="mang"] .modal-top{position:static!important}
+dialog[data-art="xian"] .modal-top>div,dialog[data-art="mang"] .modal-top>div{position:absolute;left:26%;right:22%;top:12%;height:12%;width:auto;display:flex;align-items:center;justify-content:center}
+#modal[data-art="xian"] #close-modal,#modal[data-art="mang"] #close-modal{left:85%;top:12%;right:auto}
+dialog[data-art="xian"] #modal-body,dialog[data-art="mang"] #modal-body{top:28%!important;bottom:18%!important;left:10%!important;right:10%!important}
+.profile-card{position:relative;height:100%;width:100%;margin:0!important;color:#23454d}
+.profile-portrait{position:absolute;left:0;top:0;width:36%;height:62%;object-fit:contain;object-position:center top}
+.profile-quote{position:absolute;left:0;top:60%;width:36%;margin:0;font-size:12px;line-height:17px;text-align:center;color:#244954}
+.profile-status{position:absolute;left:42%;right:0;top:0;display:grid;gap:5px}
+.profile-stat{display:grid;grid-template-columns:18px 1fr auto;gap:3px 5px;align-items:center;font-family:var(--art-font);font-size:16px;line-height:20px}
+.profile-stat svg{width:17px;height:17px;flex:none;color:#9b7928}
+.profile-stat b{font-size:19px;font-weight:400}
+.profile-stat progress{grid-column:2 / -1;width:100%;height:7px;accent-color:#245d77}
+.profile-stat:nth-child(2) progress{accent-color:#c59c35}
+.profile-skills{position:absolute;top:40%;left:42%;right:0;display:grid;gap:5px}
+.profile-skills .skill-row{position:relative;margin:0;height:38px;padding:2px 0;border-top:1px dashed #7e9692;min-width:0}
+.profile-skills .skill-label{font-family:var(--art-font);display:flex;justify-content:space-between;gap:5px;font-size:13px;line-height:18px;margin:0 0 3px;color:#23494d}
+.profile-skills progress{display:block;margin-top:4px;width:calc(100% - 44px);height:6px;accent-color:#2d647b}
+.profile-skills small{position:absolute;right:0;bottom:0;font-size:11px;line-height:16px;margin:0;color:#28464b}
+dialog[data-art="mang"] .profile-skills .skill-row:nth-child(2) progress{accent-color:#a1412d}
+.profile-ledger{position:absolute;left:0;right:0;bottom:0;display:flex;gap:9px;justify-content:center;font-family:var(--art-font);font-size:13px;line-height:20px;color:#234954}
+.profile-ledger b{font-weight:400;white-space:nowrap}
+@media(max-width:360px){
+ dialog[data-art]:not([data-art=""]) .modal-top h2{font-size:22px}
+ dialog[data-art="settings"] .modal-top h2{font-size:21px}
+ dialog[data-art="settings"] .toggle-row,dialog[data-art="settings"] .volume-control{font-size:13px}
+ dialog[data-art="settings"] .settings-nav .text-button{font-size:11px!important}
+ dialog[data-art="goals"] .modal-top h2{font-size:22px!important}
+ .profile-stat{font-size:14px}.profile-stat b{font-size:17px}.profile-skills .skill-label{font-size:12px}
+ .profile-ledger{font-size:12px}.profile-quote{font-size:11px;line-height:16px}
+}
