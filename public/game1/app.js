@@ -3,21 +3,22 @@ import * as G from './engine.js';
 const $=id=>document.getElementById(id), icon=name=>`<i data-lucide="${name}"></i>`;
 const escape=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const KEY='today-who-works-save-v1', PREF='today-who-works-preferences-v1';
-let state=G.fresh(), tab=null, scene='home', busy=false, sound=false, fast=false, toastTimer, modalKind='', pendingReloadNotice='',storageOK=true,lastSavedRaw=null;
+let state=G.fresh(), tab=null, scene='home', busy=false, sound=false, fast=false, toastTimer, modalKind='', pendingReloadNotice='',storageOK=true,lastSavedRaw=null,hasSavedGame=false,menuOpen=true;
 let contentPage=0, photoView=false, modalPage=0, modalPages=[];
 const music=new Audio('assets/music.wav');music.loop=true;music.volume=.18;
 let prefs={};
+try{prefs=JSON.parse(localStorage.getItem(PREF)||'{}');fast=!!prefs?.fast;}catch{}
 try {
-  prefs=JSON.parse(localStorage.getItem(PREF)||'{}');fast=!!prefs.fast;
   const raw=localStorage.getItem(KEY);
-  if(raw){const candidate=JSON.parse(raw);if(!G.validateSave(candidate))throw Error('invalid');state=candidate;}
+  if(raw){const candidate=JSON.parse(raw);if(!G.validateSave(candidate))throw Error('invalid');state=candidate;hasSavedGame=true;}
 }catch{
-  try{const backup=JSON.parse(localStorage.getItem(KEY+'-backup')||'null');if(G.validateSave(backup)){state=backup;pendingReloadNotice='已从上一份备份恢复进度。';}else{const raw=localStorage.getItem(KEY);if(raw)localStorage.setItem(KEY+'-unreadable',raw);pendingReloadNotice='旧存档无法读取，已保留原始数据并开始新生活。';}}
+  try{const backup=JSON.parse(localStorage.getItem(KEY+'-backup')||'null');if(G.validateSave(backup)){state=backup;hasSavedGame=true;pendingReloadNotice='已从上一份备份恢复进度。';}else{const raw=localStorage.getItem(KEY);if(raw)localStorage.setItem(KEY+'-unreadable',raw);pendingReloadNotice='旧存档无法读取，已保留原始数据，可以开始新生活。';}}
   catch{storageOK=false;pendingReloadNotice='浏览器禁止保存，退出前可以导出存档。';}
 }
 function icons(){window.lucide?.createIcons({attrs:{'aria-hidden':'true'}});}
 function toast(text){clearTimeout(toastTimer);$('toast').textContent=text;$('toast').classList.add('visible');toastTimer=setTimeout(()=>$('toast').classList.remove('visible'),3200);}
 function save(){
+  hasSavedGame=true;
   try {
     const previous=localStorage.getItem(KEY);
     const raw=JSON.stringify(state);
@@ -26,6 +27,44 @@ function save(){
   }catch{storageOK=false;}
   $('save-status').textContent=storageOK?'进度已保存到此浏览器':'无法自动保存 · 请在设置导出存档';
   $('save-status').classList.toggle('storage-warning',!storageOK);
+}
+function renderMenu(){
+  $('menu-continue').disabled=!hasSavedGame;
+  $('menu-save').textContent=hasSavedGame?`第 ${state.week} 周 · ${state.day===7?'周末':G.DAYS[state.day]} · ${state.cash} 生活币`:'从一把钥匙，开始两个人的生活。';
+  $('menu-storage').textContent=storageOK?'你的进度，只保存在这台设备的浏览器里。':'此浏览器无法保存，请在游戏设置里导出备份。';
+}
+function enterGame(){
+  closeModal();menuOpen=false;$('main-menu').hidden=true;$('main-menu').inert=true;
+  $('game-shell').hidden=false;$('game-shell').inert=false;tab=null;scene='home';contentPage=0;render();
+  if(sound)music.play().catch(()=>{});
+  $('run').focus({preventScroll:true});
+}
+function refreshMenuSave(){
+  try{
+    const raw=localStorage.getItem(KEY);
+    if(raw){const candidate=JSON.parse(raw);if(G.validateSave(candidate)){state=candidate;lastSavedRaw=raw;hasSavedGame=true;}}
+    else if(storageOK){hasSavedGame=false;lastSavedRaw=null;}
+  }catch{}
+  renderMenu();
+}
+function showMenu(){
+  if(busy)return;
+  closeModal();menuOpen=true;music.pause();$('game-shell').hidden=true;$('game-shell').inert=true;
+  $('main-menu').hidden=false;$('main-menu').inert=false;renderMenu();icons();$('menu-continue').focus({preventScroll:true});
+}
+function requestNewGame(){
+  refreshMenuSave();
+  if(hasSavedGame){
+    openModal('重新开始这段生活？','<p class="modal-caption">新游戏会从第1周、500生活币开始。现在的进度会保留一份恢复备份，并导出为存档文件。</p><div class="modal-actions"><button class="text-button" data-cancel-new>保留现在的进度</button><button class="primary-button" data-confirm-new>备份并开始新游戏</button></div>','给新的生活，留一把旧钥匙','new-game');
+  }else startNewGame();
+}
+function startNewGame(){
+  if(hasSavedGame){
+    try{localStorage.setItem(KEY+'-previous-game',JSON.stringify(state));}
+    catch{if(storageOK){toast('旧进度备份未能保存，请先导出存档。');return;}}
+    exportSave();
+  }
+  if(perform(()=>G.fresh()))enterGame();
 }
 function commit(next){
   if(!G.validateSave(next))throw Error('存档状态异常，本次改动没有保存。');
@@ -180,7 +219,7 @@ function eventModal(){
   openModal(e.title,`<img class="event-art" src="assets/town.webp" alt="小镇里的生活小事"><p class="modal-caption">${e.line}</p><div class="action-options">${e.options.map((o,i)=>`<button class="action-option" data-event-choice="${i}">${icon(i?'sparkles':'leaf')}<span><b>${o.name}</b><small>${o.hint}</small></span>${icon('chevron-right')}</button>`).join('')}</div>`,'今天有件小事','event');
 }
 function settingsModal(){
-  openModal('生活的小设置',`<label class="toggle-row"><span>轻快的背景音乐</span><input id="sound-toggle" type="checkbox" ${sound?'checked':''}></label><label class="toggle-row"><span>快速过一天</span><input id="fast-toggle" type="checkbox" ${fast?'checked':''}></label><div class="settings-buttons"><button class="text-button" data-export>${icon('download')}导出存档</button><button class="text-button" data-import>${icon('upload')}导入存档</button><button class="text-button danger-button" data-reset>${icon('rotate-ccw')}重新开始</button></div><p class="option-note">${storageOK?'进度保存在当前浏览器。':'当前浏览器无法自动保存。'}换手机前，请带上存档。存档只包含游戏进度。</p><div class="ledger-row"><span>放松体验券</span><b>精力 +20</b></div><p class="option-note">广告演示 · 每游戏周一次，不播放商业广告，不产生真实收益。</p><button class="text-button" data-ad ${state.adWeek===state.week||state.day===7?'disabled':''}>${icon('clapperboard')}${state.adWeek===state.week?'本周已用':'体验一次模拟激励广告'}</button>`,'今天谁上班 · Demo V0.5.6','settings');
+  openModal('生活的小设置',`<label class="toggle-row"><span>轻快的背景音乐</span><input id="sound-toggle" type="checkbox" ${sound?'checked':''}></label><label class="toggle-row"><span>快速过一天</span><input id="fast-toggle" type="checkbox" ${fast?'checked':''}></label><button class="text-button" data-main-menu>${icon('house')}返回主菜单</button><div class="settings-buttons"><button class="text-button" data-export>${icon('download')}导出存档</button><button class="text-button" data-import>${icon('upload')}导入存档</button><button class="text-button danger-button" data-reset>${icon('rotate-ccw')}重新开始</button></div><p class="option-note">${storageOK?'进度保存在当前浏览器。':'当前浏览器无法自动保存。'}换手机前，请带上存档。存档只包含游戏进度。</p><div class="ledger-row"><span>放松体验券</span><b>精力 +20</b></div><p class="option-note">广告演示 · 每游戏周一次，不播放商业广告，不产生真实收益。</p><button class="text-button" data-ad ${state.adWeek===state.week||state.day===7?'disabled':''}>${icon('clapperboard')}${state.adWeek===state.week?'本周已用':'体验一次模拟激励广告'}</button>`,'今天谁上班 · Demo V0.6','settings');
 }
 function setSound(value){sound=value;$('sound').innerHTML=icon(sound?'volume-2':'volume-x');$('sound').title=sound?'关闭声音':'开启声音';$('sound').setAttribute('aria-label',$('sound').title);if(sound)music.play().catch(()=>{sound=false;toast('浏览器暂未允许播放声音。');});else music.pause();icons();}
 function persistPrefs(){try{localStorage.setItem(PREF,JSON.stringify({fast}));}catch{}}
@@ -215,6 +254,11 @@ document.addEventListener('click',event=>{
   if(!b){if(!busy&&(event.target.id==='scene-bg'||event.target.id==='scene')){tab=null;renderContent();icons();}return;}
   if(b.id==='close-modal'){closeModal();return;}
   if(b.hasAttribute('data-modal-page')){modalPage=Number(b.dataset.modalPage);renderModalPage();return;}
+  if(b.id==='menu-new'){requestNewGame();return;}
+  if(b.id==='menu-continue'){refreshMenuSave();if(hasSavedGame)enterGame();return;}
+  if(b.hasAttribute('data-main-menu')){showMenu();return;}
+  if(b.hasAttribute('data-cancel-new')){closeModal();return;}
+  if(b.hasAttribute('data-confirm-new')){startNewGame();return;}
   if(busy){if(b.id==='sound')setSound(!sound);return;}
   if(b.dataset.scene){scene=b.dataset.scene;render();}
   if(b.dataset.tab){tab=tab===b.dataset.tab?null:b.dataset.tab;contentPage=0;if(tab==='home')scene='home';if(tab==='jobs')scene='town';render();}
@@ -242,9 +286,7 @@ document.addEventListener('click',event=>{
   if(b.id==='sound')setSound(!sound);
   if(b.hasAttribute('data-export'))exportSave();
   if(b.hasAttribute('data-import'))$('import-file').click();
-  if(b.hasAttribute('data-reset'))openModal('重新过第一周？','<p class="modal-caption">这次的进度会先导出为存档，再从500币开始新的生活。</p><div class="modal-actions"><button class="text-button" data-cancel-reset>继续现在的生活</button><button class="primary-button" data-confirm-reset>开始新生活</button></div>','保留这一段生活，再重新出发');
-  if(b.hasAttribute('data-cancel-reset'))settingsModal();
-  if(b.hasAttribute('data-confirm-reset')){exportSave();if(perform(()=>G.fresh())){closeModal();tab=null;scene='home';render();}}
+  if(b.hasAttribute('data-reset'))requestNewGame();
   if(b.hasAttribute('data-ad'))simulatedAd();
   if(b.hasAttribute('data-draw')){if(perform(()=>G.draw(state))){const j=G.JOBS.find(j=>j.id===state.drawJob);openModal('信封里，是一个新机会',`<div class="report-hero"><img src="assets/characters-3.webp" alt="阿忙"><div><h3>${j.name}</h3><p>${j.line}</p><p class="hint-price">${j.wage} 币 / 班</p></div></div><div class="modal-actions"><button class="text-button" data-ignore-draw>留着原合同</button><button class="primary-button" data-accept-draw ${state.day!==0?'disabled':''}>${icon('check')}一起接这个班</button></div>${state.day!==0?'<p class="option-note">本周已开工，下周到招工栏接新合同。</p>':''}`,'每周一次免费岗位提案');}}
   if(b.hasAttribute('data-ignore-draw'))closeModal();
@@ -267,8 +309,8 @@ $('modal').addEventListener('click',event=>{if(event.target===$('modal')){const 
 $('modal').addEventListener('cancel',()=>{modalKind='';});
 window.addEventListener('resize',()=>{if($('modal').open)paginateModal();});
 document.addEventListener('keydown',event=>{if(event.key==='Escape'&&!$('modal').open){tab=null;renderContent();icons();}});
-document.addEventListener('visibilitychange',()=>{if(document.hidden)music.pause();else if(sound)music.play().catch(()=>{});});
-window.addEventListener('storage',event=>{if(event.key===KEY&&event.newValue){try{const candidate=JSON.parse(event.newValue);if(G.validateSave(candidate)){if(busy){toast('另一个页面修改了存档，正在同步进度。');}else{state=candidate;lastSavedRaw=event.newValue;closeModal();render();toast('已同步另一个页面的进度。');}}}catch{}}});
+document.addEventListener('visibilitychange',()=>{if(document.hidden||menuOpen)music.pause();else if(sound)music.play().catch(()=>{});});
+window.addEventListener('storage',event=>{if(event.key===KEY){if(!event.newValue){if(menuOpen){hasSavedGame=false;lastSavedRaw=null;renderMenu();}return;}try{const candidate=JSON.parse(event.newValue);if(G.validateSave(candidate)){if(busy){toast('另一个页面修改了存档，正在同步进度。');}else{state=candidate;hasSavedGame=true;lastSavedRaw=event.newValue;closeModal();render();renderMenu();toast('已同步另一个页面的进度。');}}}catch{}}});
 try{lastSavedRaw=localStorage.getItem(KEY);}catch{storageOK=false;}
-render();save();if(pendingReloadNotice)toast(pendingReloadNotice);
+render();renderMenu();icons();if(pendingReloadNotice)toast(pendingReloadNotice);
 if('serviceWorker' in navigator&&window.isSecureContext)navigator.serviceWorker.register('./sw.js').catch(()=>{});

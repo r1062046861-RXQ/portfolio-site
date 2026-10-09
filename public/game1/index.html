@@ -13,10 +13,21 @@
   <link rel="stylesheet" href="art-direction.css">
   <link rel="stylesheet" href="fixed-stage.css">
   <link rel="stylesheet" href="floating-ui.css">
-  <title>今天谁上班 · 生活经营 Demo V0.5.6</title>
+  <link rel="stylesheet" href="menu.css">
+  <title>今天谁上班 · 生活经营 Demo V0.6</title>
 </head>
 <body>
-  <div class="app-shell">
+  <section id="main-menu" class="main-menu" aria-label="游戏主菜单">
+    <img class="menu-cover" src="assets/menu-cover.webp" alt="清晨，猫与狐狸室友在蓝门前交接钥匙" width="1024" height="1536">
+    <div class="menu-heading"><h1><img class="menu-title" src="assets/ui/menu-title.webp" alt="今天谁上班" width="1000" height="640"></h1><p>一个班，两个人轮着上。</p></div>
+    <div class="menu-actions">
+      <p class="menu-save" id="menu-save" aria-live="polite">正在读取你的进度……</p>
+      <button id="menu-continue" class="menu-button menu-continue" disabled><span>继续游戏</span><i data-lucide="arrow-right"></i></button>
+      <button id="menu-new" class="menu-button menu-new"><span>新游戏</span><i data-lucide="sunrise"></i></button>
+      <p class="menu-storage" id="menu-storage">你的进度，只保存在这台设备的浏览器里。</p>
+    </div>
+  </section>
+  <div class="app-shell" id="game-shell" hidden inert>
     <header class="topbar">
       <div class="brand"><span class="brand-mark"><i data-lucide="calendar-heart"></i></span><div><h1><img class="title-lettering" src="assets/ui/title-lettering.webp" alt="今天谁上班" width="640" height="153"></h1><p>一个班，两个人轮着上。</p></div></div>
       <div class="header-actions"><div class="wallet" aria-label="生活账户"><i data-lucide="coins"></i><span id="cash">500</span><small>生活币</small></div><button id="sound" class="icon-button" title="开启声音" aria-label="开启声音"><i data-lucide="volume-x"></i></button><button id="settings" class="icon-button" title="存档与设置" aria-label="存档与设置"><i data-lucide="settings-2"></i></button></div>

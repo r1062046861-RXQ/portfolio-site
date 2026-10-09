@@ -1,0 +1,24 @@
+#main-menu[hidden],#game-shell[hidden]{display:none!important}
+.main-menu{position:relative;width:min(100%,480px);height:100dvh;overflow:hidden;background:#163c40;color:#f4e8cd;isolation:isolate}
+.menu-cover{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 50%;z-index:-1}
+.menu-heading{position:absolute;top:calc(8px + var(--safe-top));left:8%;right:8%;text-align:center}
+.menu-heading h1{margin:0;line-height:0}
+.menu-title{display:block;width:100%;height:clamp(100px,18dvh,170px);object-fit:contain;filter:drop-shadow(2px 3px 0 #102e36)}
+.menu-heading p{display:table;margin:10px auto 0;padding:4px 12px;background:#163d3dea;color:#f4e8cd;font-family:"SimSun","Songti SC",serif;font-size:14px;font-weight:700;letter-spacing:2px;line-height:20px}
+.menu-actions{position:absolute;bottom:calc(18px + var(--safe-bottom));left:8%;right:8%;display:grid;gap:8px;padding:10px 12px 8px;border:14px solid transparent;border-image:url('assets/ui/window.webp') 45 fill / 14px stretch;filter:drop-shadow(2px 4px 0 #15333766)}
+.menu-save{margin:0 0 2px;text-align:center;font-size:12px;line-height:18px;color:#24413c;font-weight:700}
+.menu-button{display:flex;align-items:center;justify-content:center;gap:12px;width:100%;height:52px;min-height:52px;padding:0 12px;background:none!important;border:10px solid transparent;border-image:url('assets/ui/button.webp') 30 fill / 10px stretch;color:#fff0d1;box-shadow:none;cursor:pointer}
+.menu-button span{font-family:"SimSun","Songti SC",serif;font-size:22px;line-height:28px;font-weight:900;letter-spacing:4px}
+.menu-button svg{width:19px;height:19px;flex-shrink:0}
+.menu-new{border-image-source:url('assets/ui/tile.webp');color:#24413c}
+.menu-button:disabled{cursor:default;opacity:1;filter:grayscale(.85);color:#e0ddd0}
+.menu-storage{margin:2px 0 0;text-align:center;font-size:11px;line-height:17px;color:#2d4943}
+.menu-button:focus-visible{outline:3px solid #efbd54;outline-offset:3px}
+@media(max-height:700px){
+  .menu-heading{top:calc(8px + var(--safe-top))}
+  .menu-title{height:clamp(100px,18dvh,130px)}
+  .menu-heading p{margin-top:5px;font-size:12px;letter-spacing:1px}
+  .menu-actions{bottom:calc(12px + var(--safe-bottom));left:7%;right:7%;padding:6px 8px;border-width:11px;border-image-width:11px;gap:5px}
+  .menu-button{height:46px;min-height:46px;border-width:8px;border-image-width:8px}
+  .menu-button span{font-size:20px;letter-spacing:3px}
+}
