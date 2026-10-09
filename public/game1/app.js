@@ -5,7 +5,7 @@ const escape=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&
 const KEY='today-who-works-save-v1', PREF='today-who-works-preferences-v1';
 let state=G.fresh(), tab=null, scene='home', busy=false, sound=false, fast=false, toastTimer, modalKind='', pendingReloadNotice='',storageOK=true,lastSavedRaw=null,hasSavedGame=false,menuOpen=true;
 let contentPage=0, photoView=false, modalPage=0, modalPages=[];
-const music=new Audio('assets/music.wav');music.loop=true;music.volume=.18;
+const music=new Audio();music.preload='none';music.src='assets/music.wav';music.loop=true;music.volume=.18;
 let prefs={};
 try{prefs=JSON.parse(localStorage.getItem(PREF)||'{}');fast=!!prefs?.fast;}catch{}
 try {
@@ -219,7 +219,7 @@ function eventModal(){
   openModal(e.title,`<img class="event-art" src="assets/town.webp" alt="小镇里的生活小事"><p class="modal-caption">${e.line}</p><div class="action-options">${e.options.map((o,i)=>`<button class="action-option" data-event-choice="${i}">${icon(i?'sparkles':'leaf')}<span><b>${o.name}</b><small>${o.hint}</small></span>${icon('chevron-right')}</button>`).join('')}</div>`,'今天有件小事','event');
 }
 function settingsModal(){
-  openModal('生活的小设置',`<label class="toggle-row"><span>轻快的背景音乐</span><input id="sound-toggle" type="checkbox" ${sound?'checked':''}></label><label class="toggle-row"><span>快速过一天</span><input id="fast-toggle" type="checkbox" ${fast?'checked':''}></label><button class="text-button" data-main-menu>${icon('house')}返回主菜单</button><div class="settings-buttons"><button class="text-button" data-export>${icon('download')}导出存档</button><button class="text-button" data-import>${icon('upload')}导入存档</button><button class="text-button danger-button" data-reset>${icon('rotate-ccw')}重新开始</button></div><p class="option-note">${storageOK?'进度保存在当前浏览器。':'当前浏览器无法自动保存。'}换手机前，请带上存档。存档只包含游戏进度。</p><div class="ledger-row"><span>放松体验券</span><b>精力 +20</b></div><p class="option-note">广告演示 · 每游戏周一次，不播放商业广告，不产生真实收益。</p><button class="text-button" data-ad ${state.adWeek===state.week||state.day===7?'disabled':''}>${icon('clapperboard')}${state.adWeek===state.week?'本周已用':'体验一次模拟激励广告'}</button>`,'今天谁上班 · Demo V0.6','settings');
+  openModal('生活的小设置',`<label class="toggle-row"><span>轻快的背景音乐</span><input id="sound-toggle" type="checkbox" ${sound?'checked':''}></label><label class="toggle-row"><span>快速过一天</span><input id="fast-toggle" type="checkbox" ${fast?'checked':''}></label><button class="text-button" data-main-menu>${icon('house')}返回主菜单</button><div class="settings-buttons"><button class="text-button" data-export>${icon('download')}导出存档</button><button class="text-button" data-import>${icon('upload')}导入存档</button><button class="text-button danger-button" data-reset>${icon('rotate-ccw')}重新开始</button></div><p class="option-note">${storageOK?'进度保存在当前浏览器。':'当前浏览器无法自动保存。'}换手机前，请带上存档。存档只包含游戏进度。</p><div class="ledger-row"><span>放松体验券</span><b>精力 +20</b></div><p class="option-note">广告演示 · 每游戏周一次，不播放商业广告，不产生真实收益。</p><button class="text-button" data-ad ${state.adWeek===state.week||state.day===7?'disabled':''}>${icon('clapperboard')}${state.adWeek===state.week?'本周已用':'体验一次模拟激励广告'}</button>`,'今天谁上班 · Demo V0.6.1','settings');
 }
 function setSound(value){sound=value;$('sound').innerHTML=icon(sound?'volume-2':'volume-x');$('sound').title=sound?'关闭声音':'开启声音';$('sound').setAttribute('aria-label',$('sound').title);if(sound)music.play().catch(()=>{sound=false;toast('浏览器暂未允许播放声音。');});else music.pause();icons();}
 function persistPrefs(){try{localStorage.setItem(PREF,JSON.stringify({fast}));}catch{}}
@@ -313,4 +313,9 @@ document.addEventListener('visibilitychange',()=>{if(document.hidden||menuOpen)m
 window.addEventListener('storage',event=>{if(event.key===KEY){if(!event.newValue){if(menuOpen){hasSavedGame=false;lastSavedRaw=null;renderMenu();}return;}try{const candidate=JSON.parse(event.newValue);if(G.validateSave(candidate)){if(busy){toast('另一个页面修改了存档，正在同步进度。');}else{state=candidate;hasSavedGame=true;lastSavedRaw=event.newValue;closeModal();render();renderMenu();toast('已同步另一个页面的进度。');}}}catch{}}});
 try{lastSavedRaw=localStorage.getItem(KEY);}catch{storageOK=false;}
 render();renderMenu();icons();if(pendingReloadNotice)toast(pendingReloadNotice);
-if('serviceWorker' in navigator&&window.isSecureContext)navigator.serviceWorker.register('./sw.js').catch(()=>{});
+if('serviceWorker' in navigator&&window.isSecureContext){
+  const register=()=>navigator.serviceWorker.register('./sw.js').catch(()=>{});
+  // Finish the visible menu before downloading the offline copy of the full game.
+  if(document.readyState==='complete')register();
+  else window.addEventListener('load',register,{once:true});
+}

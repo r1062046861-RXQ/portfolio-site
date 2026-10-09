@@ -8,13 +8,14 @@
   <link rel="icon" href="assets/icon-192.png">
   <link rel="apple-touch-icon" href="assets/icon-192.png">
   <link rel="manifest" href="manifest.webmanifest">
+  <link rel="modulepreload" href="engine.js">
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="portrait.css">
   <link rel="stylesheet" href="art-direction.css">
   <link rel="stylesheet" href="fixed-stage.css">
   <link rel="stylesheet" href="floating-ui.css">
   <link rel="stylesheet" href="menu.css">
-  <title>今天谁上班 · 生活经营 Demo V0.6</title>
+  <title>今天谁上班 · 生活经营 Demo V0.6.1</title>
 </head>
 <body>
   <section id="main-menu" class="main-menu" aria-label="游戏主菜单">
@@ -29,18 +30,18 @@
   </section>
   <div class="app-shell" id="game-shell" hidden inert>
     <header class="topbar">
-      <div class="brand"><span class="brand-mark"><i data-lucide="calendar-heart"></i></span><div><h1><img class="title-lettering" src="assets/ui/title-lettering.webp" alt="今天谁上班" width="640" height="153"></h1><p>一个班，两个人轮着上。</p></div></div>
+      <div class="brand"><span class="brand-mark"><i data-lucide="calendar-heart"></i></span><div><h1><img loading="lazy" class="title-lettering" src="assets/ui/title-lettering.webp" alt="今天谁上班" width="640" height="153"></h1><p>一个班，两个人轮着上。</p></div></div>
       <div class="header-actions"><div class="wallet" aria-label="生活账户"><i data-lucide="coins"></i><span id="cash">500</span><small>生活币</small></div><button id="sound" class="icon-button" title="开启声音" aria-label="开启声音"><i data-lucide="volume-x"></i></button><button id="settings" class="icon-button" title="存档与设置" aria-label="存档与设置"><i data-lucide="settings-2"></i></button></div>
     </header>
     <main class="workspace">
       <section class="living-area" aria-label="我们的生活">
         <div class="scene" id="scene">
-          <img class="scene-background" id="scene-bg" src="assets/apartment.webp" alt="阳光照进两个人的合租房">
+          <img loading="lazy" class="scene-background" id="scene-bg" src="assets/apartment.webp" alt="阳光照进两个人的合租房">
           <div class="scene-top"><div class="date-ribbon"><span id="week">第 1 周</span><b id="day">周一</b><i data-lucide="sun"></i></div><div class="scene-switch" aria-label="场景"><button data-scene="home" class="active" title="回家" aria-label="回家"><i data-lucide="house"></i></button><button data-scene="town" title="小镇" aria-label="小镇"><i data-lucide="store"></i></button></div></div>
           <div id="props" class="props"></div>
           <div class="scene-messages"><div class="scene-caption" id="scene-caption"><i data-lucide="key-round"></i><span>我们的合租小屋</span></div><div id="speech" class="speech">阿闲：我把周一三五让出来一半，行吗？</div></div>
-          <button class="actor actor-a" data-person="0" title="查看阿闲" aria-label="查看阿闲"><img id="actor-a" src="assets/characters-0.webp" alt="阿闲，戴眼镜的猫室友"><span>阿闲</span></button>
-          <button class="actor actor-b" data-person="1" title="查看阿忙" aria-label="查看阿忙"><img id="actor-b" src="assets/characters-2.webp" alt="阿忙，穿格纹长外套的狐狸室友"><span>阿忙</span></button>
+          <button class="actor actor-a" data-person="0" title="查看阿闲" aria-label="查看阿闲"><img loading="lazy" id="actor-a" src="assets/characters-0.webp" alt="阿闲，戴眼镜的猫室友"><span>阿闲</span></button>
+          <button class="actor actor-b" data-person="1" title="查看阿忙" aria-label="查看阿忙"><img loading="lazy" id="actor-b" src="assets/characters-2.webp" alt="阿忙，穿格纹长外套的狐狸室友"><span>阿忙</span></button>
           <div id="day-overlay" class="day-overlay" hidden><span id="day-overlay-text"></span></div>
         </div>
         <div class="people-strip" id="people"></div>
