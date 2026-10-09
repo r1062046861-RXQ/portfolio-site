@@ -314,7 +314,7 @@ window.addEventListener('storage',event=>{if(event.key===KEY){if(!event.newValue
 try{lastSavedRaw=localStorage.getItem(KEY);}catch{storageOK=false;}
 render();renderMenu();icons();if(pendingReloadNotice)toast(pendingReloadNotice);
 if('serviceWorker' in navigator&&window.isSecureContext){
-  const register=()=>navigator.serviceWorker.register('./sw.js').catch(()=>{});
+  const register=()=>navigator.serviceWorker.register('./sw.js?v=0.6.1').catch(()=>{});
   // Finish the visible menu before downloading the offline copy of the full game.
   if(document.readyState==='complete')register();
   else window.addEventListener('load',register,{once:true});
