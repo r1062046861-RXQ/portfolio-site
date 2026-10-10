@@ -33,6 +33,7 @@
 .planner .day-name{display:flex;align-items:center;justify-content:center;height:25px;font-family:var(--art-font);font-size:12px;line-height:16px;color:#264e5c;border-bottom:1px solid #315666}
 .planner .day-name.today{color:#fff3d0;background:#1e586e}
 .planner .schedule-action{display:flex;flex-direction:column;align-items:center;justify-content:center;height:auto;min-height:0;padding:3px 0;gap:3px;border:0;border-image:none;border-bottom:1px solid #315666;background:transparent!important;font-family:var(--art-font);font-size:12px;line-height:15px;color:#16556a;letter-spacing:0}
+.planner .schedule-action:hover:not(:disabled){border-bottom-color:#315666}
 .planner .schedule-action:last-child{border-bottom:0}
 .planner .schedule-action[data-person-action="1"]{color:#963b27}
 .planner .schedule-action.done{opacity:.7}
