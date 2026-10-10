@@ -100,7 +100,7 @@ function commit(next,{backup=true}={}){
 function perform(fn){try{commit(fn());return true;}catch(e){toast(e.message);return false;}}
 function openModal(title,html,eyebrow='',kind='') {
   if($('modal').open)$('modal').close();
-  modalKind=kind;const legacy=['free-time','sunday','preset','course','draw','event','reward','report','tutorial','buy','import','ad'].includes(kind);$('modal').classList.toggle('legacy-window',legacy);$('modal').classList.toggle('has-close-marker',['free-time','course','event','reward','buy','import'].includes(kind));$('modal').dataset.art=legacy||['settings','goals','xian','mang','new-game','shift'].includes(kind)?kind:'';
+  modalKind=kind;const legacy=['free-time','sunday','preset','course','draw','event','reward','report','tutorial','buy','import','ad'].includes(kind);$('modal').classList.toggle('legacy-window',legacy);$('modal').classList.toggle('has-close-marker',['course','event','reward','buy','import'].includes(kind));$('modal').dataset.art=legacy||['settings','goals','xian','mang','new-game','shift'].includes(kind)?kind:'';
   $('modal-title').textContent=title;$('modal-eyebrow').textContent=eyebrow;$('modal-body').innerHTML=html;
   $('modal-tools').replaceChildren();const tools=$('modal-body').querySelector('.goal-nav,.settings-nav,.shift-tools,.tutorial-tools');if(tools)$('modal-tools').append(tools);$('modal-tools').hidden=!tools;
   $('modal').showModal();icons();paginateModal();

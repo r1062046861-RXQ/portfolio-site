@@ -11,7 +11,7 @@
 .top-dock .header-actions .icon-button,.top-dock .scene-switch button{border:0;background:#e7d8b4!important;background-image:none!important;clip-path:polygon(35% 2%,73% 5%,96% 31%,98% 69%,75% 95%,34% 98%,5% 76%,1% 35%);width:32px;height:34px;padding:6px;color:#254f45}
 .top-dock .header-actions .icon-button svg{width:20px;height:20px}
 .top-dock .people-strip{height:49px;gap:10px}
-.top-dock .person,.top-dock .person+.person{position:relative;isolation:isolate;flex:1;min-width:0;height:49px;display:grid;grid-template-columns:36px max-content 1fr;grid-template-rows:23px 17px;gap:0 3px;align-items:center;border:0;border-image:none;background:none!important;padding:4px 4px 4px 0;text-align:left}
+.top-dock .person,.top-dock .person+.person{position:relative;isolation:isolate;flex:none;width:max-content;max-width:100%;justify-self:start;min-width:0;height:49px;display:grid;grid-template-columns:36px max-content max-content;grid-template-rows:23px 17px;gap:0 3px;align-items:center;border:0;border-image:none;background:none!important;padding:4px 4px 4px 0;text-align:left}
 .top-dock .person:before{content:"";position:absolute;inset:4px 0 3px 17px;z-index:-1;background:#e6d5ac;clip-path:polygon(0 4%,94% 0,100% 6%,98% 91%,95% 100%,0 94%)}
 .person-portrait{grid-column:1;grid-row:1 / 3;width:38px;height:45px;object-fit:contain;align-self:center;max-width:none}
 .top-dock .person-head{display:contents}
@@ -19,7 +19,7 @@
 .top-dock .person-head small{grid-column:2 / 4;grid-row:2;font-family:var(--art-font);font-size:13px;line-height:17px;white-space:nowrap}
 .top-dock .meters{grid-column:3;grid-row:1;display:flex;gap:3px;flex:none;justify-content:flex-start;margin:0}
 .top-dock .meter{gap:1px;flex:none}.top-dock .meter svg{width:11px;height:11px}.top-dock .meter b{font-size:11px;line-height:16px;min-width:0;font-weight:700}.top-dock .meter-track{display:none}
-.top-dock .person-a{color:#16556a}.top-dock .person-b{color:#963b27}
+.top-dock .person-a{color:#16556a}.top-dock .person-b{color:#963b27}.top-dock .person+.person{justify-self:end}
 .job-ticket{grid-column:1;grid-row:3 / 5;width:max-content;max-width:100%;background:url('assets/ui-v10/paper-ticket.webp') center/100% 100% no-repeat;padding:8px 10px 9px;min-height:48px}
 .top-dock .date-ribbon{height:auto;border:0;border-image:none;padding:0;background:none;max-width:100%;line-height:16px;font-family:var(--art-font);font-size:13px;gap:3px}
 .top-dock .date-ribbon b{font-size:13px;font-weight:400}
@@ -55,4 +55,4 @@
 .modal-top h2,.planner-heading h2,.section-heading h3,.tutorial-card h3,.menu-button>span{font-family:var(--art-font);font-weight:400}
 .text-button,.primary-button,.buy-button{font-family:var(--art-font);font-weight:400}.action-option{font-family:inherit}
 .decoration-mode .job-ticket{display:none}
-@media(max-width:360px){.top-dock .brand{width:135px}.top-dock .brand h1{font-size:23px}.top-dock .header-actions{gap:3px}.top-dock .wallet span{font-size:16px}.top-dock .people-strip{gap:7px}.top-dock .person,.top-dock .person+.person{grid-template-columns:31px max-content 1fr;gap:0 2px;padding-right:3px}.person-portrait{width:33px}.top-dock .person-head b{font-size:15px}.top-dock .meter svg{width:9px;height:9px}.top-dock .meter b{font-size:10px}.top-dock .meters{gap:2px}.top-dock .speech b{font-size:12px}.top-dock .date-ribbon{font-size:12px}.job-ticket{padding-left:8px;padding-right:8px}.top-dock .scene-switch{gap:3px}.top-dock .goals-button{min-width:40px;font-size:14px}.bottom-dock{gap:4px}.bottom-dock .tabs button{font-size:16px}}
+@media(max-width:360px){.top-dock .brand{width:135px}.top-dock .brand h1{font-size:23px}.top-dock .header-actions{gap:3px}.top-dock .wallet span{font-size:16px}.top-dock .people-strip{gap:7px}.top-dock .person,.top-dock .person+.person{grid-template-columns:31px max-content max-content;gap:0 2px;padding-right:3px}.person-portrait{width:33px}.top-dock .person-head b{font-size:15px}.top-dock .meter svg{width:9px;height:9px}.top-dock .meter b{font-size:10px}.top-dock .meters{gap:2px}.top-dock .speech b{font-size:12px}.top-dock .date-ribbon{font-size:12px}.job-ticket{padding-left:8px;padding-right:8px}.top-dock .scene-switch{gap:3px}.top-dock .goals-button{min-width:40px;font-size:14px}.bottom-dock{gap:4px}.bottom-dock .tabs button{font-size:16px}}

@@ -24,7 +24,7 @@
 #modal.legacy-window .modal-actions{display:flex;gap:7px;margin:4px 0 0}
 #modal.legacy-window .modal-actions>*{min-width:0;flex:1}
 #modal.legacy-window .swap-button{width:100%;margin:0 0 6px;background:#d6dfcc!important}
-#modal[data-art="free-time"]{background-image:url('assets/ui-v14/free-time-frame.webp')!important}
+#modal[data-art="free-time"]{background-image:url('assets/ui-v15/free-time-frame.webp')!important}
 #modal[data-art="free-time"] .modal-top{left:18%!important;right:8%!important}
 #modal[data-art="free-time"] #modal-body{left:18%!important;right:8%!important}
 #modal[data-art="sunday"]{background-image:url('assets/ui-v14/sunday-frame.webp')!important}
@@ -118,13 +118,13 @@
 }
 
 #modal[data-art="free-time"]{--title-left:27%;--title-right:18%;--title-top:2%;--title-height:13%;--close-x:94%;--close-y:16%}
-#modal[data-art="sunday"]{--title-top:4%;--title-height:14%;--title-left:20%;--title-right:20%;--close-x:87%;--close-y:18%}
+#modal[data-art="sunday"]{--title-top:1%;--title-height:14%;--title-left:20%;--title-right:20%;--close-x:87%;--close-y:18%}
 #modal[data-art="sunday"] #modal-body{top:29%!important;left:19%!important;right:16%!important}
 #modal[data-art="preset"]{--title-top:1%;--title-height:13%;--title-left:22%;--title-right:22%;--close-x:88%;--close-y:12%}
 #modal[data-art="preset"] #modal-body{top:18%!important;bottom:14%!important;left:13%!important;right:10%!important;display:flex;flex-direction:column;gap:0!important}
 #modal[data-art="preset"] .action-option{height:calc((100% - 18px)/3);min-height:0;flex:none;padding:9px 6px!important;margin:0!important}
 #modal[data-art="course"]{--title-top:2%;--title-height:13%;--title-left:25%;--title-right:21%;--close-x:94%;--close-y:9%}
-#modal[data-art="draw"]{--title-top:5%;--title-height:15%;--title-left:23%;--title-right:23%;--close-x:88%;--close-y:12%}
+#modal[data-art="draw"]{--title-top:3%;--title-height:15%;--title-left:23%;--title-right:23%;--close-x:88%;--close-y:12%}
 #modal[data-art="event"]{--title-top:17%;--title-height:12%;--title-left:23%;--title-right:13%;--close-x:94%;--close-y:7%}
 #modal[data-art="event"] #modal-body{top:33%!important;left:23%!important;right:10%!important;bottom:10%!important}
 #modal[data-art="reward"]{--title-top:1%;--title-height:14%;--title-left:23%;--title-right:23%;--close-x:94%;--close-y:11%}
@@ -138,3 +138,9 @@
 #modal[data-art="import"] .modal-top>div{justify-content:flex-start;text-align:left}
 #modal[data-art="ad"]{--title-top:4%;--title-height:17%;--title-left:24%;--title-right:23%;--close-x:82%;--close-y:17%}
 body:has(.decoration-mode) #toast{bottom:calc(190px + var(--safe-bottom))}
+
+/* Portrait free-time frame keeps a circular clock and a single DOM close button. */
+#modal[data-art="free-time"]{--frame-width:min(450px,calc(100vw - 12px),calc((100dvh - 25px - var(--safe-top) - var(--safe-bottom)) * 0.703478261));width:var(--frame-width)!important;height:calc(var(--frame-width) * 1.421508035)!important;max-width:none!important;max-height:none!important;background-size:contain!important;--title-left:24%;--title-right:14%;--title-top:0%;--title-height:12%;--close-x:93%;--close-y:14%}
+#modal[data-art="free-time"] #close-modal{background:#a1402c!important;clip-path:polygon(10% 3%,80% 0,100% 22%,96% 89%,77% 100%,6% 94%,0 65%)}
+#modal[data-art="free-time"] #modal-body{left:16%!important;right:8%!important;top:22%!important;bottom:14%!important}
+#modal[data-art="free-time"] #modal-pager{left:34%;right:27%;bottom:3%}

@@ -22,3 +22,6 @@
   .menu-button{height:46px;min-height:46px;border-width:8px;border-image-width:8px}
   .menu-button span{font-size:20px;letter-spacing:3px}
 }
+
+/* The release tag belongs to the cover and respects the phone safe area. */
+.main-menu .menu-version{position:absolute;right:calc(10px + env(safe-area-inset-right,0px));top:calc(10px + var(--safe-top));z-index:3;display:flex;align-items:center;justify-content:center;min-width:57px;height:27px;padding:2px 8px;background:#efe2bf;color:#244c58;font-family:var(--art-font);font-size:15px;line-height:19px;font-variant-numeric:tabular-nums;clip-path:polygon(4% 6%,93% 0,100% 17%,95% 95%,7% 100%,0 77%);pointer-events:none}
