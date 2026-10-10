@@ -1,10 +1,11 @@
 /* Approved door plaque, folded letter and work-ticket clipboard. */
 .main-menu .menu-actions{left:3%;right:3%;bottom:calc(10px + var(--safe-bottom));height:min(300px,42dvh);padding:0;border:0;border-image:none;display:block;background:url('assets/ui-v13/menu-frame.webp') center/100% 100% no-repeat;filter:none}
-.main-menu .menu-save{position:absolute;top:20%;left:24%;right:10%;margin:0;font-family:var(--art-font);font-weight:400;font-size:14px;line-height:19px;text-align:center;color:#234b50}
-.main-menu .menu-button{position:absolute;left:23%;right:11%;width:66%;height:20%;min-height:0;padding:0 5px;border:0;border-image:none;box-shadow:none;gap:9px;transform:none!important;clip-path:polygon(4% 4%,95% 0,100% 15%,98% 88%,93% 100%,5% 96%,0 80%,0 15%)}
-.main-menu .menu-continue{top:35%;color:#fff0ce}.main-menu .menu-new{top:61%;color:#234b50}
-.main-menu .menu-button span{font-family:var(--art-font);font-weight:400;font-size:27px;line-height:32px;letter-spacing:1px}
-.main-menu .menu-button svg{width:19px;height:19px;flex:none}
+.main-menu .menu-save{position:absolute;top:15%;height:12%;left:23%;right:23%;display:flex;align-items:center;justify-content:center;margin:0;font-family:var(--art-font);font-weight:400;font-size:14px;line-height:1.15;text-align:center;color:#234b50}
+.main-menu .menu-button{position:absolute;left:17%;right:11%;width:72%;height:22%;font-size:27px;min-height:0;padding:0 5px;border:0;border-image:none;box-shadow:none;gap:9px;transform:none!important;clip-path:polygon(4% 4%,95% 0,100% 15%,98% 88%,93% 100%,5% 96%,0 80%,0 15%)}
+.main-menu .menu-continue{top:30%;color:#fff0ce}.main-menu .menu-new{top:58%;color:#234b50}
+.main-menu .menu-button span{position:absolute;left:0;right:0;text-align:center;font-family:var(--art-font);font-weight:400;font-size:27px;line-height:32px;letter-spacing:1px}
+.main-menu .menu-button svg{position:absolute;left:calc(50% + 2em + 10px);width:19px;height:19px;flex:none}
+.main-menu .menu-new svg{left:calc(50% + 1.5em + 10px)}
 .main-menu .menu-button:hover:not(:disabled){background:#f9e2a915!important}
 .main-menu .menu-button:active:not(:disabled){background:#152d3940!important}
 .main-menu .menu-button:disabled{background:#243e4b80!important;color:#ddd8c4;filter:none}
@@ -48,7 +49,7 @@
 #modal[data-art="shift"] .claim-label svg{width:20px;height:20px}
 #modal[data-art="shift"] #modal-pager{bottom:4%;left:28%;right:28%;height:30px}
 @media(max-width:360px){
- .main-menu .menu-save{font-size:12px;line-height:17px}.main-menu .menu-button span{font-size:23px;line-height:28px}.main-menu .menu-storage{font-size:10px;line-height:14px}
+ .main-menu .menu-save{font-size:12px;line-height:1.15}.main-menu .menu-button{font-size:23px}.main-menu .menu-button span{font-size:23px;line-height:28px}.main-menu .menu-storage{font-size:10px;line-height:14px}
  #modal[data-art="new-game"] .modal-top h2{font-size:21px;line-height:26px}
  #modal[data-art="new-game"] .modal-caption{font-size:13px;line-height:20px}
  #modal[data-art="new-game"] .modal-actions button{font-size:13px}
