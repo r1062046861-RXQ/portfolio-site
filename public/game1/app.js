@@ -3,18 +3,22 @@ import * as G from './engine.js?v=0.15';
 const $=id=>document.getElementById(id), icon=name=>`<i data-lucide="${name}"></i>`;
 const escape=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const KEY='today-who-works-save-v1', PREF='today-who-works-preferences-v1';
-let state=G.fresh(), tab=null, scene='home', busy=false, sound=true, volume=.35, fast=false, toastTimer, modalKind='', pendingReloadNotice='',storageOK=true,lastSavedRaw=null,hasSavedGame=false,menuOpen=true;
+const DEFAULT_VOLUME=.35;
+let state=G.fresh(), tab=null, scene='home', busy=false, sound=true, volume=DEFAULT_VOLUME, fast=false, toastTimer, modalKind='', pendingReloadNotice='',storageOK=true,lastSavedRaw=null,hasSavedGame=false,menuOpen=true;
 let contentPage=0, photoView=false, modalPage=0, modalPages=[],decorating=null;
 let tutorialStep=null,tutorialDone=false;
 const TUTORIAL=[
-  {title:'两个人，一个班',text:'周一到周六，每天一位室友上班，另一位自由安排；周日一起放假。第一周已替你排好示范日程。',hint:'顶部看生活币、精力与心情；底部管理生活。',icon:'users',route:null},
-  {title:'先看看上什么班',text:'点底部「找班」，再点日期，能抢当天岗位或换当班人。岗位写明地点、工作内容和工资；技能不够可以进修。',hint:'每周还能抽一次免费岗位盲盒。',icon:'briefcase-business',route:'jobs'},
-  {title:'把空档留给自己',text:'点「排班」。工作格查看岗位与换班，另一格可安排休息、进修或副业。当天小目标会提示做什么能多拿25币。',hint:'一节进修 +3经验，三节从零达到2级，无需学历。',icon:'calendar-days',route:'plan'},
-  {title:'开工，然后看看收获',text:'安排好后收起窗口，点底部「开始周一」。只有点击开始才会推进一天，工资、技能和目标奖励会显示在收获单。',hint:'每天开工前都能改剩余安排；精力不足先换班或休息。',icon:'play',route:null},
-  {title:'小目标，大大的盼头',text:'点顶部「目标」：查看每日奖励、选择每周街坊委托，再逐步完成四章大目标。委托完成自动到账，章节完成手动领奖。',hint:'试试先接「小店的周末准备」，跟着示范日程就能完成。',icon:'flag',route:'goals'},
-  {title:'让出租屋一点点变成家',text:'生活币可买家具。点「小家」添置后选位置，已有家具也能挪动。周日结算生活费后进入下一周，继续学本事、接委托。',hint:'进度自动保存在当前浏览器；设置里可重看教程和调节音量。',icon:'armchair',route:'home'}
+  {title:'认识两位室友',text:'阿闲和阿忙共享一个班位：一人上班，一人自由安排。点人物纸签，查看精力、心情与技能。',hint:'阿闲是蓝色，阿忙是暖色；周日一起放假。',alt:'顶部两位室友纸签，蓝框标出阿闲、暖色框标出阿忙。',route:'people',look:'阿闲'},
+  {title:'今天，去上什么班？',text:'点「找班」，再点未开工的日期卡片，查看岗位、地点与工资，抢班或换当班人。',hint:'技能不够就短训；每周还有一次岗位盲盒。',alt:'找班界面，框选岗位日期卡片和短训按钮。',route:'jobs',look:'找班'},
+  {title:'把空档留给自己',text:'点「排班」里的空档格，安排休息、进修或副业。点工作格，可以查看岗位与换班。',hint:'图中框选了阿闲的休息格；第一周已有示范安排。',alt:'排班表中框选阿闲的一个休息格，可点击修改空档安排。',route:'plan',look:'排班'},
+  {title:'安排好，就开工！',text:'收起窗口，点底部开工按钮，完成一天后查看工资、技能与奖励收获。',hint:'只有开工才推进一天；去看看不会直接开工。',alt:'主场景底部，蓝框标出播放形状的开工按钮。',route:'run',look:'开工按钮'},
+  {title:'给生活一点小盼头',text:'点「目标」，先做每日小目标，再接街坊委托，逐步完成四章大目标。',hint:'委托奖励自动到账；章节奖励记得手动领取。',alt:'目标窗口的三个分类，以及框选的每日小目标与奖励。',route:'goals',look:'目标'},
+  {title:'一点点，把小家住满',text:'点「小家」添置家具后选择位置；已有家具点「挪个位置」，重新摆放。',hint:'进度自动保存在当前手机浏览器；设置可重看教程。',alt:'家具窗口，蓝框标出挪个位置与添置家具按钮。',route:'home',look:'小家'}
 ];
-const music=new Audio();music.preload='none';music.src='assets/music.wav';music.loop=true;
+const MUSIC_TRACKS=Array.from({length:4},(_,i)=>`assets/music/music-${String(i+1).padStart(2,'0')}.mp3`);
+let musicTrack=0;
+const music=new Audio();music.preload='none';music.src=MUSIC_TRACKS[0];music.hidden=true;music.id='background-music';document.body.append(music);
+music.addEventListener('ended',()=>{musicTrack=(musicTrack+1)%MUSIC_TRACKS.length;music.src=MUSIC_TRACKS[musicTrack];playMusic();});
 let prefs={};
 try{prefs=JSON.parse(localStorage.getItem(PREF)||'{}');fast=!!prefs?.fast;if(typeof prefs?.sound==='boolean')sound=prefs.sound;if(typeof prefs?.volume==='number'&&Number.isFinite(prefs.volume))volume=Math.max(0,Math.min(1,prefs.volume));}catch{}
 music.volume=volume;
@@ -38,7 +42,13 @@ function colorCharacterNames(root=document.body){
     node.replaceWith(fragment);
   }
 }
-function icons(){window.lucide?.createIcons({attrs:{'aria-hidden':'true'}});colorCharacterNames();}
+function icons(){
+  document.querySelectorAll('.top-dock .person,.actor>span,.bottom-dock .tabs button,#goals-button,#settings').forEach(el=>{
+    if(el.querySelector('.panel-cue'))return;
+    const cue=document.createElement('span');cue.className='panel-cue';cue.setAttribute('aria-hidden','true');cue.innerHTML=icon('chevron-right');el.append(cue);
+  });
+  window.lucide?.createIcons({attrs:{'aria-hidden':'true'}});colorCharacterNames();
+}
 function toast(text){clearTimeout(toastTimer);$('toast').textContent=text;colorCharacterNames($('toast'));$('toast').classList.add('visible');toastTimer=setTimeout(()=>$('toast').classList.remove('visible'),3200);}
 function save(backup=true){
   hasSavedGame=true;
@@ -59,11 +69,12 @@ function renderMenu(){
   $('menu-storage').textContent=storageOK?'你的进度，只保存在这台设备的浏览器里。':'此浏览器无法保存，请在游戏设置里导出备份。';
 }
 function enterGame({newGame=false}={}){
+  if(newGame){sound=true;volume=DEFAULT_VOLUME;music.volume=volume;tutorialDone=false;persistPrefs();}
   closeModal();menuOpen=false;$('main-menu').hidden=true;$('main-menu').inert=true;
   $('game-shell').hidden=false;$('game-shell').inert=false;tab=null;scene='home';contentPage=0;render();
   playMusic();
   $('run').focus({preventScroll:true});
-  if(newGame&&!tutorialDone)startTutorial();
+  if(newGame)startTutorial();
 }
 function refreshMenuSave(){
   try{
@@ -115,7 +126,7 @@ function contentPager(items){
 function paginateModal(){
   $('modal').style.height='';
   const body=$('modal-body');
-  if(['xian','mang'].includes($('modal').dataset.art)){modalPages=[[...body.children]];modalPage=0;$('modal-pager').hidden=true;return;}
+  if(['xian','mang','tutorial'].includes($('modal').dataset.art)){modalPages=[[...body.children]];modalPage=0;$('modal-pager').hidden=true;return;}
   body.querySelectorAll('.action-options').forEach(group=>group.replaceWith(...group.children));
   const blocks=[...body.children];blocks.forEach(block=>{block.classList.add('modal-block');block.hidden=false;});
   $('modal-pager').hidden=false;
@@ -146,7 +157,7 @@ function startTutorial(){stopDecorating();tutorialStep=0;tab=null;render();tutor
 function finishTutorial(){tutorialStep=null;tutorialDone=true;persistPrefs();closeModal();renderTutorialResume();}
 function tutorialModal(){
   const t=TUTORIAL[tutorialStep];if(!t)return;
-  openModal('新手教程',`<div class="tutorial-card">${icon(t.icon)}<h3>${t.title}</h3><p>${t.text}</p><p class="tutorial-hint">${t.hint}</p></div>${t.route?`<button class="text-button" data-tutorial-look="${t.route}">${icon('mouse-pointer-2')}去看看${{jobs:'找班',plan:'排班',goals:'目标',home:'小家'}[t.route]}</button>`:''}<div class="tutorial-tools"><nav class="tutorial-steps" aria-label="教程进度">${TUTORIAL.map((_,i)=>`<span class="${i===tutorialStep?'current':''}" ${i===tutorialStep?'aria-current="step"':''}>${i+1}</span>`).join('')}</nav><div class="tutorial-actions"><button class="text-button" data-tutorial-back ${tutorialStep===0?'disabled':''}>上一步</button><button class="primary-button" data-tutorial-next>${tutorialStep===TUTORIAL.length-1?'开始生活':'下一步'}</button><button class="text-button" data-tutorial-skip>跳过</button></div></div>`,`第 ${tutorialStep+1} / ${TUTORIAL.length} 步 · 随时可在设置重看`,'tutorial');
+  openModal('新手教程',`<div class="tutorial-card"><h3>${t.title}</h3><figure class="tutorial-picture"><img src="assets/tutorial/step-${tutorialStep+1}.webp" alt="${escape(t.alt)}" decoding="async"></figure><p>${t.text}</p><p class="tutorial-hint">${t.hint}</p><button class="text-button tutorial-look" data-tutorial-look="${t.route}">${icon('mouse-pointer-2')}去看看${t.look}${icon('chevron-right')}</button></div><div class="tutorial-tools"><nav class="tutorial-steps" aria-label="教程进度">${TUTORIAL.map((_,i)=>`<span class="${i===tutorialStep?'current':''}" ${i===tutorialStep?'aria-current="step"':''}>${i+1}</span>`).join('')}</nav><div class="tutorial-actions"><button class="text-button" data-tutorial-back ${tutorialStep===0?'disabled':''}>上一步</button><button class="primary-button" data-tutorial-next>${tutorialStep===TUTORIAL.length-1?'开始生活':'下一步'}</button><button class="text-button" data-tutorial-skip>跳过</button></div></div>`,`第 ${tutorialStep+1} / ${TUTORIAL.length} 步`,'tutorial');
   renderTutorialResume();
 }
 function meter(value,name){return `<span class="meter ${name==='smile'?'mood':''}" title="${name==='smile'?'心情':'精力'} ${value}/100">${icon(name)}<span class="meter-track"><span style="width:${value}%"></span></span><b>${value}</b></span>`;}
@@ -335,10 +346,10 @@ function eventModal(){
 function settingsModal(view='audio'){
   const nav=`<nav class="settings-nav" aria-label="设置分类">${[['audio','声音与节奏'],['save','存档与帮助']].map(([id,title])=>`<button class="text-button ${view===id?'selected':''}" data-settings-view="${id}">${title}</button>`).join('')}</nav>`;
   const body=view==='audio'?`<div class="settings-audio"><label class="toggle-row"><span>背景音乐</span><input id="sound-toggle" type="checkbox" ${sound?'checked':''}></label><label class="volume-control"><span>音量 <output id="volume-value" for="volume-slider">${Math.round(volume*100)}%</output></span><input id="volume-slider" type="range" min="0" max="100" step="1" value="${Math.round(volume*100)}" aria-label="游戏音量"></label><label class="toggle-row"><span>快速过一天</span><input id="fast-toggle" type="checkbox" ${fast?'checked':''}></label><div class="settings-shortcuts"><button class="text-button" data-tutorial-start>重看教程</button><button class="text-button" data-main-menu>返回主菜单</button></div></div>`:`<div class="settings-buttons"><button class="text-button" data-export>${icon('download')}导出存档</button><button class="text-button" data-import>${icon('upload')}导入存档</button><button class="text-button danger-button" data-reset>${icon('rotate-ccw')}重新开始</button></div><p class="option-note">${storageOK?'进度保存在此浏览器。':'此浏览器无法自动保存。'}换设备前可导出存档。</p><div class="ledger-row"><span>放松体验券</span><b>精力 +20</b></div><p class="option-note">每游戏周可用一次模拟广告；不播放商业广告，不产生真实收益。</p><button class="text-button" data-ad ${state.adWeek===state.week||state.day===7?'disabled':''}>${icon('clapperboard')}${state.adWeek===state.week?'本周已用':'体验模拟激励广告'}</button>`;
-  openModal('生活设置',nav+body,'今天谁上班 · Demo V0.15','settings');
+  openModal('生活设置',nav+body,'今天谁上班 · 1.0.1','settings');
 }
 function renderSound(){$('sound').innerHTML=icon(sound&&volume>0?'volume-2':'volume-x');$('sound').title=sound?'关闭声音':'开启声音';$('sound').setAttribute('aria-label',$('sound').title);$('sound').setAttribute('aria-pressed',String(sound));}
-function playMusic(){if(sound&&volume>0&&!document.hidden)music.play().catch(()=>{});else music.pause();}
+function playMusic(){if(sound&&volume>0&&!menuOpen&&!document.hidden)music.play().catch(()=>{});else music.pause();}
 function setSound(value){sound=value;persistPrefs();renderSound();if($('sound-toggle'))$('sound-toggle').checked=sound;playMusic();icons();}
 function persistPrefs(){try{localStorage.setItem(PREF,JSON.stringify({fast,sound,volume,tutorialDone}));}catch{}}
 function exportSave(){
@@ -390,7 +401,7 @@ document.addEventListener('click',event=>{
   if(b.hasAttribute('data-tutorial-skip')){finishTutorial();return;}
   if(b.hasAttribute('data-tutorial-back')){tutorialStep=Math.max(0,tutorialStep-1);tutorialModal();return;}
   if(b.hasAttribute('data-tutorial-next')){if(tutorialStep===TUTORIAL.length-1)finishTutorial();else{tutorialStep++;tutorialModal();}return;}
-  if(b.hasAttribute('data-tutorial-look')){closeModal();const route=b.dataset.tutorialLook;if(route==='goals')goalsModal();else{tab=route;contentPage=0;scene=route==='jobs'?'town':route==='home'?'home':scene;render();}return;}
+  if(b.hasAttribute('data-tutorial-look')){closeModal();const route=b.dataset.tutorialLook;if(route==='goals')goalsModal();else if(route==='people')personModal(0);else{tab=route==='run'?null:route;contentPage=0;scene=route==='jobs'?'town':route==='home'?'home':scene;render();if(route==='run')$('run').focus({preventScroll:true});}return;}
   if(b.id==='goals-button'||b.hasAttribute('data-goals')){goalsModal();return;}
   if(b.hasAttribute('data-goal-view')){goalsModal(b.dataset.goalView);return;}
   if(b.hasAttribute('data-close-reward')){closeModal();return;}
@@ -459,12 +470,12 @@ $('modal').addEventListener('click',event=>{if(event.target===$('modal')){const 
 $('modal').addEventListener('cancel',()=>{modalKind='';});
 window.addEventListener('resize',()=>{if($('modal').open)paginateModal();fitPanelActors();});
 document.addEventListener('keydown',event=>{if(event.key==='Escape'&&!$('modal').open){tab=null;renderContent();icons();}});
-document.addEventListener('visibilitychange',()=>{if(document.hidden||menuOpen)music.pause();else if(sound)music.play().catch(()=>{});});
+document.addEventListener('visibilitychange',playMusic);
 window.addEventListener('storage',event=>{if(event.key===KEY){if(!event.newValue){if(menuOpen){hasSavedGame=false;lastSavedRaw=null;renderMenu();}return;}try{const candidate=JSON.parse(event.newValue);if(G.validateSave(candidate)){if(busy){toast('另一个页面修改了存档，正在同步进度。');}else{state=candidate;hasSavedGame=true;lastSavedRaw=event.newValue;closeModal();render();renderMenu();toast('已同步另一个页面的进度。');}}}catch{}}});
 try{lastSavedRaw=localStorage.getItem(KEY);}catch{storageOK=false;}
 render();renderMenu();icons();if(pendingReloadNotice)toast(pendingReloadNotice);
 if('serviceWorker' in navigator&&window.isSecureContext){
-  const register=()=>navigator.serviceWorker.register('./sw.js?v=0.15').catch(()=>{});
+  const register=()=>navigator.serviceWorker.register('./sw.js?v=1.0.1').catch(()=>{});
   // Finish the visible menu before downloading the offline copy of the full game.
   if(document.readyState==='complete')register();
   else window.addEventListener('load',register,{once:true});

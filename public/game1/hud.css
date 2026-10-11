@@ -55,4 +55,25 @@
 .modal-top h2,.planner-heading h2,.section-heading h3,.tutorial-card h3,.menu-button>span{font-family:var(--art-font);font-weight:400}
 .text-button,.primary-button,.buy-button{font-family:var(--art-font);font-weight:400}.action-option{font-family:inherit}
 .decoration-mode .job-ticket{display:none}
+/* A cut-paper arrow stamp marks entrances; plain paper remains informational. */
+.app-shell .panel-cue{position:absolute;display:flex;align-items:center;justify-content:center;width:14px;height:16px;min-width:0;margin:0;padding:0;border:0;border-image:none;background:#16556a;color:#fff0cc;clip-path:polygon(0 5%,77% 0,100% 50%,80% 100%,0 92%,9% 48%);pointer-events:none;line-height:1}
+.app-shell .panel-cue svg{display:block!important;width:11px;height:11px;stroke-width:2.4;color:inherit;position:static;flex:none}
+.top-dock .person .panel-cue{right:4px;bottom:6px;width:12px;height:14px}
+.top-dock .person-b .panel-cue,.actor-b .panel-cue{background:#963b27}
+.top-dock .person:before{border-bottom:2px solid currentColor}
+.top-dock .person,.actor>span,.bottom-dock .tabs button{filter:drop-shadow(0 2px 0 #163f4655)}
+.actor>span{position:relative;min-width:72px;padding:3px 18px;border-bottom:2px solid #16556a}
+.actor-b>span{border-bottom-color:#963b27}
+.actor>span .panel-cue{right:3px;top:50%;transform:translateY(-50%)}
+.bottom-dock .tabs button .panel-cue{right:max(1px,calc(50% - 28px));top:24px;width:15px;height:16px;background:#16556a}
+.bottom-dock .tabs [data-tab="home"] .panel-cue,.bottom-dock .tabs [data-tab="diary"] .panel-cue{background:#31594e}
+.top-dock #goals-button{position:relative;min-width:58px;padding-left:6px;padding-right:20px;filter:drop-shadow(0 2px 0 #163f4644)}
+.top-dock #goals-button .panel-cue{right:4px;top:50%;transform:translateY(-50%);width:12px;height:14px}
+.top-dock #settings{position:relative}
+.top-dock #settings .panel-cue{right:1px;bottom:1px;width:10px;height:12px;background:#963b27}
+.top-dock #settings .panel-cue svg{width:8px;height:8px}
+.top-dock .wallet,.top-dock .brand,.job-ticket{cursor:default}
+.top-dock .person:hover:not(:disabled),.actor:hover:not(:disabled)>span,.top-dock #goals-button:hover:not(:disabled){filter:brightness(1.08) drop-shadow(0 2px 0 #163f4666)}
+.top-dock .person:active:not(:disabled),.actor:active:not(:disabled)>span,.top-dock #goals-button:active:not(:disabled){filter:brightness(.9);transform:none}
+.actor>span:has(.panel-cue){height:auto;min-height:26px;line-height:18px}
 @media(max-width:360px){.top-dock .brand{width:135px}.top-dock .brand h1{font-size:23px}.top-dock .header-actions{gap:3px}.top-dock .wallet span{font-size:16px}.top-dock .people-strip{gap:7px}.top-dock .person,.top-dock .person+.person{grid-template-columns:31px max-content max-content;gap:0 2px;padding-right:3px}.person-portrait{width:33px}.top-dock .person-head b{font-size:15px}.top-dock .meter svg{width:9px;height:9px}.top-dock .meter b{font-size:10px}.top-dock .meters{gap:2px}.top-dock .speech b{font-size:12px}.top-dock .date-ribbon{font-size:12px}.job-ticket{padding-left:8px;padding-right:8px}.top-dock .scene-switch{gap:3px}.top-dock .goals-button{min-width:40px;font-size:14px}.bottom-dock{gap:4px}.bottom-dock .tabs button{font-size:16px}}

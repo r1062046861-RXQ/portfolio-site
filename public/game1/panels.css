@@ -32,7 +32,7 @@
 .planner .day-row:last-child{border-right:0;background:#dbb55280}
 .planner .day-name{display:flex;align-items:center;justify-content:center;height:25px;font-family:var(--art-font);font-size:12px;line-height:16px;color:#264e5c;border-bottom:1px solid #315666}
 .planner .day-name.today{color:#fff3d0;background:#1e586e}
-.planner .schedule-action{display:flex;flex-direction:column;align-items:center;justify-content:center;height:auto;min-height:0;padding:3px 0;gap:3px;border:0;border-image:none;border-bottom:1px solid #315666;background:transparent!important;font-family:var(--art-font);font-size:12px;line-height:15px;color:#16556a;letter-spacing:0}
+.planner .schedule-action{display:flex;align-self:stretch;flex-direction:column;align-items:center;justify-content:center;height:auto;min-height:0;padding:3px 0;gap:3px;border:0;border-image:none;border-bottom:1px solid #315666;background:transparent!important;font-family:var(--art-font);font-size:12px;line-height:15px;color:#16556a;letter-spacing:0}
 .planner .schedule-action:hover:not(:disabled){border-bottom-color:#315666}
 .planner .schedule-action:last-child{border-bottom:0}
 .planner .schedule-action[data-person-action="1"]{color:#963b27}
@@ -42,11 +42,11 @@
 .planner .schedule-action.sunday{grid-column:1 / -1;grid-row:2 / 4;align-self:stretch;color:#4e4929;gap:7px}
 .planner .schedule-action.sunday span{font-size:12px;white-space:normal}
 .planner .schedule-action.sunday svg:last-child{width:12px;height:12px}
-.planner-footer{position:absolute;left:7%;right:5%;bottom:5%;height:12%;display:flex;gap:7px;align-items:center}
+.planner-footer{position:absolute;left:7%;right:5%;bottom:2%;height:12%;display:flex;gap:7px;align-items:center}
 .planner-footer #preset{flex:none;font-size:12px;padding:3px 4px;gap:3px}
 .planner-footer>small{font-size:10px;white-space:nowrap}
 .planner-footer .forecast{flex:1;display:flex;align-items:center;justify-content:flex-end;gap:3px;min-height:0;height:auto;padding:0;margin:0;border:0;border-image:none;background:none;font-size:11px;line-height:15px}
-.planner-footer .forecast strong{font-family:var(--art-font);font-weight:400;font-size:20px;white-space:nowrap;color:#214757}
+.planner-footer .forecast strong{display:inline-flex;align-items:center;font-family:var(--art-font);font-weight:400;font-size:20px;line-height:26px;white-space:nowrap;color:#214757}
 .planner-footer .forecast strong small{font-size:10px}
 .planner-footer .forecast.error{justify-content:flex-start;color:#963b27;font-size:11px}
 .planner-footer .forecast.error svg{display:none}
@@ -78,7 +78,7 @@
 .content-area[data-panel="jobs"] .shift-toolbar [data-draw]{background:#215a74!important;color:#fff0cf}
 .content-area[data-panel="jobs"] .shift-toolbar [data-course]{background:#f2e1bd!important;color:#963b27}
 .content-area[data-panel="jobs"] .shift-list{position:absolute;top:34%;bottom:19%;left:12%;right:11%;display:grid;grid-template-rows:repeat(3,minmax(0,1fr));gap:6px}
-.content-area[data-panel="jobs"] .shift-row{height:auto;min-height:0;display:flex;padding:3px 5px;gap:5px;background:#eee0bd!important;border:0;border-image:none;clip-path:polygon(2% 0,99% 4%,98% 23%,100% 40%,98% 65%,99% 93%,0 100%,2% 65%,0 30%);text-align:left;color:#244a51}
+.content-area[data-panel="jobs"] .shift-row{height:auto;min-height:0;display:flex;padding:3px 12px 3px 14px;gap:5px;background:#eee0bd!important;border:0;border-image:none;clip-path:polygon(2% 0,99% 4%,98% 23%,100% 40%,98% 65%,99% 93%,0 100%,2% 65%,0 30%);text-align:left;color:#244a51}
 .content-area[data-panel="jobs"] .shift-date{width:34px;line-height:16px;font-family:var(--art-font);font-size:12px}
 .content-area[data-panel="jobs"] .shift-date small{font-size:12px;line-height:16px}
 .content-area[data-panel="jobs"] .shift-copy b{font-family:var(--art-font);font-size:14px;font-weight:400;line-height:18px}
@@ -111,7 +111,7 @@
 .panel-open .actor>span{visibility:hidden}
 @media(max-width:360px){
   .planner .planner-heading h2{font-size:21px}.planner .planner-heading small{font-size:11px}
-  .planner-footer>small{display:none}.planner-footer .forecast{font-size:10px}.planner-footer .forecast strong{font-size:18px}
+  .planner-footer>small{display:none}.planner-footer .forecast{font-size:10px}.planner-footer .forecast strong{font-size:18px;line-height:22px}
   .planner .schedule-action{font-size:11px}.planner .schedule-action svg{width:16px;height:16px}
   .planner .schedule-action[data-shift]>svg{width:20px;height:20px}
   .schedule-board{grid-template-columns:37px minmax(0,1fr)}.planner .schedule-labels{font-size:12px}
@@ -119,7 +119,7 @@
   .content-area[data-panel="home"] .buy-button{font-size:11px}.content-area[data-panel="home"]:after{font-size:10px}
   .content-area[data-panel="jobs"] .shift-toolbar .text-button{font-size:12px}.content-area[data-panel="jobs"] .shift-toolbar svg{width:13px}
   .content-area[data-panel="jobs"] .shift-copy b{font-size:13px}.content-area[data-panel="jobs"] .shift-copy small{font-size:10px}
-  .content-area[data-panel="jobs"] .shift-row{gap:3px;padding:2px 3px}.content-area[data-panel="jobs"] .shift-wage{font-size:16px}
+  .content-area[data-panel="jobs"] .shift-row{gap:3px;padding-top:2px;padding-bottom:2px}.content-area[data-panel="jobs"] .shift-wage{font-size:16px}
   .content-area[data-panel="diary"] .section-heading h3{font-size:21px}.content-area[data-panel="diary"] .photo-toggle{margin-left:0;font-size:12px}
   .content-area[data-panel="diary"] .diary-log li{font-size:12px;line-height:18px}.content-area[data-panel="diary"] .diary-date{font-size:12px}
   .content-area[data-panel="diary"] .diary-actions .text-button{font-size:11px}.content-area[data-panel="diary"] .pager{gap:2px}.content-area[data-panel="diary"] .pager span{min-width:32px}
