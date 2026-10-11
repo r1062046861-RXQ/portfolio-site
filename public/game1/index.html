@@ -21,12 +21,13 @@
   <link rel="stylesheet" href="modal-art.css?v=1.0.1">
   <link rel="stylesheet" href="menu-shift.css?v=1.0.1">
   <link rel="stylesheet" href="legacy-windows.css?v=1.0.1">
-  <link rel="stylesheet" href="ratio-layout.css?v=1.0.1">
-  <title>今天谁上班 · 1.0.1</title>
+  <link rel="stylesheet" href="ratio-layout.css?v=1.0.2">
+  <link rel="stylesheet" href="symbols.css?v=1.0.2">
+  <title>今天谁上班 · 1.0.2</title>
 </head>
 <body>
   <section id="main-menu" class="main-menu" aria-label="游戏主菜单">
-    <span class="menu-version" aria-label="游戏版本 1.0.1">1.0.1</span>
+    <span class="menu-version" aria-label="游戏版本 1.0.2">1.0.2</span>
     <img class="menu-cover" src="assets/menu-cover.webp" alt="清晨，猫与狐狸室友在蓝门前交接钥匙" width="1024" height="1536">
     <div class="menu-heading"><h1><img class="menu-title" src="assets/ui/menu-title.webp" alt="今天谁上班" width="1000" height="640"></h1><p>一个班，两个人轮着上。</p></div>
     <div class="menu-actions">
@@ -68,8 +69,12 @@
   </div>
   <dialog id="modal" aria-labelledby="modal-title"><div class="modal-top"><div><small id="modal-eyebrow"></small><h2 id="modal-title"></h2></div><button class="icon-button" id="close-modal" title="关闭" aria-label="关闭"><i data-lucide="x"></i></button></div><div id="modal-tools" hidden></div><div id="modal-body"></div><nav id="modal-pager" class="pager" aria-label="弹窗分页" hidden></nav></dialog>
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <dialog id="memory-viewer" aria-labelledby="memory-title" aria-describedby="memory-caption">
+    <header><h2 id="memory-title"></h2><button id="close-memory" title="收起照片" aria-label="收起照片"><i data-lucide="x"></i></button></header>
+    <figure><img id="memory-image" width="960" height="640" alt=""><figcaption id="memory-caption"></figcaption></figure>
+  </dialog>
   <input type="file" id="import-file" accept="application/json,.json" hidden>
   <script src="vendor/lucide.min.js"></script>
-  <script type="module" src="app.js?v=1.0.1"></script>
+  <script type="module" src="app.js?v=1.0.2"></script>
 </body>
 </html>

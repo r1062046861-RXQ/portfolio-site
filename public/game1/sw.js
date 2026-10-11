@@ -1,6 +1,6 @@
 const SCOPE=new URL('./',self.location.href);
 const PREFIX=`who-works-${SCOPE.pathname}-`;
-const CACHE=PREFIX+'v1.0.1';
+const CACHE=PREFIX+'v1.0.2';
 const FILES=['./','index.html','app.js?v=1.0.1','engine.js?v=1.0.0','style.css','portrait.css','art-direction.css','fixed-stage.css','floating-ui.css','manifest.webmanifest','vendor/lucide.min.js','assets/paper.png','assets/apartment.webp','assets/town.webp','assets/characters-0.webp','assets/characters-1.webp','assets/characters-2.webp','assets/characters-3.webp','assets/furniture-0.webp','assets/furniture-1.webp','assets/furniture-2.webp','assets/furniture-3.webp','assets/furniture-4.webp','assets/furniture-5.webp','assets/icon-192.png','assets/icon-512.png','assets/day.wav','assets/ui/window.webp','assets/ui/button.webp','assets/ui/label.webp','assets/ui/tool.webp','assets/ui/selected.webp','assets/ui/tile.webp'];
 FILES.push('legacy-windows.css?v=1.0.0','assets/ui-v15/free-time-frame.webp','menu-shift.css?v=1.0.0','assets/ui-v13/menu-frame.webp','modal-art.css?v=1.0.0','assets/ui-v12/portrait-xian.webp','assets/ui-v12/portrait-mang.webp','panels.css?v=1.0.0','hud.css?v=1.0.0','assets/fonts/ZCOOLKuaiLe-ui.woff2?v=1.0.0','assets/ui-v10/portrait-cat.webp','assets/ui-v10/portrait-fox.webp','assets/ui-v10/nav-plan.webp','assets/ui-v10/nav-home.webp','assets/ui-v10/nav-jobs.webp','assets/ui-v10/nav-diary.webp','assets/ui-v10/paper-ticket.webp','assets/ui-v10/paper-title.webp','assets/ui-v10/run-disc.webp','assets/ui/title-lettering.webp','menu.css?v=1.0.0','gameplay.css?v=1.0.0','assets/menu-cover.webp','assets/ui/menu-title.webp');
 self.addEventListener('install',event=>{event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(FILES.map(file=>new Request(new URL(file,SCOPE),{cache:'reload'})))).then(()=>self.skipWaiting()));});
@@ -18,3 +18,6 @@ FILES.push('ratio-layout.css?v=1.0.0','assets/ui-v16/diary-frame.webp','assets/u
 
 FILES.push('engine.js?v=0.15','assets/fonts/ZCOOLKuaiLe-ui.woff2?v=0.15');
 FILES.push(...Array.from({length:6},(_,i)=>`assets/tutorial/step-${i+1}.webp`),...Array.from({length:4},(_,i)=>`assets/music/music-${String(i+1).padStart(2,'0')}.mp3`));
+FILES.push(...['first','learn','side','home','balance'].map(id=>`assets/memories/${id}-v1.webp`));
+FILES.push('app.js?v=1.0.2','ratio-layout.css?v=1.0.2','symbols.css?v=1.0.2');
+FILES.push('engine.js?v=1.0.1',...['menu','gameplay','hud','panels','modal-art','menu-shift','legacy-windows'].map(name=>`${name}.css?v=1.0.1`));

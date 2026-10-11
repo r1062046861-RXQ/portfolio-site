@@ -2,8 +2,27 @@ import * as G from './engine.js?v=0.15';
 
 const $=id=>document.getElementById(id), icon=name=>`<i data-lucide="${name}"></i>`;
 const escape=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const glyph=(name,work=false)=>`<span class="symbol-glyph ${work?'symbol-work':'symbol-life'}" data-symbol="${name}">${icon(name)}</span>`;
+const REQUEST_SYMBOLS={'shop-help':'store',community:'newspaper',market:'package',studio:'handshake'};
+const CHAPTER_SYMBOLS={settle:'key-round',grow:'graduation-cap',home:'house',dream:'sparkles'};
+const WISH_SYMBOLS={first:'scale',learn:'book-open',side:'package',home:'house'};
+const REQUIREMENT_SYMBOLS={shifts:'briefcase-business',courses:'book-open',furniture:'armchair',jobs:'briefcase-business',skills:'graduation-cap',commissions:'mail',balancedWeeks:'scale',sideOrders:'package',cash:'coins',wishes:'heart',shop:'store',office:'clipboard-list',advanced:'briefcase-business',course:'book-open',side:'package',rest:'coffee',mood:'smile',sunday:'footprints'};
+const stat=(symbol,value,label)=>`<span class="symbol-stat" title="${escape(label)}" aria-label="${escape(label)} ${escape(value)}">${icon(symbol)}<span>${escape(value)}</span></span>`;
+const reward=amount=>`<b class="symbol-reward">${stat('coins',`+${amount}`,'生活币奖励')}</b>`;
+const heading=(symbol,title,work=false)=>`<div class="symbol-identity">${glyph(symbol,work)}<h3>${escape(title)}</h3></div>`;
+function actionEffects(action){
+  const effects={rest:[['zap','+30','精力'],['smile','+6','心情']],admin:[['graduation-cap','+3','事务经验'],['coins','−40','学费'],['zap','−15','精力'],['smile','−5','心情']],creative:[['graduation-cap','+3','创作经验'],['coins','−40','学费'],['zap','−15','精力'],['smile','−5','心情']],second:[['coins','+50','净收入'],['zap','−15','精力'],['smile','−4','心情']],prep:[['coins','−40','备货成本'],['zap','−15','精力'],['smile','−4','心情']],sell:[['coins','+140','回款'],['zap','−15','精力'],['smile','−4','心情']]};
+  return `<span class="symbol-effects">${effects[action].map(args=>stat(...args)).join('')}</span>`;
+}
 const KEY='today-who-works-save-v1', PREF='today-who-works-preferences-v1';
 const DEFAULT_VOLUME=.35;
+const MEMORIES={
+  first:{name:'第一张好日程',caption:'一周的班轮着上，星期天的桥一起走。',alt:'阿闲和阿忙在红色小桥上并肩散步，身旁是小镇与河水。'},
+  learn:{name:'新本事',caption:'课后的桌上，多了两件自己做的小作品。',alt:'阿闲举起自己的纸版画，阿忙在窗边的手作课桌上拼出小房子。'},
+  side:{name:'第一次小生意',caption:'收摊时数一数，开心比硬币还多。',alt:'阿闲在街角小摊数硬币，阿忙开心地举起卖空的托盘。'},
+  home:{name:'我们的家',caption:'一点点添置，一点点把出租屋住成家。',alt:'阿闲摆好一盆绿植，阿忙蹲下来安置家里的新边桌。'},
+  balance:{name:'忙闲刚刚好',caption:'这一周，认真上班，也认真一起发呆。',alt:'阿闲和阿忙坐在夜晚的露台上读书、喝茶，远处亮起小镇的灯。'}
+};
 let state=G.fresh(), tab=null, scene='home', busy=false, sound=true, volume=DEFAULT_VOLUME, fast=false, toastTimer, modalKind='', pendingReloadNotice='',storageOK=true,lastSavedRaw=null,hasSavedGame=false,menuOpen=true;
 let contentPage=0, photoView=false, modalPage=0, modalPages=[],decorating=null;
 let tutorialStep=null,tutorialDone=false;
@@ -47,7 +66,7 @@ function icons(){
     if(el.querySelector('.panel-cue'))return;
     const cue=document.createElement('span');cue.className='panel-cue';cue.setAttribute('aria-hidden','true');cue.innerHTML=icon('chevron-right');el.append(cue);
   });
-  window.lucide?.createIcons({attrs:{'aria-hidden':'true'}});colorCharacterNames();
+  window.lucide?.createIcons({attrs:{'aria-hidden':'true','stroke-width':1.8}});colorCharacterNames();
 }
 function toast(text){clearTimeout(toastTimer);$('toast').textContent=text;colorCharacterNames($('toast'));$('toast').classList.add('visible');toastTimer=setTimeout(()=>$('toast').classList.remove('visible'),3200);}
 function save(backup=true){
@@ -112,6 +131,7 @@ function perform(fn){try{commit(fn());return true;}catch(e){toast(e.message);ret
 function openModal(title,html,eyebrow='',kind='') {
   if($('modal').open)$('modal').close();
   modalKind=kind;const legacy=['free-time','sunday','preset','course','draw','event','reward','report','tutorial','buy','import','ad'].includes(kind);$('modal').classList.toggle('legacy-window',legacy);$('modal').classList.toggle('has-close-marker',['course','event','reward','buy','import'].includes(kind));$('modal').dataset.art=legacy||['settings','goals','xian','mang','new-game','shift'].includes(kind)?kind:'';
+  $('modal').classList.toggle('symbol-window',['goals','shift','free-time','course','sunday','draw','preset','event','reward'].includes(kind));
   $('modal-title').textContent=title;$('modal-eyebrow').textContent=eyebrow;$('modal-body').innerHTML=html;
   $('modal-tools').replaceChildren();const tools=$('modal-body').querySelector('.goal-nav,.settings-nav,.shift-tools,.tutorial-tools');if(tools)$('modal-tools').append(tools);$('modal-tools').hidden=!tools;
   $('modal').showModal();icons();paginateModal();
@@ -122,6 +142,12 @@ function pager(page,total,attribute){
 function contentPager(items){
   const total=Math.max(1,Math.ceil(items.length/(tab==='diary'?2:3)));contentPage=Math.min(contentPage,total-1);
   return `<nav class="pager" aria-label="列表分页">${pager(contentPage,total,'data-content-page')}</nav>`;
+}
+function viewMemory(id){
+  const memory=MEMORIES[id];if(!memory||!state.memories.includes(id))return;
+  $('memory-title').textContent=memory.name;$('memory-caption').textContent=memory.caption;
+  $('memory-image').src=`assets/memories/${id}-v1.webp`;$('memory-image').alt=memory.alt;
+  $('memory-viewer').showModal();icons();
 }
 function paginateModal(){
   $('modal').style.height='';
@@ -226,12 +252,11 @@ function renderContent(){
   }
   if(tab==='jobs') {
     const days=[0,1,2,3,4,5],navigation=contentPager(days);
-    $('content').innerHTML=`<div class="section-heading"><h3>抢班课表</h3><span>一天一人一个班</span></div><div class="shift-toolbar"><button class="text-button" data-draw ${busy||state.day>=6||state.drawUsed?'disabled':''}>${icon('package-open')}${state.drawWeek===state.week?'我的盲盒':'抽岗位盲盒'}</button><button class="text-button" data-course>${icon('book-open')}一周短训</button></div><div class="shift-list">${days.slice(contentPage*3,contentPage*3+3).map(d=>{const j=G.jobDetail(state,d),worker=state.chars[state.plan[d].indexOf('work')];return `<button class="shift-row" data-shift="${d}" ${busy||d<state.day?'disabled':''} title="${j.place} · ${state.shiftSources?.[d]==='draw'?'盲盒分配':state.shiftSources?.[d]==='claim'?'已抢到':'原班可保留'}"><span class="shift-date">${G.DAYS[d]}<small>${worker.name}</small></span><span class="shift-copy"><b>${j.name}</b><small>${j.place}</small></span><span class="shift-wage">${j.wage}<small>币/班</small></span>${icon(d<state.day?'check':'chevron-right')}</button>`;}).join('')}</div><p class="shift-note">进修一下，就能试试新岗位</p>${navigation}`;
+    $('content').innerHTML=`<div class="section-heading"><h3>抢班课表</h3><span>一天一人一个班</span></div><div class="shift-toolbar"><button class="text-button" data-draw ${busy||state.day>=6||state.drawUsed?'disabled':''}>${icon('package-open')}${state.drawWeek===state.week?'我的盲盒':'抽岗位盲盒'}</button><button class="text-button" data-course>${icon('book-open')}一周短训</button></div><div class="shift-list">${days.slice(contentPage*3,contentPage*3+3).map(d=>{const j=G.jobDetail(state,d),worker=state.chars[state.plan[d].indexOf('work')];return `<button class="shift-row" data-shift="${d}" ${busy||d<state.day?'disabled':''} title="${j.place} · ${state.shiftSources?.[d]==='draw'?'盲盒分配':state.shiftSources?.[d]==='claim'?'已抢到':'原班可保留'}"><span class="shift-date">${G.DAYS[d]}<small>${worker.name}</small></span>${glyph(j.icon,true)}<span class="shift-copy"><b>${j.name}</b><small>${j.place}</small></span><span class="shift-wage">${j.wage}<small>币/班</small></span>${icon(d<state.day?'check':'chevron-right')}</button>`;}).join('')}</div><p class="shift-note">进修一下，就能试试新岗位</p>${navigation}`;
   }
   if(tab==='diary') {
-    const memoryNames={first:'第一张好日程',learn:'新本事',side:'第一次小生意',home:'我们的家',balance:'忙闲刚刚好'};
     const items=photoView?state.memories:state.log,navigation=contentPager(items),visible=items.slice(contentPage*2,contentPage*2+2);
-    $('content').innerHTML=`<div class="section-heading"><h3>${photoView?'生活照片':'生活日记'}</h3><button class="text-button photo-toggle" data-photo-view title="${photoView?'查看日记':'查看照片'}" aria-label="${photoView?'查看日记':'查看照片'}">${icon(photoView?'notebook-pen':'images')}<span>${photoView?'日记':'照片'}</span></button></div>${photoView?`<div class="memory-strip">${visible.length?visible.map(id=>`<div class="memory"><img src="assets/${id==='home'?'apartment':'town'}.webp" alt="${memoryNames[id]}"><p>${memoryNames[id]}</p></div>`).join(''):'<p class="empty-state">过好今天，慢慢收集生活照片。</p>'}</div>`:`<ul class="diary-log">${visible.length?visible.map(l=>`<li><span class="diary-date">第${l.week}周 · ${G.DAYS[Math.min(l.day,6)]}</span><span>${escape(l.text)}</span></li>`).join(''):`<li class="empty-state"><span>日记的第一页，留给今天。</span></li>`}</ul>`}<div class="diary-actions"><button class="text-button diary-goals" data-goals>${icon('flag')}目标与奖励</button>${state.reports.length?`<button class="text-button report-button" data-last-report>${icon('receipt-text')}上周账本</button>`:''}</div>${navigation}`;
+    $('content').innerHTML=`<div class="section-heading"><h3>${photoView?'生活照片':'生活日记'}</h3><button class="text-button photo-toggle" data-photo-view title="${photoView?'查看日记':'查看照片'}" aria-label="${photoView?'查看日记':'查看照片'}">${icon(photoView?'notebook-pen':'images')}<span>${photoView?'日记':'照片'}</span></button></div>${photoView?`<div class="memory-strip">${visible.length?visible.map(id=>`<button class="memory" data-memory="${id}" title="查看${MEMORIES[id].name}大图" aria-label="查看${MEMORIES[id].name}大图"><img src="assets/memories/${id}-v1.webp" width="960" height="640" alt="${MEMORIES[id].alt}" decoding="async"><span>${MEMORIES[id].name}</span></button>`).join(''):'<p class="empty-state">过好今天，慢慢收集生活照片。</p>'}</div>`:`<ul class="diary-log">${visible.length?visible.map(l=>`<li><span class="diary-date">第${l.week}周 · ${G.DAYS[Math.min(l.day,6)]}</span><span>${escape(l.text)}</span></li>`).join(''):`<li class="empty-state"><span>日记的第一页，留给今天。</span></li>`}</ul>`}<div class="diary-actions"><button class="text-button diary-goals" data-goals>${icon('flag')}目标与奖励</button>${state.reports.length?`<button class="text-button report-button" data-last-report>${icon('receipt-text')}上周账本</button>`:''}</div>${navigation}`;
   }
   $('content').querySelector('.section-heading')?.insertAdjacentHTML('beforeend',`<button class="icon-button" data-close-panel title="收起窗口" aria-label="收起窗口">${icon('x')}</button>`);
   fitPanelActors();
@@ -259,23 +284,23 @@ function shiftModal(d){
   if(d<state.day||d>5||busy)return;
   const worker=state.plan[d].indexOf('work'),c=state.chars[worker],current=G.jobDetail(state,d);
   openModal(`${G.DAYS[d]} · ${c.name}上什么班`,
-    `<div class="shift-tools"><div class="shift-summary"><small>今天已排</small><b>${current.name} · ${current.wage}币</b><p>${current.place}：${current.task}</p></div><div class="shift-shortcuts"><button class="text-button swap-button" data-shift-swap="${d}">${icon('arrow-left-right')}换成${state.chars[1-worker].name}上班</button><button class="text-button" data-course>${icon('graduation-cap')}短期进修</button></div></div>`+
+    `<div class="shift-tools"><div class="shift-summary"><small>今天已排</small><b>${current.name} · ${current.wage}币</b><p>${current.place}：${current.task}</p></div><div class="shift-shortcuts"><button class="text-button swap-button" data-shift-swap="${d}">${icon('arrow-left-right')}换成${state.chars[1-worker].name}上班</button><button class="text-button" data-course>${icon('book-open')}短期进修</button></div></div>`+
     G.shiftOffers(state,d).map(job=>{
       const qualified=G.qualifies(c,job),selected=current.id===job.id,detail=G.JOB_DETAILS[job.id];
-      return `<button class="action-option ${selected?'active':''}" data-claim-day="${d}" data-claim-job="${job.id}" ${!qualified||selected?'disabled':''}><span class="offer-icon">${icon(job.icon)}</span><span><b>${job.name} · ${job.wage}币/班</b><small>${detail.place} · ${selected?'已排到这一天':qualified?'1个可选班位':`${job.skill?'创作':'事务'}${job.level}级，进修即可`}</small></span><span class="claim-label">${selected?icon('check'):qualified?'抢这个班':icon('book-open')}</span></button>`;
+      return `<button class="action-option symbol-option ${selected?'active':''}" data-claim-day="${d}" data-claim-job="${job.id}" ${!qualified||selected?'disabled':''}>${glyph(job.icon,true)}<span class="symbol-copy"><b>${job.name}</b><small>${detail.place} · ${job.level?`${job.skill?'创作':'事务'}${job.level}级`:'无需技能'}</small><span class="symbol-effects">${stat('coins',`${job.wage}/班`,'工资')}<span class="symbol-state">${selected?'已排':qualified?'可抢班':'待进修'}</span></span></span><span class="symbol-status" aria-label="${selected?'已排':qualified?'可进入':'未达资格'}">${icon(selected?'check':qualified?'chevron-right':'lock-keyhole')}</span></button>`;
     }).join(''),
     '按日期抢班，空档留给自己','shift');
 }
 function drawModal(){
   if(state.drawWeek!==state.week&&!perform(()=>G.draw(state)))return;
   const job=G.JOBS.find(j=>j.id===state.drawJob);if(!job)return;
-  openModal('盲盒里的新班',`<div class="draw-reveal">${icon(job.icon)}<h3>${job.name}</h3><p>${G.JOB_DETAILS[job.id].place} · ${job.wage}币/班</p><small>${job.line}</small></div><p class="modal-caption">选一天，安排${job.name}。每周免费抽一次，选定前仍可保留原班。</p>`+Array.from({length:6},(_,d)=>{
+  openModal('盲盒里的新班',`<div class="draw-reveal">${heading(job.icon,job.name,true)}<p>${G.JOB_DETAILS[job.id].place} · ${job.wage}币/班</p><small>${job.line}</small></div><p class="modal-caption">选一天，安排${job.name}。每周免费抽一次，选定前仍可保留原班。</p>`+Array.from({length:6},(_,d)=>{
     const c=state.chars[state.plan[d].indexOf('work')],ok=G.qualifies(c,job);
     return `<button class="action-option" data-draw-day="${d}" ${d<state.day||!ok||state.drawUsed?'disabled':''}><span><b>${G.DAYS[d]} · ${c.name}</b><small>${d<state.day?'这一天已完成':!ok?`${job.skill?'创作':'事务'}${job.level}级后可上岗`:state.drawUsed?'本周盲盒已经分配':'将原班换成这个岗位'}</small></span>${icon('calendar-check')}</button>`;
   }).join(''),'先看看，再决定哪天上','draw');
 }
 function courseModal(){
-  openModal('学会，就能上岗',`<p class="modal-caption">利用不上班的三天空档进修。每节40币、经验+3，三节从零到2级，一周就能学会新岗位。</p>`+[0,1].map(skill=>`<button class="action-option" data-plan-course="${skill}" ${state.day>=6?'disabled':''}>${icon(skill?'pencil-ruler':'book-open')}<span><b>${skill?'创作':'事务'}一周短训</b><small>${skill?'活动助理、图文助理':'登记、文档整理、排版'} · 自动安排剩下空档</small></span>${icon('calendar-plus')}</button>`).join('')+`<p class="option-note">课表只安排，不预扣钱。可以再改为休息；本周已上过的课不重排。进修后到抢班课表选择新岗位。</p>`,'白天轮流上班，空档各学一点','course');
+  openModal('学会，就能上岗',[0,1].map(skill=>`<section class="symbol-course">${heading(skill?'pencil-ruler':'book-open',`${skill?'创作':'事务'}短训`)}<div class="symbol-course-nodes" aria-label="三节课，每节40币、经验加3">${[1,2,3].map(n=>`<span class="symbol-course-node"><b>${n}</b><span>第${n}课</span><small>40币 · +3经验</small></span>`).join('')}</div><p class="symbol-course-outcome">从零到2级 · 可尝试${skill?'活动、图文':'登记、归档、排版'}</p><div class="symbol-learners">${state.chars.map(c=>`<div><span>${c.name} · ${c.xp[skill]}经验 · Lv.${G.level(c.xp[skill])}</span><progress value="${Math.min(c.xp[skill],9)}" max="9" aria-label="${c.name}${skill?'创作':'事务'}技能距离2级的经验"></progress></div>`).join('')}</div><button class="text-button symbol-command" data-plan-course="${skill}" ${state.day>=6?'disabled':''}>安排${skill?'创作':'事务'}课${icon('chevron-right')}</button></section>`).join('')+`<p class="option-note">安排两人的剩余空档，每人交替上班时最多三节。只排课，不预扣学费；经验也能从上班与小事获得。</p>`,'白天轮流上班，空档各学一点','course');
 }
 function startDecorating(id){
   if(busy||!state.furniture.includes(id))return;
@@ -293,33 +318,39 @@ function stopDecorating(){
 function scheduleModal(d,i) {
   if(busy||d<state.day)return;
   const worker=state.plan[d].indexOf('work'),free=1-worker,c=state.chars[free];
-  openModal(`${G.DAYS[d]} · ${c.name}空档`,`<button class="text-button swap-button" data-swap="${d}" data-worker="${free}">${icon('arrow-left-right')}<span>换班：让${escape(c.name)}上班，${escape(state.chars[worker].name)}空闲</span></button><div class="action-options">${Object.entries(G.ACTIONS).filter(([k])=>k!=='work').map(([k,a])=>`<button class="action-option ${state.plan[d][free]===k?'active':''}" data-action="${k}" data-action-day="${d}" data-action-person="${free}">${icon(a.icon)}<span><b>${a.name}</b><small>${a.detail}</small></span>${icon(state.plan[d][free]===k?'check':'chevron-right')}</button>`).join('')}</div>`,'一天一个行动，工资先到账','free-time');
+  const notes={rest:'免费',admin:'事务技能',creative:'创作技能',second:`成本30 / 回款80 · 本周 ${state.second}/2单`,prep:`创作1级 · 库存 ${state.inventory}/1批`,sell:`创作1级 · ${state.inventory?'已有库存':'先备货再摆摊'}`};
+  openModal(`${G.DAYS[d]} · ${c.name}空档`,`<button class="text-button swap-button" data-swap="${d}" data-worker="${free}">${icon('arrow-left-right')}<span>换班：让${escape(c.name)}上班，${escape(state.chars[worker].name)}空闲</span></button><div class="action-options">${Object.entries(G.ACTIONS).filter(([k])=>k!=='work').map(([k,a])=>`<button class="action-option symbol-option ${state.plan[d][free]===k?'active':''}" data-action="${k}" data-action-day="${d}" data-action-person="${free}">${glyph(a.icon)}<span class="symbol-copy"><b>${a.name}</b><small>${notes[k]}</small>${actionEffects(k)}</span><span class="symbol-status">${icon(state.plan[d][free]===k?'check':'chevron-right')}</span></button>`).join('')}</div>`,'一天一个行动，工资先到账','free-time');
 }
 function sundayModal(){
   if(state.day>6||busy)return;
-  const options=[['walk','footprints','一起散步','免费 · 两人精力 +40，心情 +12'],['home','house','在家慢慢过','免费 · 两人精力 +50，心情 +8'],['picnic','sandwich','带便当去野餐','60币 · 两人精力 +40，心情 +20']];
-  openModal('周日，一起放假',`<div class="action-options">${options.map(([id,ic,name,detail])=>`<button class="action-option ${state.sunday===id?'active':''}" data-sunday-choice="${id}">${icon(ic)}<span><b>${name}</b><small>${detail}</small></span>${icon(state.sunday===id?'check':'chevron-right')}</button>`).join('')}</div>`,'不用打卡的一天','sunday');
+  const options=[['walk','footprints','一起散步',40,12,0],['home','house','在家慢慢过',50,8,0],['picnic','sandwich','带便当去野餐',40,20,60]];
+  openModal('周日，一起放假',`<div class="action-options">${options.map(([id,ic,name,energy,mood,cost])=>`<button class="action-option symbol-option ${state.sunday===id?'active':''}" data-sunday-choice="${id}">${glyph(ic)}<span class="symbol-copy"><b>${name}</b><small>两人一起 · ${cost?`${cost}币`:'免费'}</small><span class="symbol-effects">${stat('zap',`+${energy}`,'两人精力')}${stat('smile',`+${mood}`,'两人心情')}</span></span><span class="symbol-status">${icon(state.sunday===id?'check':'chevron-right')}</span></button>`).join('')}</div>`,'不用打卡的一天','sunday');
 }
-function objectiveRows(rows){return rows.map(r=>`<div class="objective-row"><span>${icon(r.done?'check-circle-2':'circle')} ${r.label}</span><b>${Math.min(r.value,r.target)} / ${r.target}</b><progress value="${Math.min(r.value,r.target)}" max="${r.target}" aria-label="${r.label}"></progress></div>`).join('');}
+function objectiveRows(rows,{symbols=true}={}){return rows.map(r=>`<div class="symbol-objective ${r.done?'complete':''}" data-value="${r.value}" data-target="${r.target}"><span class="symbol-objective-label">${symbols?icon(REQUIREMENT_SYMBOLS[r.key]||'circle'):''}<span>${escape(r.label)}</span></span><b>${r.value} / ${r.target}</b>${r.target<=7?`<span class="symbol-segments" role="progressbar" aria-label="${escape(r.label)}" aria-valuenow="${Math.min(r.value,r.target)}" aria-valuemin="0" aria-valuemax="${r.target}">${Array.from({length:r.target},(_,i)=>`<i class="${i<r.value?'filled':''}"></i>`).join('')}</span>`:`<progress value="${Math.min(r.value,r.target)}" max="${r.target}" aria-label="${escape(r.label)}"></progress>`}</div>`).join('');}
+function wishRows(g){
+  const rows=g.id==='first'?[...state.chars.map((c,i)=>({key:'shifts',label:`${c.name}上班`,value:state.ledger.shifts[i],target:3,done:state.ledger.shifts[i]===3})),{key:'sunday',label:'周日一起散步',value:state.day===7&&state.sunday==='walk'?1:0,target:1}]:g.id==='learn'?[{key:'courses',label:'本周进修',value:state.ledger.courses,target:2}]:g.id==='side'?[{key:'side',label:'副业毛收入',value:state.ledger.side,target:140}]:[{key:'furniture',label:'拥有家具',value:state.furniture.length,target:1}];
+  if(['first','home'].includes(g.id))rows.push(...state.chars.map(c=>({key:'mood',label:`${c.name}心情`,value:c.mood,target:50})));
+  return objectiveRows(rows.map(r=>({...r,done:r.done??r.value>=r.target})));
+}
 function goalsModal(view='daily'){
   const j=G.journeyOf(state),g=G.goalFor(state),c=G.chapterProgress(state),r=G.requestProgress(state);
   let body=`<nav class="goal-nav" aria-label="目标分类">${[['daily','小目标'],['requests','街坊委托'],['journey','大目标']].map(([id,title])=>`<button class="text-button ${view===id?'selected':''}" data-goal-view="${id}">${title}</button>`).join('')}</nav>`;
   if(view==='daily'){
     const d=G.dailyGoal(state);
-    body+=`<div class="goal-paper"><small>每日收获 · ${state.day>=7?'本周已收工':G.DAYS[state.day]}</small><h3>${state.day===7?'这周的小努力都算数':d.title}</h3><p>${state.day===7?`已完成 ${j.weekly.daily.length} 个每日小目标。`:d.hint}</p><b class="reward-label">${state.day===7?'下一周有新的每日目标':`额外 +${d.reward} 生活币`}</b></div><div class="goal-paper"><small>本周心愿 · 周日自动结算</small><h3>${g.title}</h3><p>${g.description}</p><b class="reward-label">${state.day===7?(state.reports.at(-1)?.wishReward===80?'已领取 +80币与生活照片':state.reports.at(-1)?.goalMet?'旧版心愿已完成 · 新奖励从下一周开始':'这周未完成，下周再来'):'奖励 +80币与生活照片'}</b></div><button class="text-button" data-goal-route="plan">${icon('calendar-days')}去排班，安排今日小目标</button><button class="text-button" data-goal-view="requests">${icon('mail')}选一份本周街坊委托</button>`;
+    body+=`<section class="symbol-section"><small>每日收获 · ${state.day>=7?'本周已收工':G.DAYS[state.day]}</small>${heading(state.day===7?'calendar-check':d.action==='sunday'?'sun':G.ACTIONS[d.action].icon,state.day===7?'这周的小努力都算数':d.title)}<p>${state.day===7?`已完成 ${j.weekly.daily.length} 个每日小目标。`:d.hint}</p>${state.day===7?'<p>下一周有新的每日目标</p>':reward(d.reward)}<div class="symbol-daily-actions"><button class="text-button symbol-command" data-goal-route="plan">去安排${icon('chevron-right')}</button><button class="text-button symbol-command" data-goal-view="requests">选委托${icon('chevron-right')}</button></div></section><section class="symbol-section"><small>本周心愿 · 周日自动结算</small>${heading(WISH_SYMBOLS[g.id],g.title)}<p>${g.description}</p></section>${wishRows(g)}<div class="symbol-reward-line">${reward(80)}<span>${state.day===7?(state.reports.at(-1)?.wishReward===80?'已到账 · 照片已收藏':state.reports.at(-1)?.goalMet?'旧版已完成':'本周未完成'):'完成后解锁生活照片'}</span></div>`;
   }else if(view==='requests'){
-    if(r)body+=`<div class="goal-paper"><small>本周已接委托 · ${r.paid?'已交付':'进行中'}</small><h3>${r.title}</h3><p>${r.story}</p><b class="reward-label">${r.paid?'已到账':'完成自动到账'} +${r.reward}币</b></div>${objectiveRows(r.rows)}<button class="text-button" data-goal-route="jobs">${icon('briefcase-business')}去找班与进修</button><button class="text-button" data-goal-route="plan">${icon('calendar-days')}去排班与安排副业</button>`;
-    else body+=`<p class="option-note">每周自选一份。进度从本周已完成的行动计算，达到条件自动领奖；未完成下周可重新选择。</p>`+G.REQUESTS.map(q=>{const p=G.requestProgress(state,q.id);return `<div class="goal-paper"><h3>${q.title}</h3><p>${q.story}</p><p>${q.needs.map(n=>n[2]).join(' · ')}</p><div class="goal-card-footer"><b class="reward-label">+${q.reward}币</b><button class="text-button" data-accept-request="${q.id}" ${p.locked||state.day>=6?'disabled':''}>${p.locked?'完成前两章解锁':state.day>=6?'下周可接':'接下委托'}</button></div></div>`;}).join('');
+    if(r)body+=`<section class="symbol-section"><small>本周已接委托 · ${r.paid?'已交付':'进行中'}</small>${heading(REQUEST_SYMBOLS[r.id],r.title)}<p>${r.story}</p>${objectiveRows(r.rows,{symbols:false})}<div class="symbol-reward-line">${reward(r.reward)}<span>${r.paid?'已到账':'完成自动到账'}</span></div></section><button class="text-button" data-goal-route="jobs">${icon('briefcase-business')}去找班与进修</button><button class="text-button" data-goal-route="plan">${icon('calendar-days')}去排班与安排副业</button>`;
+    else body+=`<p class="option-note">每周自选一份，按已完成的行动计算进度，达标自动领奖。</p>`+G.REQUESTS.map(q=>{const p=G.requestProgress(state,q.id);return `<section class="symbol-section" data-request="${q.id}">${heading(REQUEST_SYMBOLS[q.id],q.title)}<p>${q.story}</p>${objectiveRows(p.rows,{symbols:false})}<div class="symbol-reward-line">${reward(q.reward)}<button class="text-button symbol-command" data-accept-request="${q.id}" ${p.locked||state.day>=6?'disabled':''}>${p.locked?`${icon('lock-keyhole')}前两章解锁`:state.day>=6?'下周可接':`接下委托${icon('chevron-right')}`}</button></div></section>`;}).join('');
   }else{
-    body+=`<div class="goal-paper"><small>生活印章 · ${j.claimed.length} / ${G.CHAPTERS.length}</small><h3>${c?c.title:'我们的理想生活，达成了！'}</h3><p>${c?c.story:'所有章节已完成。你们获得「小镇生活家」印章，可以继续接委托、换班与布置小家。'}</p><b class="reward-label">${c?`章节奖励 +${c.reward}币 · ${c.stamp}`:'完整成长目标已通关'}</b></div>`;
+    body+=`<section class="symbol-section"><small>生活印章 · ${j.claimed.length} / ${G.CHAPTERS.length}</small>${heading(CHAPTER_SYMBOLS[c?.id]||'sparkles',c?c.title:'我们的理想生活，达成了！')}<p>${c?c.story:'所有章节已完成。你们获得「小镇生活家」印章，可以继续接委托、换班与布置小家。'}</p>${c?`<div class="symbol-reward-line">${reward(c.reward)}<span>${c.stamp}</span></div>`:'<p>完整成长目标已通关</p>'}</section>`;
     if(c)body+=objectiveRows(c.rows)+`<button class="primary-button" data-claim-chapter ${c.done?'':'disabled'}>${icon('gift')}${c.done?'领取章节奖励':'完成以上目标即可领取'}</button>`;
-    body+=`<div class="stamp-list">${G.CHAPTERS.map((q,i)=>`<span class="${j.claimed.includes(q.id)?'earned':''}">${icon(j.claimed.includes(q.id)?'award':'lock-keyhole')}${q.stamp}</span>`).join('')}</div><p class="option-note">四章路线：站稳脚跟 → 新本事与委托 → 舒服的小家 → 六岗位、六家具与生活储蓄。完成第二章解锁联合企划委托。</p><button class="text-button" data-goal-route="home">${icon('armchair')}去小家添置家具</button>`;
+    body+=`<div class="symbol-chapters" aria-label="四章成长路线">${G.CHAPTERS.map((q,i)=>`<div class="${j.claimed.includes(q.id)?'earned':i===j.claimed.length?'current':''}">${glyph(CHAPTER_SYMBOLS[q.id])}<span>${['站稳脚跟','新本事','小家','理想生活'][i]}</span><small>${j.claimed.includes(q.id)?'已完成':i===j.claimed.length?'进行中':'未解锁'}</small></div>`).join('')}</div><button class="text-button" data-goal-route="home">${icon('armchair')}去小家添置家具</button>`;
   }
   openModal('生活目标',body,'小步向前，也有大大的盼头','goals');
 }
 function wishModal(){goalsModal();}
 function presetModal(){
-  openModal('一周计划签',`<div class="action-options"><button class="action-option" data-preset="rest">${icon('coffee')}<span><b>忙闲刚刚好</b><small>交替上班，空档好好休息。</small></span>${icon('chevron-right')}</button><button class="action-option" data-preset="learn">${icon('book-open')}<span><b>这周学点东西</b><small>优先给两人补事务课，其他空档休息。</small></span>${icon('chevron-right')}</button><button class="action-option" data-preset="side">${icon('package')}<span><b>攒一点生活钱</b><small>安排剩余二手订单，有条件再备货摆摊。</small></span>${icon('chevron-right')}</button></div>`,'已完成的日程会保留','preset');
+  openModal('一周计划签',`<div class="action-options"><button class="action-option symbol-option" data-preset="rest">${glyph('coffee')}<span class="symbol-copy"><b>忙闲刚刚好</b><small>交替上班，空档好好休息。</small></span><span class="symbol-status">${icon('chevron-right')}</span></button><button class="action-option symbol-option" data-preset="learn">${glyph('book-open')}<span class="symbol-copy"><b>这周学点东西</b><small>优先给两人补事务课，其他空档休息。</small></span><span class="symbol-status">${icon('chevron-right')}</span></button><button class="action-option symbol-option" data-preset="side">${glyph('package')}<span class="symbol-copy"><b>攒一点生活钱</b><small>安排剩余二手订单，有条件再备货摆摊。</small></span><span class="symbol-status">${icon('chevron-right')}</span></button></div>`,'已完成的日程会保留','preset');
 }
 function applyPreset(type) {
   const n=structuredClone(state);let seconds=n.second,prep=n.batches,stock=n.inventory,course=0;
@@ -341,12 +372,13 @@ function reportModal(report=state.reports.at(-1)) {
 }
 function eventModal(){
   const e=G.eventFor(state);if(!e)return;
-  openModal(e.title,`<img class="event-art" src="assets/town.webp" alt="小镇里的生活小事"><p class="modal-caption">${e.line}</p><div class="action-options">${e.options.map((o,i)=>`<button class="action-option" data-event-choice="${i}">${icon(i?'sparkles':'leaf')}<span><b>${o.name}</b><small>${o.hint}</small></span>${icon('chevron-right')}</button>`).join('')}</div>`,'今天有件小事','event');
+  const symbol=['clock','sun','folder-search','citrus'][G.EVENTS.indexOf(e)],effects={none:[],meeting:[['graduation-cap','+1','当班人事务经验'],['smile','−3','当班人心情']],sun:[['smile','+4','两人心情']],photo:[['coins','+20','生活币']],sort:[['graduation-cap','+1','当班人事务经验'],['zap','−3','当班人精力']],fruit:[['zap','+8','两人精力']]};
+  openModal(e.title,`<section class="symbol-event">${glyph(symbol)}<p>${e.line}</p></section><div class="action-options">${e.options.map((o,i)=>`<button class="action-option symbol-event-option" data-event-choice="${i}"><span class="symbol-copy"><b>${o.name}</b><small>${o.hint}</small><span class="symbol-effects">${effects[o.type].map(args=>stat(...args)).join('')||'<span>照常过今天</span>'}</span></span><span class="symbol-status">${icon('chevron-right')}</span></button>`).join('')}</div>`,'今天有件小事','event');
 }
 function settingsModal(view='audio'){
   const nav=`<nav class="settings-nav" aria-label="设置分类">${[['audio','声音与节奏'],['save','存档与帮助']].map(([id,title])=>`<button class="text-button ${view===id?'selected':''}" data-settings-view="${id}">${title}</button>`).join('')}</nav>`;
   const body=view==='audio'?`<div class="settings-audio"><label class="toggle-row"><span>背景音乐</span><input id="sound-toggle" type="checkbox" ${sound?'checked':''}></label><label class="volume-control"><span>音量 <output id="volume-value" for="volume-slider">${Math.round(volume*100)}%</output></span><input id="volume-slider" type="range" min="0" max="100" step="1" value="${Math.round(volume*100)}" aria-label="游戏音量"></label><label class="toggle-row"><span>快速过一天</span><input id="fast-toggle" type="checkbox" ${fast?'checked':''}></label><div class="settings-shortcuts"><button class="text-button" data-tutorial-start>重看教程</button><button class="text-button" data-main-menu>返回主菜单</button></div></div>`:`<div class="settings-buttons"><button class="text-button" data-export>${icon('download')}导出存档</button><button class="text-button" data-import>${icon('upload')}导入存档</button><button class="text-button danger-button" data-reset>${icon('rotate-ccw')}重新开始</button></div><p class="option-note">${storageOK?'进度保存在此浏览器。':'此浏览器无法自动保存。'}换设备前可导出存档。</p><div class="ledger-row"><span>放松体验券</span><b>精力 +20</b></div><p class="option-note">每游戏周可用一次模拟广告；不播放商业广告，不产生真实收益。</p><button class="text-button" data-ad ${state.adWeek===state.week||state.day===7?'disabled':''}>${icon('clapperboard')}${state.adWeek===state.week?'本周已用':'体验模拟激励广告'}</button>`;
-  openModal('生活设置',nav+body,'今天谁上班 · 1.0.1','settings');
+  openModal('生活设置',nav+body,'今天谁上班 · 1.0.2','settings');
 }
 function renderSound(){$('sound').innerHTML=icon(sound&&volume>0?'volume-2':'volume-x');$('sound').title=sound?'关闭声音':'开启声音';$('sound').setAttribute('aria-label',$('sound').title);$('sound').setAttribute('aria-pressed',String(sound));}
 function playMusic(){if(sound&&volume>0&&!menuOpen&&!document.hidden)music.play().catch(()=>{});else music.pause();}
@@ -375,7 +407,7 @@ async function runDay(){
   else{
     const bonus=state.ledger.bonus-previous.ledger.bonus,daily=G.dailyGoal(previous),request=G.requestProgress(state),c=G.chapterProgress(state);
     const levelUps=state.chars.flatMap((ch,i)=>ch.xp.map((xp,k)=>G.level(xp)>G.level(previous.chars[i].xp[k])?`${ch.name}的${k?'创作':'事务'}技能升到${G.level(xp)}级`:null)).filter(Boolean);
-    openModal(`${G.DAYS[previousDay]} · 今日收获`,`<div class="goal-paper"><small>${workedJob.place}</small><h3>${workedJob.name}完成！</h3><p>${workedJob.task}</p><b class="reward-label">工资 +${state.ledger.salary[worker]-previous.ledger.salary[worker]}币${bonus?` · 奖励 +${bonus}币`:''}</b></div><p class="modal-caption">${G.journeyOf(state).weekly.daily.includes(previousDay)?`每日小目标完成，额外 +${daily.reward}币。`:`今日小目标还差「${G.ACTIONS[daily.action].name}」，明天可以换个安排。`}</p>${request?.paid&&!G.requestProgress(previous)?.paid?`<p class="milestone-note">${icon('mail-check')}<span>街坊委托交付：${request.title}</span></p>`:''}${levelUps.map(text=>`<p class="milestone-note">${icon('sparkles')}<span>${text}，可以试试新岗位了。</span></p>`).join('')}${c?.done?`<button class="primary-button" data-goal-view="journey">${icon('gift')}本章目标完成，去领奖</button>`:''}<button class="text-button" data-goal-view="daily">${icon('flag')}看看明天的小目标</button><button class="primary-button" data-close-reward>继续生活</button>`,'今天的小努力，也有回响','reward');
+    openModal(`${G.DAYS[previousDay]} · 今日收获`,`<section class="symbol-section"><small>${workedJob.place}</small>${heading(workedJob.icon,`${workedJob.name}完成！`,true)}<p>${workedJob.task}</p><div class="symbol-effects">${stat('coins',`+${state.ledger.salary[worker]-previous.ledger.salary[worker]}`,'今日工资')}${bonus?stat('gift',`+${bonus}`,'额外奖励'):''}</div></section><p class="modal-caption">${G.journeyOf(state).weekly.daily.includes(previousDay)?`每日小目标完成，额外 +${daily.reward}币。`:`今日小目标还差「${G.ACTIONS[daily.action].name}」，明天可以换个安排。`}</p>${request?.paid&&!G.requestProgress(previous)?.paid?`<p class="milestone-note">${icon(REQUEST_SYMBOLS[request.id])}<span>街坊委托交付：${request.title}</span></p>`:''}${levelUps.map(text=>`<p class="milestone-note">${icon('graduation-cap')}<span>${text}，可以试试新岗位了。</span></p>`).join('')}${c?.done?`<button class="primary-button" data-goal-view="journey">${icon('gift')}本章目标完成，去领奖</button>`:''}<button class="text-button" data-goal-view="daily">${icon('flag')}看看明天的小目标</button><button class="primary-button" data-close-reward>继续生活</button>`,'今天的小努力，也有回响','reward');
   }
 }
 async function simulatedAd(){
@@ -389,6 +421,8 @@ document.addEventListener('click',event=>{
   const b=event.target.closest('button');
   if(!b){if(!busy&&(event.target.id==='scene-bg'||event.target.id==='scene')){tab=null;renderContent();icons();}return;}
   if(b.id==='close-modal'){closeModal();return;}
+  if(b.id==='close-memory'){$('memory-viewer').close();return;}
+  if(b.hasAttribute('data-memory')){viewMemory(b.dataset.memory);return;}
   if(b.hasAttribute('data-modal-page')){modalPage=Number(b.dataset.modalPage);renderModalPage();return;}
   if(b.id==='menu-new'){requestNewGame();return;}
   if(b.id==='menu-continue'){refreshMenuSave();if(hasSavedGame)enterGame();return;}
@@ -469,13 +503,13 @@ $('import-file').addEventListener('change',async event=>{
 $('modal').addEventListener('click',event=>{if(event.target===$('modal')){const r=$('modal').getBoundingClientRect();if(event.clientX<r.left||event.clientX>r.right||event.clientY<r.top||event.clientY>r.bottom)closeModal();}});
 $('modal').addEventListener('cancel',()=>{modalKind='';});
 window.addEventListener('resize',()=>{if($('modal').open)paginateModal();fitPanelActors();});
-document.addEventListener('keydown',event=>{if(event.key==='Escape'&&!$('modal').open){tab=null;renderContent();icons();}});
+document.addEventListener('keydown',event=>{if(event.key==='Escape'&&!$('modal').open&&!$('memory-viewer').open){tab=null;renderContent();icons();}});
 document.addEventListener('visibilitychange',playMusic);
 window.addEventListener('storage',event=>{if(event.key===KEY){if(!event.newValue){if(menuOpen){hasSavedGame=false;lastSavedRaw=null;renderMenu();}return;}try{const candidate=JSON.parse(event.newValue);if(G.validateSave(candidate)){if(busy){toast('另一个页面修改了存档，正在同步进度。');}else{state=candidate;hasSavedGame=true;lastSavedRaw=event.newValue;closeModal();render();renderMenu();toast('已同步另一个页面的进度。');}}}catch{}}});
 try{lastSavedRaw=localStorage.getItem(KEY);}catch{storageOK=false;}
 render();renderMenu();icons();if(pendingReloadNotice)toast(pendingReloadNotice);
 if('serviceWorker' in navigator&&window.isSecureContext){
-  const register=()=>navigator.serviceWorker.register('./sw.js?v=1.0.1').catch(()=>{});
+  const register=()=>navigator.serviceWorker.register('./sw.js?v=1.0.2').catch(()=>{});
   // Finish the visible menu before downloading the offline copy of the full game.
   if(document.readyState==='complete')register();
   else window.addEventListener('load',register,{once:true});

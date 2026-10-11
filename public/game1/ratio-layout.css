@@ -90,6 +90,22 @@
 #modal[data-art="tutorial"] .tutorial-look{flex:none;align-self:center;min-height:32px;padding:3px 10px;display:flex;gap:5px;align-items:center;justify-content:center;font-size:13px;line-height:20px}
 #modal[data-art="tutorial"] .tutorial-look svg{width:16px;height:16px}
 #modal[data-art="tutorial"] .tutorial-actions button{height:36px;min-height:36px;box-sizing:border-box;display:flex;align-items:center;justify-content:center;line-height:20px}
+/* Full illustrations on the album pages; paper captions stay outside the artwork. */
+#content[data-panel="diary"] .memory{align-self:center;display:flex;flex-direction:column;gap:6px;width:100%;height:auto;min-height:44px;padding:5px 5px 8px;margin:0;background:#f4f0de;border:1px solid #c4ba99;border-image:none;border-radius:2px;box-shadow:1px 3px 0 #8c816c40;transform:none}
+#content[data-panel="diary"] .memory img{display:block;width:100%;height:auto;aspect-ratio:3/2;object-fit:contain;border:0}
+#content[data-panel="diary"] .memory>span{display:flex;align-items:center;justify-content:center;min-height:36px;font-family:var(--art-font);font-size:13px;line-height:18px;text-align:center;white-space:normal;color:#244451}
+#content[data-panel="diary"] .memory:hover{transform:none;border-color:#477484;box-shadow:1px 3px 0 #47748455}
+#content[data-panel="diary"] .memory:active{transform:none;box-shadow:0 1px 0 #47748455}
+#content[data-panel="diary"] .memory:focus-visible{outline:2px solid #477484;outline-offset:3px}
+#memory-viewer{inset:0;width:min(660px,calc(100vw - 24px),calc((100dvh - 160px) * 1.5));max-width:none;max-height:calc(100dvh - 24px);height:fit-content;min-height:0;padding:12px;margin:auto!important;box-sizing:border-box;overflow:hidden;background:#f4f0de url('assets/paper.png');border:2px solid #325d66;border-image:none;border-radius:3px;box-shadow:4px 6px 0 #172f3459;color:#244451}
+#memory-viewer::backdrop{background:#122e37b8}
+#memory-viewer header{display:grid;grid-template-columns:36px 1fr 36px;align-items:center;gap:4px;padding:0 0 8px}
+#memory-viewer h2{grid-column:2;min-width:0;margin:0;padding:0;font-family:var(--art-font);font-size:22px;line-height:28px;text-align:center}
+#close-memory{display:grid;place-items:center;flex:none;width:36px;height:36px;min-height:36px;padding:0;border:1px solid #678891;border-radius:0;background:#d5e3e0;color:#244451;transform:none}
+#close-memory svg{width:20px;height:20px}
+#memory-viewer figure{margin:0;padding:0}
+#memory-image{display:block;width:100%;height:auto;aspect-ratio:3/2;object-fit:contain}
+#memory-caption{margin:0;padding:12px 8px 2px;font-family:var(--art-font);font-size:15px;line-height:22px;text-align:center}
 @media(max-width:360px){
  #modal[data-art="tutorial"] .tutorial-card{gap:4px}
  #modal[data-art="tutorial"] .tutorial-card h3{font-size:16px;line-height:21px}

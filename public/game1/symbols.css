@@ -1,0 +1,82 @@
+/* Approved four-color symbols; the illustrated window frames remain intact. */
+.symbol-window,#content[data-panel="jobs"]{--symbol-paper:#f4eedf;--symbol-ink:#303e3f;--symbol-blue:#254e64;--symbol-warm:#b3543e}
+#modal.symbol-window #modal-body{color:var(--symbol-ink)}
+.symbol-glyph{display:inline-flex;align-items:center;justify-content:center;width:30px;height:34px;flex:0 0 30px;color:var(--symbol-ink)}
+.symbol-glyph svg{display:block;width:25px;height:25px;stroke-width:1.8}
+.symbol-glyph.symbol-work{color:var(--symbol-blue)}
+.symbol-glyph.symbol-work svg{stroke:var(--symbol-paper);filter:drop-shadow(1px 0 0 var(--symbol-blue)) drop-shadow(-1px 0 0 var(--symbol-blue)) drop-shadow(0 1px 0 var(--symbol-blue)) drop-shadow(0 -1px 0 var(--symbol-blue))}
+#modal.symbol-window .symbol-identity{display:flex;align-items:center;gap:8px;min-height:38px}
+#modal.symbol-window .symbol-identity h3{flex:1;min-width:0;margin:0!important;font-family:var(--art-font);font-size:18px;line-height:24px;font-weight:400;color:var(--symbol-blue);text-align:left;overflow-wrap:anywhere;letter-spacing:0}
+#modal.symbol-window .symbol-section,#modal.symbol-window .symbol-course{padding:4px 0 10px;margin:0 0 9px;border:0;border-bottom:1px solid var(--symbol-ink);background:none}
+#modal.symbol-window .symbol-section>small{font-size:11px;line-height:17px;color:var(--symbol-ink)}
+#modal.symbol-window .symbol-section>p,#modal.symbol-window .symbol-course>p{font-size:12px;line-height:19px;margin:5px 0;color:var(--symbol-ink)}
+#modal.symbol-window .symbol-stat{display:inline-flex;align-items:center;justify-content:flex-start;gap:3px;white-space:nowrap;font-size:12px;line-height:20px}
+#modal.symbol-window .symbol-stat svg{width:15px;height:15px;flex:none;color:inherit}
+#modal.symbol-window .symbol-reward{display:inline-flex;color:var(--symbol-warm);font-family:var(--art-font);font-weight:400}
+#modal.symbol-window .symbol-reward .symbol-stat{font-size:17px;line-height:23px}
+#modal.symbol-window .symbol-effects{display:flex;flex-wrap:wrap;align-items:center;gap:2px 10px;margin-top:4px;color:var(--symbol-ink)}
+#modal.symbol-window .symbol-effects span{flex:none;min-width:0}
+#modal.symbol-window .symbol-effects>.symbol-stat:first-child{color:var(--symbol-blue)}
+#modal.symbol-window .symbol-reward-line{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:5px 10px;margin-top:8px;font-size:12px;line-height:18px}
+#modal.symbol-window .text-button.symbol-command{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:36px;margin:4px 0 0;padding:4px 10px;background:var(--symbol-blue)!important;color:var(--symbol-paper);border:0;border-image:none;box-shadow:none;transform:none;clip-path:polygon(3% 0,97% 0,100% 50%,97% 100%,3% 100%,0 50%);font-family:var(--art-font);font-size:14px;line-height:20px}
+#modal.symbol-window .symbol-command svg{width:16px;height:16px;flex:none}
+#modal.symbol-window .symbol-daily-actions{display:flex;gap:8px;margin-top:5px}
+#modal.symbol-window .symbol-daily-actions .symbol-command{flex:1;min-width:0}
+#modal.symbol-window .symbol-command:disabled{background:var(--symbol-paper)!important;color:var(--symbol-ink);opacity:1;clip-path:none}
+#modal.symbol-window .action-option.symbol-option,#modal.symbol-window .action-option.symbol-event-option{display:flex;align-items:center;gap:8px;width:100%;height:auto;min-height:84px;margin:0 0 6px;padding:7px 8px;border:0;border-bottom:1px solid var(--symbol-ink);border-image:none;background:var(--symbol-paper)!important;color:var(--symbol-ink);clip-path:none;transform:none;box-shadow:none;text-align:left}
+#modal.symbol-window .action-option.symbol-option.active{box-shadow:inset 3px 0 var(--symbol-blue);background:var(--symbol-paper)!important}
+#modal.symbol-window .symbol-option>.symbol-glyph{flex:0 0 30px}
+#modal.symbol-window .action-option>.symbol-copy{flex:1;min-width:0}
+#modal.symbol-window .symbol-copy>b{display:block;margin:0;font-family:var(--art-font);font-size:16px;line-height:22px;font-weight:400;color:var(--symbol-blue);overflow-wrap:anywhere}
+#modal.symbol-window .symbol-copy>small{display:block;margin:3px 0 0;font-size:11px;line-height:17px;color:var(--symbol-ink)}
+#modal.symbol-window .action-option>.symbol-status{flex:0 0 16px;display:flex;align-items:center;justify-content:center;color:var(--symbol-blue)}
+#modal.symbol-window .symbol-status svg{width:16px;height:16px;flex:none}
+#modal.symbol-window .symbol-state{font-size:11px;line-height:18px;color:var(--symbol-warm)}
+#modal.symbol-window .symbol-objective{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:4px 8px;padding:6px 0;border-bottom:1px solid var(--symbol-ink);font-size:12px;line-height:18px}
+#modal.symbol-window .symbol-objective-label{display:flex;align-items:center;gap:5px;min-width:0;color:var(--symbol-ink)}
+#modal.symbol-window .symbol-objective-label svg{width:16px;height:16px;flex:none}
+#modal.symbol-window .symbol-objective-label>span{min-width:0;overflow-wrap:anywhere}
+#modal.symbol-window .symbol-objective>b{font-size:12px;line-height:18px;white-space:nowrap;font-weight:400;color:var(--symbol-blue)}
+#modal.symbol-window .symbol-segments{grid-column:1/-1;display:flex;gap:4px;height:7px;margin:0;min-width:0}
+#modal.symbol-window .symbol-segments i{display:block;flex:1;height:7px;border:1px solid var(--symbol-blue);box-sizing:border-box}
+#modal.symbol-window .symbol-segments .filled{background:var(--symbol-blue)}
+#modal.symbol-window .symbol-objective progress,#modal.symbol-window .symbol-learners progress{grid-column:1/-1;display:block;width:100%;height:7px;border:0;background:var(--symbol-paper);accent-color:var(--symbol-blue)}
+#modal.symbol-window progress::-webkit-progress-bar{background:var(--symbol-paper);border:1px solid var(--symbol-blue)}
+#modal.symbol-window progress::-webkit-progress-value{background:var(--symbol-blue)}
+#modal.symbol-window progress::-moz-progress-bar{background:var(--symbol-blue)}
+#modal.symbol-window .symbol-course-nodes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px;margin:11px 0;position:relative}
+#modal.symbol-window .symbol-course-nodes:before{content:"";position:absolute;left:16%;right:16%;top:17px;height:1px;background:var(--symbol-blue)}
+#modal.symbol-window .symbol-course-node{position:relative;display:flex;flex-direction:column;align-items:center;gap:4px;min-width:0;color:var(--symbol-ink);font-size:12px;line-height:17px}
+#modal.symbol-window .symbol-course-node b{display:flex;align-items:center;justify-content:center;flex:none;width:34px;height:34px;border:1px solid var(--symbol-blue);background:var(--symbol-paper);font-family:var(--art-font);font-weight:400;font-size:22px;line-height:26px;color:var(--symbol-blue)}
+#modal.symbol-window .symbol-course-node small{font-size:10px;line-height:16px;white-space:nowrap}
+#modal.symbol-window .symbol-learners{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:8px 0;font-size:11px;line-height:17px}
+#modal.symbol-window .symbol-learners>div{min-width:0}
+#modal.symbol-window .symbol-learners progress{margin-top:5px}
+#modal.symbol-window .symbol-course .symbol-command{display:flex;width:100%}
+#modal.symbol-window .symbol-chapters{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px;margin:12px 0;padding:8px 0;border-top:1px solid var(--symbol-ink)}
+#modal.symbol-window .symbol-chapters>div{display:flex;flex-direction:column;align-items:center;gap:4px;font-family:var(--art-font);font-size:12px;line-height:18px;text-align:center;color:var(--symbol-ink)}
+#modal.symbol-window .symbol-chapters small{font-family:inherit;font-size:10px;line-height:16px}
+#modal.symbol-window .symbol-chapters .earned,#modal.symbol-window .symbol-chapters .current{color:var(--symbol-blue)}
+#modal.symbol-window .symbol-event{display:flex;align-items:center;gap:12px;padding:10px 0;margin-bottom:12px;border-bottom:1px solid var(--symbol-ink)}
+#modal.symbol-window .symbol-event>p{margin:0;font-family:var(--art-font);font-size:16px;line-height:24px;color:var(--symbol-ink)}
+#modal.symbol-window .draw-reveal .symbol-identity{justify-content:center}
+#modal.symbol-window .draw-reveal .symbol-identity h3{flex:none}
+#modal.symbol-window .name-xian{color:var(--symbol-blue)}
+#modal.symbol-window .name-mang{color:var(--symbol-warm)}
+#modal.symbol-window button:focus-visible{outline:2px solid var(--symbol-blue);outline-offset:-2px}
+#modal.symbol-window .symbol-option:hover:not(:disabled),#modal.symbol-window .symbol-event-option:hover:not(:disabled){box-shadow:inset 3px 0 var(--symbol-blue);filter:none}
+#modal.symbol-window .symbol-option:active:not(:disabled),#modal.symbol-window .symbol-event-option:active:not(:disabled){box-shadow:inset 3px 0 var(--symbol-warm);filter:none}
+#modal.symbol-window[data-art="preset"] .symbol-option{height:calc((100% - 18px)/3);min-height:0;flex:none;padding:9px 6px;border:0;background:transparent!important}
+#content[data-panel="jobs"] .shift-row{padding:4px 8px;gap:5px;background:var(--symbol-paper)!important;color:var(--symbol-ink)}
+#content[data-panel="jobs"] .symbol-glyph{width:24px;flex-basis:24px;height:30px}
+#content[data-panel="jobs"] .symbol-glyph svg{width:21px;height:21px}
+@media(max-width:360px){
+ #modal.symbol-window .symbol-identity h3{font-size:16px;line-height:22px}
+ #modal.symbol-window .symbol-copy>b{font-size:15px;line-height:21px}
+ #modal.symbol-window .symbol-option .symbol-effects{gap:2px 6px}
+ #modal.symbol-window .symbol-stat{font-size:11px;line-height:18px}
+ #modal.symbol-window .symbol-course-node small{font-size:9px}
+ #content[data-panel="jobs"] .shift-row{gap:4px;padding-left:7px;padding-right:7px}
+ #content[data-panel="jobs"] .symbol-glyph{width:18px;flex-basis:18px}
+ #content[data-panel="jobs"] .symbol-glyph svg{width:17px;height:17px}
+}
