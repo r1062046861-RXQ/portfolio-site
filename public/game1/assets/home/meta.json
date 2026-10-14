@@ -1,0 +1,1187 @@
+{
+  "sofa": {
+    "width": 509,
+    "height": 270,
+    "ratio": 0.5304518664047151,
+    "source": "08-large-furniture.png",
+    "cell": 0,
+    "crop": [
+      32,
+      149,
+      541,
+      419
+    ]
+  },
+  "bed": {
+    "width": 327,
+    "height": 398,
+    "ratio": 1.217125382262997,
+    "source": "08-large-furniture.png",
+    "cell": 1,
+    "crop": [
+      611,
+      68,
+      938,
+      466
+    ]
+  },
+  "shelf": {
+    "width": 223,
+    "height": 445,
+    "ratio": 1.9955156950672646,
+    "source": "08-large-furniture.png",
+    "cell": 2,
+    "crop": [
+      1173,
+      46,
+      1396,
+      491
+    ]
+  },
+  "desk": {
+    "width": 407,
+    "height": 375,
+    "ratio": 0.9213759213759214,
+    "source": "08-large-furniture.png",
+    "cell": 3,
+    "crop": [
+      72,
+      556,
+      479,
+      931
+    ]
+  },
+  "table": {
+    "width": 450,
+    "height": 385,
+    "ratio": 0.8555555555555555,
+    "source": "08-large-furniture.png",
+    "cell": 4,
+    "crop": [
+      540,
+      554,
+      990,
+      939
+    ]
+  },
+  "lounger": {
+    "width": 319,
+    "height": 365,
+    "ratio": 1.1442006269592477,
+    "source": "08-large-furniture.png",
+    "cell": 5,
+    "crop": [
+      1119,
+      581,
+      1438,
+      946
+    ]
+  },
+  "plant": {
+    "waterTarget": [0.5, 0.70],
+    "width": 309,
+    "height": 450,
+    "ratio": 1.4563106796116505,
+    "source": "09-small-furniture.png",
+    "cell": 0,
+    "crop": [
+      130,
+      30,
+      439,
+      480
+    ]
+  },
+  "lamp": {
+    "width": 233,
+    "height": 430,
+    "ratio": 1.8454935622317596,
+    "source": "09-small-furniture.png",
+    "cell": 1,
+    "crop": [
+      616,
+      49,
+      849,
+      479
+    ]
+  },
+  "coffee": {
+    "width": 313,
+    "height": 406,
+    "ratio": 1.2971246006389776,
+    "source": "09-small-furniture.png",
+    "cell": 2,
+    "crop": [
+      127,
+      544,
+      440,
+      950
+    ]
+  },
+  "bistro": {
+    "width": 304,
+    "height": 369,
+    "ratio": 1.2138157894736843,
+    "source": "09-small-furniture.png",
+    "cell": 3,
+    "crop": [
+      597,
+      581,
+      901,
+      950
+    ]
+  },
+  "cat-sit": {
+    "width": 383,
+    "height": 455,
+    "ratio": 1.1879895561357703,
+    "rig": true,
+    "source": "poses-0.png",
+    "neck": [
+      0.6109660574412533,
+      0.29
+    ]
+  },
+  "cat-read": {
+    "width": 390,
+    "height": 457,
+    "ratio": 1.1717948717948719,
+    "rig": true,
+    "source": "poses-1.png",
+    "neck": [
+      0.5948717948717949,
+      0.29
+    ]
+  },
+  "fox-sit": {
+    "width": 296,
+    "height": 454,
+    "ratio": 1.5337837837837838,
+    "rig": true,
+    "source": "poses-0.png",
+    "neck": [
+      0.3918918918918919,
+      0.25
+    ]
+  },
+  "fox-read": {
+    "width": 296,
+    "height": 455,
+    "ratio": 1.537162162162162,
+    "rig": true,
+    "source": "poses-1.png",
+    "neck": [
+      0.3952702702702703,
+      0.25
+    ]
+  },
+  "cat-standing-read": {
+    "width": 298,
+    "height": 457,
+    "ratio": 1.5335570469798658,
+    "rig": true,
+    "source": "poses-1.png",
+    "neck": [
+      0.5973154362416108,
+      0.29
+    ]
+  },
+  "fox-standing-read": {
+    "width": 229,
+    "height": 456,
+    "ratio": 1.9912663755458515,
+    "rig": true,
+    "source": "poses-1.png",
+    "neck": [
+      0.3537117903930131,
+      0.25
+    ]
+  },
+  "cat-bottom-0": {
+    "width": 302,
+    "height": 324,
+    "ratio": 1.0728476821192052,
+    "source": "06-bottoms.png",
+    "cell": 0,
+    "crop": [
+      124,
+      83,
+      426,
+      407
+    ]
+  },
+  "cat-bottom-1": {
+    "width": 319,
+    "height": 379,
+    "ratio": 1.188087774294671,
+    "source": "06-bottoms.png",
+    "cell": 1,
+    "crop": [
+      608,
+      60,
+      927,
+      439
+    ]
+  },
+  "cat-bottom-2": {
+    "width": 306,
+    "height": 375,
+    "ratio": 1.2254901960784315,
+    "source": "06-bottoms.png",
+    "cell": 2,
+    "crop": [
+      1101,
+      69,
+      1407,
+      444
+    ]
+  },
+  "fox-bottom-0": {
+    "width": 175,
+    "height": 454,
+    "ratio": 2.5942857142857143,
+    "source": "06-bottoms.png",
+    "cell": 3,
+    "crop": [
+      187,
+      508,
+      362,
+      962
+    ]
+  },
+  "fox-bottom-1": {
+    "width": 172,
+    "height": 455,
+    "ratio": 2.645348837209302,
+    "source": "06-bottoms.png",
+    "cell": 4,
+    "crop": [
+      680,
+      508,
+      852,
+      963
+    ]
+  },
+  "fox-bottom-2": {
+    "width": 183,
+    "height": 455,
+    "ratio": 2.4863387978142075,
+    "source": "06-bottoms.png",
+    "cell": 5,
+    "crop": [
+      1161,
+      508,
+      1344,
+      963
+    ]
+  },
+  "cat-accessory-0": {
+    "width": 298,
+    "height": 112,
+    "ratio": 0.37583892617449666,
+    "source": "07-accessories.png",
+    "cell": 0,
+    "crop": [
+      47,
+      196,
+      345,
+      308
+    ]
+  },
+  "cat-accessory-1": {
+    "width": 238,
+    "height": 116,
+    "ratio": 0.48739495798319327,
+    "source": "07-accessories.png",
+    "cell": 1,
+    "crop": [
+      458,
+      194,
+      696,
+      310
+    ]
+  },
+  "cat-accessory-2": {
+    "width": 312,
+    "height": 219,
+    "ratio": 0.7019230769230769,
+    "source": "07-accessories.png",
+    "cell": 2,
+    "crop": [
+      787,
+      148,
+      1099,
+      367
+    ]
+  },
+  "cat-accessory-3": {
+    "width": 303,
+    "height": 420,
+    "ratio": 1.386138613861386,
+    "source": "07-accessories.png",
+    "cell": 3,
+    "crop": [
+      1188,
+      30,
+      1491,
+      450
+    ]
+  },
+  "fox-accessory-0": {
+    "width": 267,
+    "height": 427,
+    "ratio": 1.599250936329588,
+    "source": "07-accessories.png",
+    "cell": 4,
+    "crop": [
+      62,
+      500,
+      329,
+      927
+    ]
+  },
+  "fox-accessory-1": {
+    "width": 256,
+    "height": 68,
+    "ratio": 0.265625,
+    "source": "07-accessories.png",
+    "cell": 5,
+    "crop": [
+      455,
+      677,
+      711,
+      745
+    ]
+  },
+  "fox-accessory-2": {
+    "width": 309,
+    "height": 223,
+    "ratio": 0.7216828478964401,
+    "source": "07-accessories.png",
+    "cell": 6,
+    "crop": [
+      788,
+      609,
+      1097,
+      832
+    ]
+  },
+  "fox-accessory-3": {
+    "width": 302,
+    "height": 449,
+    "ratio": 1.4867549668874172,
+    "source": "07-accessories.png",
+    "cell": 7,
+    "crop": [
+      1188,
+      520,
+      1490,
+      969
+    ]
+  },
+  "cat-stand": {
+    "width": 294,
+    "height": 453,
+    "ratio": 1.5408163265306123,
+    "rig": true,
+    "source": "poses-0.png",
+    "neck": [
+      0.5986394557823129,
+      0.29000000000000004
+    ]
+  },
+  "fox-stand": {
+    "width": 227,
+    "height": 453,
+    "ratio": 1.9955947136563876,
+    "rig": true,
+    "source": "poses-0.png",
+    "neck": [
+      0.36123348017621143,
+      0.25
+    ]
+  },
+  "cat-top-0": {
+    "width": 287,
+    "height": 278,
+    "ratio": 0.9686411149825784,
+    "source": "11-tops.png",
+    "cell": 0,
+    "crop": [
+      16,
+      150,
+      303,
+      428
+    ]
+  },
+  "cat-top-1": {
+    "width": 287,
+    "height": 276,
+    "ratio": 0.9616724738675958,
+    "source": "11-tops.png",
+    "cell": 1,
+    "crop": [
+      318,
+      151,
+      605,
+      427
+    ]
+  },
+  "cat-top-2": {
+    "width": 278,
+    "height": 277,
+    "ratio": 0.9964028776978417,
+    "source": "11-tops.png",
+    "cell": 2,
+    "crop": [
+      626,
+      149,
+      904,
+      426
+    ]
+  },
+  "cat-top-3": {
+    "width": 292,
+    "height": 264,
+    "ratio": 0.9041095890410958,
+    "source": "11-tops.png",
+    "cell": 3,
+    "crop": [
+      925,
+      158,
+      1217,
+      422
+    ]
+  },
+  "cat-top-4": {
+    "width": 279,
+    "height": 269,
+    "ratio": 0.96415770609319,
+    "source": "11-tops.png",
+    "cell": 4,
+    "crop": [
+      1240,
+      150,
+      1519,
+      419
+    ]
+  },
+  "fox-top-0": {
+    "width": 264,
+    "height": 401,
+    "ratio": 1.518939393939394,
+    "source": "11-tops.png",
+    "cell": 5,
+    "crop": [
+      22,
+      530,
+      286,
+      931
+    ]
+  },
+  "fox-top-1": {
+    "width": 252,
+    "height": 302,
+    "ratio": 1.1984126984126984,
+    "source": "11-tops.png",
+    "cell": 6,
+    "crop": [
+      334,
+      557,
+      586,
+      859
+    ]
+  },
+  "fox-top-2": {
+    "width": 262,
+    "height": 304,
+    "ratio": 1.1603053435114503,
+    "source": "11-tops.png",
+    "cell": 7,
+    "crop": [
+      633,
+      556,
+      895,
+      860
+    ]
+  },
+  "fox-top-3": {
+    "width": 276,
+    "height": 296,
+    "ratio": 1.0724637681159421,
+    "source": "11-tops.png",
+    "cell": 8,
+    "crop": [
+      933,
+      563,
+      1209,
+      859
+    ]
+  },
+  "fox-top-4": {
+    "width": 267,
+    "height": 289,
+    "ratio": 1.0823970037453183,
+    "source": "11-tops.png",
+    "cell": 9,
+    "crop": [
+      1246,
+      561,
+      1513,
+      850
+    ]
+  },
+  "armchair": {
+    "width": 417,
+    "height": 323,
+    "ratio": 0.7745803357314148,
+    "source": "C:\\Users\\C2H6O\\Desktop\\Taptap游戏开发\\output\\home-furniture-v5\\01-living.png",
+    "crop": [
+      52,
+      120,
+      477,
+      451
+    ]
+  },
+  "tv": {
+    "width": 361,
+    "height": 380,
+    "ratio": 1.0526315789473684,
+    "source": "C:\\Users\\C2H6O\\Desktop\\Taptap游戏开发\\output\\home-furniture-v5\\01-living.png",
+    "crop": [
+      587,
+      63,
+      956,
+      451
+    ],
+    "screen": {
+      "x": 0.16620498614958448,
+      "y": 0.060526315789473685,
+      "w": 0.5069252077562327,
+      "h": 0.3447368421052632
+    }
+  },
+  "radio": {
+    "width": 266,
+    "height": 349,
+    "ratio": 1.3120300751879699,
+    "source": "C:\\Users\\C2H6O\\Desktop\\Taptap游戏开发\\output\\home-furniture-v5\\01-living.png",
+    "crop": [
+      1150,
+      94,
+      1424,
+      451
+    ]
+  },
+  "record": {
+    "width": 335,
+    "height": 388,
+    "ratio": 1.1582089552238806,
+    "source": "C:\\Users\\C2H6O\\Desktop\\Taptap游戏开发\\output\\home-furniture-v5\\01-living.png",
+    "crop": [
+      80,
+      529,
+      423,
+      925
+    ]
+  },
+  "sideboard": {
+    "width": 479,
+    "height": 284,
+    "ratio": 0.592901878914405,
+    "source": "C:\\Users\\C2H6O\\Desktop\\Taptap游戏开发\\output\\home-furniture-v5\\01-living.png",
+    "crop": [
+      525,
+      620,
+      1012,
+      912
+    ]
+  },
+  "nightstand": {
+    "width": 238,
+    "height": 403,
+    "ratio": 1.6932773109243697,
+    "source": "C:\\Users\\C2H6O\\Desktop\\Taptap游戏开发\\output\\home-furniture-v5\\01-living.png",
+    "crop": [
+      1162,
+      515,
+      1408,
+      926
+    ]
+  },
+  "dresser": {
+    "width": 392,
+    "height": 299,
+    "ratio": 0.7627551020408163,
+    "source": "C:\\Users\\C2H6O\\Desktop\\Taptap游戏开发\\output\\home-furniture-v5\\02-bedroom.png",
+    "crop": [
+      74,
+      130,
+      474,
+      437
+    ]
+  },
+  "wardrobe": {
+    "width": 393,
+    "height": 401,
+    "ratio": 1.020356234096692,
+    "source": "C:\\Users\\C2H6O\\Desktop\\Taptap游戏开发\\output\\home-furniture-v5\\02-bedroom.png",
+    "crop": [
+      603,
+      37,
+      930,
+      446
+    ]
+  },
+  "mirror": {
+    "width": 401,
+    "height": 356,
+    "ratio": 0.8877805486284289,
+    "source": "C:\\Users\\C2H6O\\Desktop\\Taptap游戏开发\\output\\home-furniture-v5\\02-bedroom.png",
+    "crop": [
+      1045,
+      73,
+      1454,
+      437
+    ]
+  },
+  "laundry": {
+    "width": 280,
+    "height": 403,
+    "ratio": 1.4392857142857143,
+    "source": "C:\\Users\\C2H6O\\Desktop\\Taptap游戏开发\\output\\home-furniture-v5\\02-bedroom.png",
+    "crop": [
+      126,
+      530,
+      414,
+      941
+    ]
+  },
+  "fridge": {
+    "width": 372,
+    "height": 446,
+    "ratio": 1.1989247311827957,
+    "source": "C:\\Users\\C2H6O\\Desktop\\Taptap游戏开发\\output\\home-furniture-v5\\02-bedroom.png",
+    "crop": [
+      643,
+      506,
+      890,
+      960
+    ]
+  },
+  "washer": {
+    "width": 310,
+    "height": 404,
+    "ratio": 1.303225806451613,
+    "source": "C:\\Users\\C2H6O\\Desktop\\Taptap游戏开发\\output\\home-furniture-v5\\02-bedroom.png",
+    "crop": [
+      1088,
+      548,
+      1406,
+      960
+    ]
+  },
+  "microwave": {
+    "width": 327,
+    "height": 382,
+    "ratio": 1.1681957186544343,
+    "source": "C:\\Users\\C2H6O\\Desktop\\Taptap游戏开发\\output\\home-furniture-v5\\03-kitchen.png",
+    "crop": [
+      80,
+      58,
+      415,
+      448
+    ]
+  },
+  "oven": {
+    "width": 297,
+    "height": 383,
+    "ratio": 1.2895622895622896,
+    "source": "C:\\Users\\C2H6O\\Desktop\\Taptap游戏开发\\output\\home-furniture-v5\\03-kitchen.png",
+    "crop": [
+      619,
+      52,
+      924,
+      443
+    ]
+  },
+  "kettle": {
+    "width": 302,
+    "height": 386,
+    "ratio": 1.2781456953642385,
+    "source": "C:\\Users\\C2H6O\\Desktop\\Taptap游戏开发\\output\\home-furniture-v5\\03-kitchen.png",
+    "crop": [
+      1111,
+      49,
+      1421,
+      443
+    ]
+  },
+  "toaster": {
+    "width": 320,
+    "height": 407,
+    "ratio": 1.271875,
+    "source": "C:\\Users\\C2H6O\\Desktop\\Taptap游戏开发\\output\\home-furniture-v5\\03-kitchen.png",
+    "crop": [
+      81,
+      529,
+      409,
+      944
+    ]
+  },
+  "workbench": {
+    "width": 423,
+    "height": 403,
+    "ratio": 0.9527186761229315,
+    "source": "C:\\Users\\C2H6O\\Desktop\\Taptap游戏开发\\output\\home-furniture-v5\\03-kitchen.png",
+    "crop": [
+      544,
+      533,
+      975,
+      944
+    ]
+  },
+  "sewing": {
+    "width": 357,
+    "height": 415,
+    "ratio": 1.1624649859943978,
+    "source": "C:\\Users\\C2H6O\\Desktop\\Taptap游戏开发\\output\\home-furniture-v5\\03-kitchen.png",
+    "crop": [
+      1096,
+      521,
+      1461,
+      944
+    ]
+  },
+  "computer": {
+    "width": 414,
+    "height": 379,
+    "ratio": 0.9154589371980676,
+    "source": "C:\\Users\\C2H6O\\Desktop\\Taptap游戏开发\\output\\home-furniture-v5\\04-study-balcony.png",
+    "crop": [
+      46,
+      68,
+      468,
+      455
+    ],
+    "screen": {
+      "x": 0.2391304347826087,
+      "y": 0.03430079155672823,
+      "w": 0.4033816425120773,
+      "h": 0.2559366754617414
+    }
+  },
+  "printer": {
+    "width": 288,
+    "height": 385,
+    "ratio": 1.3368055555555556,
+    "source": "C:\\Users\\C2H6O\\Desktop\\Taptap游戏开发\\output\\home-furniture-v5\\04-study-balcony.png",
+    "crop": [
+      620,
+      52,
+      916,
+      445
+    ]
+  },
+  "hammock": {
+    "width": 424,
+    "height": 274,
+    "ratio": 0.6462264150943396,
+    "source": "C:\\Users\\C2H6O\\Desktop\\Taptap游戏开发\\output\\home-furniture-v5\\04-study-balcony.png",
+    "crop": [
+      1056,
+      137,
+      1488,
+      419
+    ]
+  },
+  "potting": {
+    "waterTarget": [0.285, 0.245],
+    "width": 404,
+    "height": 416,
+    "ratio": 1.0297029702970297,
+    "source": "C:\\Users\\C2H6O\\Desktop\\Taptap游戏开发\\output\\home-furniture-v5\\04-study-balcony.png",
+    "crop": [
+      49,
+      512,
+      461,
+      936
+    ]
+  },
+  "exercise": {
+    "width": 333,
+    "height": 430,
+    "ratio": 1.2912912912912913,
+    "source": "C:\\Users\\C2H6O\\Desktop\\Taptap游戏开发\\output\\home-furniture-v5\\04-study-balcony.png",
+    "crop": [
+      582,
+      523,
+      923,
+      961
+    ]
+  },
+  "drying": {
+    "width": 375,
+    "height": 372,
+    "ratio": 0.992,
+    "source": "C:\\Users\\C2H6O\\Desktop\\Taptap游戏开发\\output\\home-furniture-v5\\04-study-balcony.png",
+    "crop": [
+      1080,
+      557,
+      1463,
+      937
+    ]
+  },
+  "cat-sip": {
+    "width": 350,
+    "height": 452,
+    "ratio": 1.2914285714285714,
+    "rig": true,
+    "source": "poses-2.png",
+    "neck": [
+      0.5542857142857143,
+      0.29
+    ]
+  },
+  "fox-sip": {
+    "width": 346,
+    "height": 453,
+    "ratio": 1.3092485549132948,
+    "rig": true,
+    "source": "poses-2.png",
+    "neck": [
+      0.37283236994219654,
+      0.25
+    ]
+  },
+  "cat-craft": {
+    "width": 361,
+    "height": 456,
+    "ratio": 1.263157894736842,
+    "rig": true,
+    "source": "poses-5.png",
+    "neck": [
+      0.6232686980609419,
+      0.29
+    ]
+  },
+  "fox-craft": {
+    "width": 345,
+    "height": 456,
+    "ratio": 1.3217391304347825,
+    "rig": true,
+    "source": "poses-5.png",
+    "neck": [
+      0.4289855072463768,
+      0.25
+    ]
+  },
+  "cat-cook": {
+    "width": 323,
+    "height": 456,
+    "ratio": 1.411764705882353,
+    "rig": true,
+    "source": "poses-4.png",
+    "neck": [
+      0.6160990712074303,
+      0.29
+    ]
+  },
+  "fox-cook": {
+    "width": 266,
+    "height": 456,
+    "ratio": 1.7142857142857142,
+    "rig": true,
+    "source": "poses-4.png",
+    "neck": [
+      0.39097744360902253,
+      0.25
+    ]
+  },
+  "cat-fold": {
+    "width": 315,
+    "height": 457,
+    "ratio": 1.4507936507936507,
+    "rig": true,
+    "source": "poses-3.png",
+    "neck": [
+      0.5904761904761905,
+      0.29
+    ]
+  },
+  "fox-fold": {
+    "width": 293,
+    "height": 457,
+    "ratio": 1.5597269624573378,
+    "rig": true,
+    "source": "poses-3.png",
+    "neck": [
+      0.32081911262798635,
+      0.25
+    ]
+  },
+  "cat-stretch": {
+    "width": 380,
+    "height": 455,
+    "ratio": 1.1973684210526316,
+    "rig": true,
+    "source": "poses-3.png",
+    "neck": [
+      0.5421052631578948,
+      0.34
+    ]
+  },
+  "fox-stretch": {
+    "width": 325,
+    "height": 456,
+    "ratio": 1.403076923076923,
+    "rig": true,
+    "source": "poses-3.png",
+    "neck": [
+      0.39692307692307693,
+      0.34
+    ]
+  },
+  "cat-rest": {
+    "width": 559,
+    "height": 455,
+    "ratio": 0.813953488372093,
+    "rig": true,
+    "source": "poses-6.png",
+    "neck": [
+      0.4329159212880143,
+      0.34
+    ]
+  },
+  "fox-rest": {
+    "width": 531,
+    "height": 455,
+    "ratio": 0.8568738229755178,
+    "rig": true,
+    "source": "poses-6.png",
+    "neck": [
+      0.5499058380414312,
+      0.34
+    ]
+  },
+  "cat-water": {
+    "waterSpout": [0.19, 0.66],
+    "width": 314,
+    "height": 453,
+    "ratio": 1.4426751592356688,
+    "rig": true,
+    "source": "poses-7.png",
+    "neck": [
+      0.60828025477707,
+      0.29000000000000004
+    ]
+  },
+  "fox-water": {
+    "waterSpout": [0.045, 0.70],
+    "width": 324,
+    "height": 450,
+    "ratio": 1.3888888888888888,
+    "rig": true,
+    "source": "poses-7.png",
+    "neck": [
+      0.49074074074074076,
+      0.25
+    ]
+  },
+  "cat-exercise": {
+    "width": 371,
+    "height": 455,
+    "ratio": 1.2264150943396226,
+    "rig": true,
+    "source": "poses-7.png",
+    "neck": [
+      0.5795148247978437,
+      0.29
+    ]
+  },
+  "fox-exercise": {
+    "width": 352,
+    "height": 450,
+    "ratio": 1.2784090909090908,
+    "rig": true,
+    "source": "poses-7.png",
+    "neck": [
+      0.42329545454545453,
+      0.25
+    ]
+  },
+  "dresser-on": {
+    "width": 392,
+    "height": 299,
+    "ratio": 0.7627551020408163,
+    "source": "C:\\Users\\C2H6O\\Desktop\\Taptap游戏开发\\output\\home-furniture-v5\\09-active.png",
+    "crop": [
+      88,
+      106,
+      453,
+      451
+    ]
+  },
+  "wardrobe-on": {
+    "width": 393,
+    "height": 401,
+    "ratio": 1.020356234096692,
+    "source": "C:\\Users\\C2H6O\\Desktop\\Taptap游戏开发\\output\\home-furniture-v5\\09-active.png",
+    "crop": [
+      571,
+      45,
+      969,
+      451
+    ]
+  },
+  "fridge-on": {
+    "width": 372,
+    "height": 446,
+    "ratio": 1.1989247311827957,
+    "source": "C:\\Users\\C2H6O\\Desktop\\Taptap游戏开发\\output\\home-furniture-v5\\09-active.png",
+    "crop": [
+      1100,
+      49,
+      1442,
+      457
+    ]
+  },
+  "washer-on": {
+    "width": 310,
+    "height": 404,
+    "ratio": 1.303225806451613,
+    "source": "C:\\Users\\C2H6O\\Desktop\\Taptap游戏开发\\output\\home-furniture-v5\\09-active.png",
+    "crop": [
+      115,
+      529,
+      423,
+      949
+    ]
+  },
+  "microwave-on": {
+    "width": 327,
+    "height": 382,
+    "ratio": 1.1681957186544343,
+    "source": "C:\\Users\\C2H6O\\Desktop\\Taptap游戏开发\\output\\home-furniture-v5\\09-active.png",
+    "crop": [
+      586,
+      520,
+      942,
+      940
+    ]
+  },
+  "oven-on": {
+    "width": 297,
+    "height": 383,
+    "ratio": 1.2895622895622896,
+    "source": "C:\\Users\\C2H6O\\Desktop\\Taptap游戏开发\\output\\home-furniture-v5\\09-active.png",
+    "crop": [
+      1098,
+      511,
+      1430,
+      940
+    ]
+  },
+  "cat-type": {
+    "width": 363,
+    "height": 456,
+    "ratio": 1.256198347107438,
+    "rig": true,
+    "source": "poses-6.png",
+    "neck": [
+      0.6060606060606061,
+      0.29
+    ]
+  },
+  "fox-type": {
+    "width": 355,
+    "height": 454,
+    "ratio": 1.2788732394366198,
+    "rig": true,
+    "source": "poses-6.png",
+    "neck": [
+      0.4563380281690141,
+      0.25
+    ]
+  },
+  "cat-sew": {
+    "width": 364,
+    "height": 457,
+    "ratio": 1.2554945054945055,
+    "rig": true,
+    "source": "poses-5.png",
+    "neck": [
+      0.6016483516483516,
+      0.29
+    ]
+  },
+  "fox-sew": {
+    "width": 355,
+    "height": 456,
+    "ratio": 1.2845070422535212,
+    "rig": true,
+    "source": "poses-5.png",
+    "neck": [
+      0.43380281690140843,
+      0.25
+    ]
+  },
+  "cat-standing-sip": {
+    "width": 296,
+    "height": 454,
+    "ratio": 1.5337837837837838,
+    "rig": true,
+    "source": "poses-2.png",
+    "neck": [
+      0.6182432432432432,
+      0.29
+    ]
+  },
+  "fox-standing-sip": {
+    "width": 262,
+    "height": 455,
+    "ratio": 1.7366412213740459,
+    "rig": true,
+    "source": "poses-2.png",
+    "neck": [
+      0.32061068702290074,
+      0.25
+    ]
+  },
+  "cat-groom": {
+    "width": 301,
+    "height": 454,
+    "ratio": 1.5083056478405317,
+    "rig": true,
+    "source": "poses-4.png",
+    "neck": [
+      0.627906976744186,
+      0.29
+    ]
+  },
+  "fox-groom": {
+    "width": 277,
+    "height": 454,
+    "ratio": 1.6389891696750902,
+    "rig": true,
+    "source": "poses-4.png",
+    "neck": [
+      0.3574007220216607,
+      0.25
+    ]
+  },
+  "ui-wardrobe": {
+    "width": 1024,
+    "height": 1536,
+    "ratio": 1.5
+  },
+  "ui-house": {
+    "width": 1024,
+    "height": 1536,
+    "ratio": 1.5
+  },
+  "ui-tools": {
+    "width": 1448,
+    "height": 643,
+    "ratio": 0.444060773480663
+  }
+}

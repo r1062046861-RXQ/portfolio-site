@@ -1,0 +1,57 @@
+.effect-layer{position:absolute;inset:0;display:block;pointer-events:none;overflow:visible}
+.effect-layer svg{width:100%;height:100%}
+.effect-layer>div{position:absolute}
+.tv-screen{left:11%;top:12%;width:75%;height:37%;overflow:hidden;background:#89acb2;border:1px solid #172e32}
+.tv-screen img{width:100%;height:100%;object-fit:cover;display:block;animation:tv-pan 8s ease-in-out infinite alternate}
+.computer-screen{left:21%;top:9%;width:56%;height:24%;padding:8%;background:#a5c7c3;border:1px solid #23434a}
+.computer-screen b{display:block;height:2px;background:#254e64;margin-bottom:3px;width:85%}
+.computer-screen b:nth-child(2){width:65%}.computer-screen b:nth-child(3){width:73%}
+.computer-screen i{display:block;width:2px;height:5px;background:#963b27;animation:cursor 1s steps(1) infinite}
+.wash-drum{left:27%;top:35%;width:46%;aspect-ratio:1;overflow:hidden;border:2px solid #254e64;border-radius:50%;background:#a7c7c8;animation:drum 2s linear infinite}
+.wash-drum b{position:absolute;width:40%;height:30%;background:#963b27;left:12%;top:20%;border-radius:4px}
+.wash-drum b:nth-child(2){background:#f6ebd2;left:44%;top:48%;transform:rotate(33deg)}
+.wash-drum b:nth-child(3){background:#254e64;left:14%;top:64%;transform:rotate(70deg)}
+.record-disc{left:30%;top:33%;width:34%;aspect-ratio:1;transform:scaleY(.32);transform-origin:top center;color:#e7c46d}
+.record-disc svg{animation:drum 4s linear infinite}
+.pedal-wheel{left:21%;top:60%;width:25%;aspect-ratio:1;color:#f5e6c4}
+.pedal-wheel svg{animation:drum 2s linear infinite}
+.music-note{left:60%;top:-8%;width:23px;height:23px;color:#254e64;animation:float-note 2.2s ease-in-out infinite}
+.steam{left:43%;top:-10%;width:23px;height:32px;color:#f8f1df;filter:drop-shadow(0 1px 1px #254e6480);animation:steam 2.5s ease-in-out infinite}
+.actor-water{position:absolute;inset:0;pointer-events:none}
+.water-drops{position:absolute;width:9%;height:18%;transform:translateX(-50%);pointer-events:none}
+.water-drops i{position:absolute;left:50%;top:0;width:2px;height:5px;background:#4c899f;border-radius:1px;animation:water 1s linear infinite}
+.water-drops i:nth-child(2){left:35%;animation-delay:.35s}.water-drops i:nth-child(3){left:65%;animation-delay:.7s}
+.lamp-beam{left:25%;top:13%;width:60%;height:50%;background:#f1d36b55;clip-path:polygon(39% 0,60% 0,100% 100%,0 100%);mix-blend-mode:screen}
+.mirror-shine{left:38%;top:8%;width:26%;height:28%;color:#fff7d4;animation:cursor 1.5s steps(1) infinite}
+.print-paper{left:27%;top:28%;width:46%;height:21%;background:#fff6e5;border:1px solid #254e64;overflow:hidden;animation:print 3s ease-in-out infinite}
+.print-paper b{display:block;width:65%;height:50%;margin:15% auto;background:#bd6152;clip-path:polygon(0 100%,40% 10%,60% 60%,100% 0,100% 100%)}
+.sewing-needle{position:absolute;left:51%;top:20%;height:20%;width:2px;background:#254e64;animation:needle .35s linear infinite alternate}
+.running[data-home-item=hammock] img{animation:hammock 3s ease-in-out infinite alternate;transform-origin:50% 15%}
+.acting.pose-sip>img,.acting.pose-standing-sip>img{animation:sip 3s ease-in-out infinite}
+.acting.pose-cook>img{animation:stir 1.8s ease-in-out infinite}
+.acting.pose-type>img,.acting.pose-sew>img,.acting.pose-craft>img{animation:craft 1s ease-in-out infinite}
+.acting.pose-exercise>img{animation:pedal-body 1s ease-in-out infinite}
+.acting.pose-rest>img{animation:hammock 3s ease-in-out infinite alternate;transform-origin:50% 70%}
+.acting.pose-water>img,.actor-water{animation:pour 2s ease-in-out infinite;transform:scaleX(var(--water-facing,1));transform-origin:50% 80%}
+.acting.pose-stretch>img{animation:stretch 3s ease-in-out infinite;transform-origin:50% 100%}
+@keyframes sip{50%{transform:rotate(-1deg) translateY(-2px)}}
+@keyframes stir{50%{transform:rotate(1deg)}}
+@keyframes craft{50%{transform:translateY(1px) rotate(.4deg)}}
+@keyframes pedal-body{50%{transform:translateY(-2px)}}
+@keyframes pour{0%,100%{transform:scaleX(var(--water-facing,1))}50%{transform:scaleX(var(--water-facing,1)) rotate(-1.5deg)}}
+@keyframes stretch{50%{transform:rotate(2deg)}}
+@keyframes tv-pan{to{transform:scale(1.15) translateY(-6%)}}
+@keyframes cursor{50%{opacity:.25}}
+@keyframes drum{to{transform:rotate(360deg)}}
+@keyframes float-note{0%{opacity:0;transform:translateY(6px)}40%{opacity:1}100%{opacity:0;transform:translateY(-15px)}}
+@keyframes steam{0%{opacity:0;transform:translateY(10px)}50%{opacity:.9}100%{opacity:0;transform:translateY(-13px)}}
+@keyframes water{to{top:100%;opacity:0}}
+@keyframes print{0%,10%{transform:translateY(-4px)}75%,100%{transform:translateY(7px)}}
+@keyframes needle{to{transform:translateY(4px)}}
+@keyframes hammock{to{transform:rotate(1deg)}}
+@media(prefers-reduced-motion:reduce){.effect-layer *,.running img,.acting>img,.actor-water,.water-drops i{animation:none!important}.speech{transition:none}}
+.home-actor{touch-action:none;-webkit-touch-callout:none}
+.is-grabbing,.is-grabbing .home-actor{cursor:grabbing}
+.home-actor.grabbed{filter:drop-shadow(0 5px 2px #234e6538);overflow:visible}
+.grab-landing{position:absolute;width:13%;height:2.3%;transform:translate(-50%,-50%);background:#638da466;border:2px dashed #245565;border-radius:50%;pointer-events:none;z-index:998}
+.grab-landing.invalid{background:#b264534d;border-color:#a1402c}

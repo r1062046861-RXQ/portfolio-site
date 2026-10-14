@@ -1,3 +1,5 @@
+import * as H from './home-system.js?v=home-v10';
+export {CLOTHES,COUNT_LABELS,garmentUnlocked,roomProgress,renameCharacter,equipClothes,setRoom,moveHomeFurniture,storeHomeFurniture} from './home-system.js?v=home-v10';
 export const DAYS = ['周一', '周二', '周三', '周四', '周五', '周六', '周日'];
 export const JOBS = [
   {id:'shop', name:'小店值班员', wage:100, skill:0, level:0, icon:'store', line:'最后一位客人，总在最后一分钟出现。'},
@@ -35,8 +37,8 @@ export const FURNITURE = [
   {id:'sofa', name:'周末软沙发', cost:360, sprite:3, benefit:'每晚精力 +2', energy:2, mood:0, desc:'今天可以陷在这里，哪里都不去。'},
   {id:'coffee', name:'早安咖啡机', cost:420, sprite:4, benefit:'每晚精力 +2', energy:2, mood:0, desc:'不是为了加班，是为了喜欢早晨。'},
   {id:'balcony', name:'阳台小餐桌', cost:500, sprite:5, benefit:'每晚心情 +1', energy:0, mood:1, desc:'把晚饭搬到晚风里。'}
-];
-// Authored floor anchors: widths are relative to the room, not viewport height.
+].concat(H.HOME_ITEMS.filter(item=>!['plant','lamp','shelf','sofa','coffee','balcony'].includes(item.id)).map(item=>({id:item.id,name:item.name,cost:({bed:400,desk:320,table:300,lounger:380,armchair:300,tv:380,radio:240,record:320,sideboard:280,nightstand:160,dresser:260,wardrobe:500,mirror:220,laundry:90,fridge:480,washer:460,microwave:300,oven:360,kettle:210,toaster:180,workbench:340,sewing:420,computer:480,printer:300,hammock:360,potting:190,exercise:380,drying:160})[item.id],benefit:'布置与互动 · 无属性加成',energy:0,mood:0,desc:item.label||'给日常留一个舒服的角落。'})));
+// Legacy anchors are retained to read old saves and map them into the new floor.
 export const HOME_SPOTS = {
   green:{name:'蓝门旁',x:3,bottom:36,width:10},
   greenRear:{name:'门边靠后',x:13,bottom:41,width:9},
@@ -132,10 +134,11 @@ export function claimChapter(s){
 }
 export function defaultPlan() {return Array.from({length:6},(_,d)=>d%2===0?['work','rest']:['rest','work']);}
 export function fresh() {
-  const s={version:1, week:1, day:0, cash:500, debt:0, job:'shop', chars:[
-    {name:'阿闲', energy:100, mood:70, xp:[3,0]}, {name:'阿忙', energy:100, mood:70, xp:[0,3]}
+  const s={version:2, week:1, day:0, cash:500, debt:0, job:'shop', chars:[
+    {name:'小满', energy:100, mood:70, xp:[3,0],counts:H.EMPTY_COUNTS(),clothes:H.DEFAULT_CLOTHES()}, {name:'小夏', energy:100, mood:70, xp:[0,3],counts:H.EMPTY_COUNTS(),clothes:H.DEFAULT_CLOTHES()}
   ],plan:[['work','admin'],['rest','work'],['work','second'],['creative','work'],['work','rest'],['second','work']],sunday:'walk', inventory:0, batches:0, second:0, furniture:[], ledger:blankLedger(),log:[], reports:[], memories:[], decisions:{}, adWeek:0, drawWeek:0, drawJob:null};
   s.ledger.start=500;
+  s.home={room:'living',unlocked:['living'],positions:{},legacyStats:false,fromWeek:1};
   return s;
 }
 export const jobOf = (s,d=Math.min(s.day,5)) => JOBS.find(j=>j.id===(s.shiftJobs?.[d]||s.job));
@@ -261,6 +264,13 @@ export function executeDay(s,expectedWeek=s.week,expectedDay=s.day,{forecast=fal
     n.chars.forEach(c=>{c.energy=clamp(c.energy+energy);c.mood=clamp(c.mood+mood);});
     addLog(n,n.sunday==='home'?'周日，两个人在家慢慢过。':n.sunday==='picnic'?'周日，两人带着便当去野餐。':'周日，两个人一起散了很长的步。');
   }
+  if(!forecast&&n.version===2){
+    for(let i=0;i<2;i++){
+      const a=s.day<6?s.plan[s.day][i]:null,c=n.chars[i].counts;
+      if(a==='work')c.work++;if(a==='rest')c.rest++;if(['admin','creative'].includes(a))c.course++;
+      if(s.day===6&&s.sunday!=='home')c.outing++;
+    }
+  }
   const furniture=n.furniture.map(id=>FURNITURE.find(f=>f.id===id));
   const extraEnergy=Math.min(6,furniture.reduce((v,f)=>v+f.energy,0)),extraMood=furniture.reduce((v,f)=>v+f.mood,0);
   n.chars.forEach(c=>{c.energy=clamp(c.energy+10+extraEnergy);c.mood=clamp(c.mood+2+extraMood);});
@@ -281,6 +291,7 @@ export function executeDay(s,expectedWeek=s.week,expectedDay=s.day,{forecast=fal
     n.reports=n.reports.slice(-16);
     addLog(n,`本周生活费360币${n.debt?`，待缴${n.debt}币`:'已缴清'}。`);
   }
+  if(!forecast&&n.version===2)H.refreshRooms(n);
   return n;
 }
 export function forecast(s) {
@@ -297,10 +308,11 @@ export function buy(s,id) {
   if(!f||s.furniture.includes(id))throw Error('这件家具已经在家里了。');
   if(s.cash<f.cost)throw Error('生活账户还不够，先多攒一点。');
   if(s.day===7)throw Error('先进入新的一周，再添家具。');
-  const spot=HOME_CHOICES[id].find(spot=>spotAvailable(s,id,spot));
-  if(!spot)throw Error('家里的两个合适位置都占了，先挪一下其他家具。');
+  const spot=HOME_CHOICES[id]?.find(spot=>spotAvailable(s,id,spot));
+  if(s.version===1&&!spot)throw Error('家里的两个合适位置都占了，先挪一下其他家具。');
   const n=copy(s);n.cash-=f.cost;n.ledger.furniture+=f.cost;n.furniture.push(id);
-  n.placements={...n.placements,[id]:spot};
+  if(spot)n.placements={...n.placements,[id]:spot};
+  if(n.version===2){const item=H.itemOf(id),room=n.home.unlocked.includes(item.room)?item.room:n.home.room;n.home.positions[id]=H.findSlot(id,room,n.home.positions,{x:item.x??.5,y:item.y??.74})||{room:null,x:.5,y:.74};}
   if(id==='plant')n.chars.forEach(c=>c.mood=clamp(c.mood+5));
   if(id==='shelf')n.chars.forEach(c=>{xp(c,0,1);xp(c,1,1);});
   addLog(n,`家里添了${f.name}。`);return n;
@@ -329,7 +341,7 @@ export function validateSave(value) {
   try {
     const s=value;
     const integer=(v,min,max)=>Number.isInteger(v)&&v>=min&&v<=max;
-    if(!s||s.version!==1||!integer(s.week,1,100000)||!integer(s.day,0,7)||!integer(s.cash,0,1e9)||!integer(s.debt,0,1e9)||!JOBS.some(j=>j.id===s.job))return false;
+    if(!s||![1,2].includes(s.version)||!integer(s.week,1,100000)||!integer(s.day,0,7)||!integer(s.cash,0,1e9)||!integer(s.debt,0,1e9)||!JOBS.some(j=>j.id===s.job))return false;
     if(s.journey!==undefined){
       const j=s.journey,w=j?.weekly,unique=values=>Array.isArray(values)&&new Set(values).size===values.length;
       if(!j||!['shifts','courses','sideOrders','balancedWeeks','wishes','commissions'].every(k=>integer(j[k],0,1e6)))return false;
@@ -344,18 +356,25 @@ export function validateSave(value) {
     if(s.drawUsed!==undefined&&typeof s.drawUsed!=='boolean')return false;
     if(s.reports?.some(r=>r.jobs!==undefined&&(!Array.isArray(r.jobs)||r.jobs.length>6||!r.jobs.every(id=>JOBS.some(j=>j.id===id)))))return false;
     if(s.reports?.some(r=>r.wishReward!==undefined&&![0,80].includes(r.wishReward)))return false;
-    if(!Array.isArray(s.chars)||s.chars.length!==2||!s.chars.every(c=>typeof c.name==='string'&&c.name.length<20&&integer(c.energy,0,100)&&integer(c.mood,0,100)&&Array.isArray(c.xp)&&c.xp.length===2&&c.xp.every(x=>integer(x,0,18))))return false;
+    if(!Array.isArray(s.chars)||s.chars.length!==2||!s.chars.every(c=>typeof c.name==='string'&&c.name.length<(s.version===2?120:20)&&integer(c.energy,0,100)&&integer(c.mood,0,100)&&Array.isArray(c.xp)&&c.xp.length===2&&c.xp.every(x=>integer(x,0,18))))return false;
     if(!Array.isArray(s.plan)||s.plan.length!==6||!s.plan.every(row=>Array.isArray(row)&&row.length===2&&row.every(a=>Object.hasOwn(ACTIONS,a))&&row.filter(a=>a==='work').length===1))return false;
     if(!['walk','home','picnic'].includes(s.sunday)||!integer(s.inventory,0,1)||!integer(s.batches,0,1)||!integer(s.second,0,2))return false;
     if(!Array.isArray(s.furniture)||new Set(s.furniture).size!==s.furniture.length||!s.furniture.every(id=>FURNITURE.some(f=>f.id===id)))return false;
     if(s.placements!==undefined&&(!s.placements||typeof s.placements!=='object'||Array.isArray(s.placements)||!Object.entries(s.placements).every(([id,spot])=>s.furniture.includes(id)&&HOME_CHOICES[id]?.includes(spot))))return false;
-    if(s.furniture.some(id=>!spotAvailable(s,id,placementOf(s,id))))return false;
+    if(s.version===1&&s.furniture.some(id=>!spotAvailable(s,id,placementOf(s,id))))return false;
     if(!s.ledger||!Object.keys(blankLedger()).every(k=>['salary','shifts'].includes(k)?Array.isArray(s.ledger[k])&&s.ledger[k].length===2&&s.ledger[k].every(v=>integer(v,0,1e9)):integer(s.ledger[k],0,1e9)))return false;
     if(!Array.isArray(s.reports)||s.reports.length>16||!s.reports.every(r=>integer(r.week,1,s.week)&&integer(r.cash,0,1e9)&&integer(r.debt,0,1e9)&&r.ledger&&['salary','shifts'].every(k=>Array.isArray(r.ledger[k])&&r.ledger[k].length===2&&r.ledger[k].every(v=>integer(v,0,1e9)))&&['side','bonus','training','stock','life','furniture','recovery'].every(k=>integer(r.ledger[k],0,1e9))))return false;
     if(!Array.isArray(s.log)||s.log.length>60||!s.log.every(l=>typeof l.text==='string'&&l.text.length<300&&integer(l.week,1,s.week)&&integer(l.day,0,7)))return false;
     if(!Array.isArray(s.memories)||s.memories.length>10||!s.memories.every(x=>['first','learn','side','home','balance'].includes(x)))return false;
     if(!s.decisions||typeof s.decisions!=='object'||Array.isArray(s.decisions)||Object.keys(s.decisions).length>2||!Object.entries(s.decisions).every(([k,v])=>[`${s.week}-2`,`${s.week}-4`].includes(k)&&['none','meeting','sun','photo','sort','fruit'].includes(v)))return false;
     if(!integer(s.adWeek,0,s.week)||!integer(s.drawWeek,0,s.week)||(s.drawJob!==null&&!JOBS.some(j=>j.id===s.drawJob)))return false;
+    if(s.version===2&&!H.validateHome(s))return false;
     return true;
   }catch{return false;}
+}
+export function migrateSave(value){
+  if(!validateSave(value))throw Error('存档格式不正确，原进度已经保留。');
+  const n=copy(value);if(n.version===2)return n;
+  n.journey=copy(journeyOf(n));n.version=2;H.migrateHome(n,HOME_SPOTS,HOME_CHOICES);
+  if(!validateSave(n))throw Error('旧存档升级失败，原进度已经保留。');return n;
 }

@@ -8,7 +8,7 @@
   <link rel="icon" href="assets/game-icon-v1-192.png">
   <link rel="apple-touch-icon" sizes="180x180" href="assets/game-icon-v1-180.png">
   <link rel="manifest" href="manifest.webmanifest">
-  <link rel="modulepreload" href="engine.js?v=1.0.1">
+  <link rel="modulepreload" href="engine.js?v=home-v10">
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="portrait.css">
   <link rel="stylesheet" href="art-direction.css">
@@ -16,18 +16,21 @@
   <link rel="stylesheet" href="floating-ui.css">
   <link rel="stylesheet" href="menu.css?v=1.0.1">
   <link rel="stylesheet" href="gameplay.css?v=1.0.1">
-  <link rel="stylesheet" href="hud.css?v=1.0.1">
+  <link rel="stylesheet" href="hud.css?v=1.0.3-navalign32">
   <link rel="stylesheet" href="panels.css?v=1.0.1">
   <link rel="stylesheet" href="modal-art.css?v=1.0.1">
   <link rel="stylesheet" href="menu-shift.css?v=1.0.1">
   <link rel="stylesheet" href="legacy-windows.css?v=1.0.1">
-  <link rel="stylesheet" href="ratio-layout.css?v=1.0.2">
+  <link rel="stylesheet" href="ratio-layout.css?v=1.0.3-ui2">
   <link rel="stylesheet" href="symbols.css?v=1.0.2">
-  <title>今天谁上班 · 1.0.2</title>
+  <link rel="stylesheet" href="home-effects.css?v=1.0.3-staticgrab31">
+  <link rel="stylesheet" href="home.css?v=home-v10">
+  <title>今天谁上班 · 1.0.3</title>
 </head>
 <body>
   <section id="main-menu" class="main-menu" aria-label="游戏主菜单">
-    <span class="menu-version" aria-label="游戏版本 1.0.2">1.0.2</span>
+    <span class="menu-version" aria-label="游戏版本 1.0.3">1.0.3</span>
+    <button id="menu-admin" class="home-gold-button"><i data-lucide="key-round"></i><span>管理员模式</span></button>
     <img class="menu-cover" src="assets/menu-cover.webp" alt="清晨，猫与狐狸室友在蓝门前交接钥匙" width="1024" height="1536">
     <div class="menu-heading"><h1><img class="menu-title" src="assets/ui/menu-title.webp" alt="今天谁上班" width="1000" height="640"></h1><p>一个班，两个人轮着上。</p></div>
     <div class="menu-actions">
@@ -43,18 +46,17 @@
       <div class="header-actions"><div class="wallet" id="wallet" aria-label="生活账户"><i data-lucide="coins"></i><span id="cash">500</span><small>生活币</small></div><button id="sound" class="icon-button" title="开启声音" aria-label="开启声音"><i data-lucide="volume-x"></i></button><button id="settings" class="icon-button" title="存档与设置" aria-label="存档与设置"><i data-lucide="settings-2"></i></button></div>
     </header>        <div class="people-strip" id="people"></div>          <div class="scene-top"><button id="goals-button" class="text-button goals-button" aria-label="查看目标与奖励"><i data-lucide="flag"></i><span>目标</span></button><div class="scene-switch" aria-label="场景"><button data-scene="home" class="active" title="回家" aria-label="回家"><i data-lucide="house"></i></button><button data-scene="town" title="小镇" aria-label="小镇"><i data-lucide="store"></i></button></div></div>
 
-<div class="job-ticket"><div class="date-ribbon"><span id="week">第 1 周</span><b id="day">周一</b><i data-lucide="sun"></i></div><div class="scene-messages"><div class="scene-caption" id="scene-caption"><i data-lucide="key-round"></i><span>我们的合租小屋</span></div><div id="speech" class="speech">阿闲：我把周一三五让出来一半，行吗？</div></div></div>
     </section>
     <main class="workspace">
       <section class="living-area" aria-label="我们的生活">
         <div class="scene" id="scene">
           <img loading="lazy" class="scene-background" id="scene-bg" src="assets/apartment.webp" alt="阳光照进两个人的合租房">
           <div id="props" class="props"></div>
-          <button class="actor actor-a" data-person="0" title="查看阿闲" aria-label="查看阿闲"><img loading="lazy" id="actor-a" src="assets/characters-0.webp" alt="阿闲，戴眼镜的猫室友"><span>阿闲</span></button>
-          <button class="actor actor-b" data-person="1" title="查看阿忙" aria-label="查看阿忙"><img loading="lazy" id="actor-b" src="assets/characters-2.webp" alt="阿忙，穿格纹长外套的狐狸室友"><span>阿忙</span></button>
+          <button class="actor actor-a" data-person="0" title="查看小满" aria-label="查看小满"><img loading="lazy" id="actor-a" src="assets/characters-0.webp" alt="戴眼镜的猫室友"></button>
+          <button class="actor actor-b" data-person="1" title="查看小夏" aria-label="查看小夏"><img loading="lazy" id="actor-b" src="assets/characters-2.webp" alt="狐狸室友"></button>
           <div id="day-overlay" class="day-overlay" hidden><span id="day-overlay-text"></span></div>
         </div>
-        <section class="bottom-dock" aria-label="游戏操作"><nav class="tabs" aria-label="游戏页面"><button class="active" data-tab="plan"><i data-lucide="calendar-days"></i><span>排班</span></button><button data-tab="home"><i data-lucide="armchair"></i><span>小家</span></button><button data-tab="jobs"><i data-lucide="briefcase-business"></i><span>找班</span></button><button data-tab="diary"><i data-lucide="notebook-pen"></i><span>日记</span></button></nav>    <div class="run-area"><button id="run" class="primary-button"><i data-lucide="play"></i><span>开始周一</span></button><span id="save-status" class="save-status" title="进度已保存到此浏览器">已保存</span></div><button id="tutorial-resume" class="tutorial-resume" hidden>继续新手教程</button></section>
+        <section class="bottom-dock" aria-label="游戏操作"><nav class="tabs" aria-label="游戏页面"><button data-tab="home"><i data-lucide="armchair"></i><span>小家</span></button><button data-open-wardrobe title="衣橱" aria-label="衣橱"><img class="wardrobe-nav-symbol" src="assets/ui-v10/wardrobe-shirt-approved.webp" alt=""><span>衣橱</span></button><button class="active" data-tab="plan"><i data-lucide="calendar-days"></i><span>排班</span></button><button data-tab="jobs"><i data-lucide="briefcase-business"></i><span>找班</span></button><button data-tab="diary"><i data-lucide="notebook-pen"></i><span>日记</span></button></nav>    <div class="run-area"><button id="run" class="primary-button"><i data-lucide="play"></i><span>开工</span></button><span id="save-status" class="save-status" title="进度已保存到此浏览器">已保存</span></div><button id="tutorial-resume" class="tutorial-resume" hidden>继续新手教程</button></section>
         <div id="content" class="content-area secondary-panel"></div>
       </section>
       <section class="planner secondary-panel" id="planner" aria-label="本周日程">
@@ -73,8 +75,11 @@
     <header><h2 id="memory-title"></h2><button id="close-memory" title="收起照片" aria-label="收起照片"><i data-lucide="x"></i></button></header>
     <figure><img id="memory-image" width="960" height="640" alt=""><figcaption id="memory-caption"></figcaption></figure>
   </dialog>
+  <dialog id="wardrobe-window" aria-labelledby="wardrobe-title"><header><h2 id="wardrobe-title">衣橱</h2><button class="icon-button" data-close-wardrobe title="关闭" aria-label="关闭衣橱"><i data-lucide="x"></i></button></header><nav id="wardrobe-people" aria-label="室友"></nav><nav id="wardrobe-parts" aria-label="服饰部位"></nav><div class="wardrobe-body"><div class="wardrobe-preview-column"><div class="wardrobe-preview-area"><img id="wardrobe-preview" alt="换装预览"></div><nav class="wardrobe-poses" aria-label="预览姿势"><button data-wardrobe-pose="stand" title="站姿" aria-label="站姿"><i data-lucide="person-standing"></i></button><button data-wardrobe-pose="sit" title="坐姿" aria-label="坐姿"><i data-lucide="armchair"></i></button></nav><p id="wardrobe-outfit"></p></div><div class="wardrobe-list"><div id="wardrobe-clothes"></div><nav id="wardrobe-pages" aria-label="衣橱分页"></nav></div></div><small id="wardrobe-history"></small><footer><button class="text-button" data-close-wardrobe>取消</button><button class="primary-button" data-confirm-outfit><i data-lucide="check"></i>确认搭配</button></footer></dialog>
+  <dialog id="home-dialog" aria-labelledby="home-dialog-title"><header><h2 id="home-dialog-title"></h2><button class="icon-button" data-close-home-dialog aria-label="关闭" title="关闭"><i data-lucide="x"></i></button></header><div id="home-dialog-body"></div></dialog>
   <input type="file" id="import-file" accept="application/json,.json" hidden>
+  <link rel="stylesheet" href="home-polish.css?v=1.0.3-skillspacing30">
   <script src="vendor/lucide.min.js"></script>
-  <script type="module" src="app.js?v=1.0.2"></script>
+  <script type="module" src="app.js?v=1.0.3-navalign32"></script>
 </body>
 </html>

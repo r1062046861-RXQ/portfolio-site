@@ -39,6 +39,7 @@
 #modal[data-art="free-time"]{--frame-depth:1.421508035;--title-x:55%;--title-y:6%;--close-x:93%;--close-y:14%;--body-top:22%;--body-bottom:14%}
 #modal[data-art="goals"]{--title-width:36%}#modal[data-art="report"]{--title-width:46%}
 #modal[data-art="xian"],#modal[data-art="mang"]{--title-width:47%}
+#modal[data-art="mang"]{--title-x:62%}
 #content[data-panel="diary"]{--title-width:40%}
 #content[data-panel="diary"] .photo-toggle{position:absolute;left:54%;top:5%;margin:0!important}
 #planner .schedule-board{top:var(--body-top);bottom:var(--body-bottom)}
