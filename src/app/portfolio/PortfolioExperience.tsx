@@ -1,8 +1,9 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import dynamic from "next/dynamic";
-import { ArrowDownRight, ChevronLeft, ChevronRight, Copy, X } from "lucide-react";
+import { ArrowDownRight, ArrowLeft, ChevronLeft, ChevronRight, Copy, X } from "lucide-react";
 import {
   useCallback,
   useEffect,
@@ -196,10 +197,15 @@ export default function PortfolioExperience() {
       <a className="studio-skip" href="#achievements">跳到正文</a>
 
       <header className="studio-header">
-        <a className="studio-brand" href="#top" aria-label="任玄奇作品集，回到顶部">
-          <span className="studio-brand-mark" aria-hidden="true">任</span>
-          <span>任玄奇<span className="studio-brand-en">PORTFOLIO / 2026</span></span>
-        </a>
+        <div className="studio-header-identity">
+          <a className="studio-brand" href="#top" aria-label="任玄奇作品集，回到顶部">
+            <span className="studio-brand-mark" aria-hidden="true">任</span>
+            <span>任玄奇<span className="studio-brand-en">PORTFOLIO / 2026</span></span>
+          </a>
+          <Link className="studio-home-link" href="/" prefetch={false}>
+            <ArrowLeft size={17} aria-hidden="true" />返回液态像素主页
+          </Link>
+        </div>
         <nav className="studio-desktop-nav" aria-label="主导航">
           {navigation.map(([id, label]) => <a key={id} href={"#" + id}>{label}</a>)}
         </nav>
