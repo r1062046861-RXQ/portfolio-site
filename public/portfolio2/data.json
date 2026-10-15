@@ -1,0 +1,80 @@
+[
+  {
+    "id": "work-03",
+    "no": "Ⅰ-01",
+    "category": "艺术创作",
+    "title": "苏醒",
+    "year": "2024",
+    "medium": "实验影像 / AI 生成",
+    "description": "融合 AI 生成技术与艺术想象，探索人工智能从无意识到自我觉醒的可能。以微观粒子为叙事主体，呼应博尔赫斯的巴别图书馆意象，构建无限延展的「影像图书馆」。",
+    "image": "./works/work-03.jpg",
+    "gif": "./works/gif/wake.gif",
+    "poster": "./works/gif/wake-poster.jpg",
+    "hue": 195
+  },
+  {
+    "id": "work-04",
+    "no": "Ⅰ-02",
+    "category": "艺术创作",
+    "title": "坍缩",
+    "year": "2025",
+    "medium": "三屏 AI 实验影像",
+    "description": "以阿兹海默症患者的主观感受为叙事核心，三个章节对应病程早期、中期与晚期，呈现记忆与感知世界逐渐坍塌中的孤独与悲怆。",
+    "image": "./works/work-04.jpg",
+    "gif": "./works/gif/collapse.gif",
+    "poster": "./works/gif/collapse-poster.jpg",
+    "hue": 275
+  },
+  {
+    "id": "work-18",
+    "no": "Ⅰ-03",
+    "category": "艺术创作",
+    "title": "桥渡牵牛织女星",
+    "year": "2026",
+    "medium": "沉浸影像 / VR",
+    "description": "以汉画像石与戏曲美学为视觉线索，将牛郎织女的分离与重逢转化为可进入的沉浸式空间。AI 参与角色、场景与动作的生成，观众通过移动和观看完成叙事的重新连接。",
+    "gif": "./works/gif/bridge.gif",
+    "poster": "./works/gif/bridge-poster.jpg",
+    "hue": 188,
+    "reserved": true
+  },
+  {
+    "id": "work-19",
+    "no": "Ⅰ-04",
+    "category": "艺术创作",
+    "title": "一帧",
+    "year": "2025",
+    "medium": "ASCII 实验影像 · 1080 × 1080 / 30fps",
+    "description": "将 ASCII 编码转化为动态编织的文本织物：字符矩阵成为像素单位与数字线纱，数据经线和算法纬线在循环影像中交织，追问编码如何重新定义纤维、图像与叙事。",
+    "gif": "./works/gif/one-frame.gif",
+    "poster": "./works/gif/one-frame-poster.jpg",
+    "hue": 215,
+    "reserved": true
+  },
+  {
+    "id": "work-20",
+    "no": "Ⅰ-05",
+    "category": "艺术创作",
+    "title": "白日梦不在这里",
+    "year": "2026",
+    "medium": "实验影像 · 1280 × 720 / 24fps",
+    "description": "从一张童年照片出发，把不倒翁、小熊软糖与鸭子重新放进明亮柔和的糖果塑料梦核空间。物件靠近、接触又分开，白日梦只在借旧物返回过去的一刻成立。",
+    "gif": "./works/gif/white-daydream.gif",
+    "poster": "./works/gif/white-daydream-poster.jpg",
+    "hue": 32,
+    "reserved": true
+  },
+  {
+    "id": "work-21",
+    "no": "Ⅰ-06",
+    "category": "艺术创作",
+    "title": "五行医道",
+    "year": "2026",
+    "medium": "交互影像 / 游戏化中医药体验",
+    "description": "以中医五行关系为结构，将药材、卡牌、巡诊路线与事件选择组织成可探索的视觉系统。观众在游戏化的交互中理解生克关系，也在图像与规则之间观察传统知识如何被重新编排。",
+    "gif": "./works/gif/wuxing.gif",
+    "poster": "./works/gif/wuxing-poster.jpg",
+    "hue": 150,
+    "reserved": true
+  }
+]
