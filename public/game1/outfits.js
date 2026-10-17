@@ -1,26 +1,22 @@
-import {clothingTemplate} from './home-system.js?v=home-v10';
+import {outfitLayers} from './actor-rig.js?v=1.0.3-life39';
 const images=new Map(),composites=new Map(),pending=new Map();
 function warm(files){navigator.serviceWorker?.controller?.postMessage({type:'warm-home',files});}
 const load=src=>{
-  if(!images.has(src))images.set(src,new Promise((resolve,reject)=>{const img=new Image();img.onload=()=>resolve(img);img.onerror=()=>{images.delete(src);reject(Error('服饰暂时未加载，恢复连接后会重试。'));};img.src=src;}));
+  if(!images.has(src))images.set(src,new Promise((resolve,reject)=>{const img=new Image();img.onload=()=>resolve(img);img.onerror=()=>{images.delete(src);reject(Error(['localhost','127.0.0.1','[::1]'].includes(location.hostname)?'服饰资源加载失败，请确认本地服务已启动。':'服饰暂时未加载，恢复连接后会重试。'));};img.src=src;}));
   return images.get(src);
 };
 export async function outfitURL(who,pose,outfit,prop=null){
+  if(outfit.accessory===2)outfit={...outfit,accessory:0};
   const key=`${who}-${pose}-${outfit.top}-${outfit.bottom}-${outfit.accessory}-${prop||''}`;
   if(composites.has(key))return composites.get(key);
-  const prefix=`assets/home/rig-v9/${who}-${pose}`;
-  const home=clothingTemplate('top',outfit.top)===3;
-  const body=home?'home-body':'body';
-  const bottom=home?'home-bottom':'bottom';
-  const front=home?'home-front':outfit.accessory===3?'apron-front':'front';
-  const files=[`${prefix}-${body}.webp`,`${prefix}-${bottom}-${outfit.bottom}.webp`,`${prefix}-top-${outfit.top}.webp`,`${prefix}-${front}.webp`,`${prefix}-accessory-${outfit.accessory}.webp`];
-  if(prop==='book')files.push(`${prefix}-book.webp`);
+  const files=outfitLayers(who,pose,outfit,prop).map(layer=>layer.src);
   warm(files);
   const promise=(async()=>{
     const parts=await Promise.all(files.map(load));
     const canvas=document.createElement('canvas');canvas.width=parts[0].naturalWidth;canvas.height=parts[0].naturalHeight;
     const context=canvas.getContext('2d');
-    [0,1,2,...(outfit.accessory===3?[4,3]:[3,4]),...(prop==='book'?[5]:[])].forEach(i=>context.drawImage(parts[i],0,0));
+    if(parts.some(part=>part.naturalWidth!==canvas.width||part.naturalHeight!==canvas.height))throw Error('服饰图层画布不一致。');
+    parts.forEach(part=>context.drawImage(part,0,0));
     const blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/png'));
     if(!blob)throw Error('换装预览生成失败。');return URL.createObjectURL(blob);
   })();
@@ -40,6 +36,9 @@ export async function paintOutfit(img,who,pose,outfit,prop=null){
   }}
   finally{if(img.outfitToken===token)delete img.dataset.outfitLoading;}
 }
-window.addEventListener('online',()=>{
+function retryPending(){
   for(const [img,{who,pose,outfit,prop}] of pending){pending.delete(img);if(img.isConnected)paintOutfit(img,who,pose,outfit,prop).catch(()=>{});}
-});
+}
+window.addEventListener('online',retryPending);
+window.addEventListener('focus',retryPending);
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)retryPending();});

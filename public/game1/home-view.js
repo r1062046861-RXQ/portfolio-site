@@ -1,22 +1,24 @@
-import {ROOMS,HOME_ITEMS,itemOf,scaleAt,floorFootprint,validPlacement,validActorPoint} from './home-system.js?v=home-v10';
-import {paintOutfit} from './outfits.js?v=1.0.3-textiles21';
-export async function createHomeView({getState,commitMove,commitActor,onSelect,onRoom,icons,notice,isActive,isReduced}){
+import {ROOMS,HOME_ITEMS,itemOf,scaleAt,floorFootprint,validPlacement,validActorPoint} from './home-system.js?v=1.0.3-life39';
+import {paintOutfit} from './outfits.js?v=1.0.3-life39';
+import {poseRig,outfitLayers,ACTION_POSES} from './actor-rig.js?v=1.0.3-life39';
+import * as L from './life-progress.js?v=1.0.3-life39';
+export async function createHomeView({getState,commitMove,commitKeepsake,commitActor,onSelect,onRoom,icons,notice,isActive,isReduced}){
   const meta=await fetch('assets/home/meta.json').then(r=>{if(!r.ok)throw Error('小家素材暂时无法读取，请重试。');return r.json();});
   const stage=document.createElement('div');stage.id='home-stage';
   stage.innerHTML='<img class="home-background" alt=""><div class="home-objects"></div><div class="home-actors"></div><div class="home-fronts"></div><button class="home-door home-west" aria-label="西侧房间"></button><button class="home-door home-east" aria-label="东侧房间"></button>';
   document.getElementById('scene').append(stage);
+  const decorations=document.createElement('div');decorations.className='home-keepsakes';stage.append(decorations);
   const objects=stage.querySelector('.home-objects'),actors=stage.querySelector('.home-actors'),fronts=stage.querySelector('.home-fronts');
   let editing=false,selected=null,person=0,drag=null,enabled=false,autoTimer,expiryTimer,renderId=0,press=null,grab=null,suppressClickUntil=0;
   const performances=new Map();
-  const actions={read:'standing-read',sit:'sit',light:'stand',cup:'sip',tea:'sip',watch:'sit',music:'stretch',fold:'fold',groom:'groom',cook:'cook',wash:'fold',heat:'cook',toast:'cook',craft:'craft',sew:'sew',type:'type',print:'standing-read',rest:'rest',water:'water',care:'water',exercise:'exercise'};
+  const actions=ACTION_POSES;
   const phrases={read:'这页真有趣。',sit:'坐一会儿。',light:'灯光刚刚好。',cup:'慢慢喝一杯。',tea:'这杯刚刚好。',watch:'再看一小会。',music:'跟着节拍晃一晃。',fold:'收整齐啦。',groom:'今天也挺精神。',cook:'香气出来啦。',wash:'衣服转起来啦。',heat:'热乎乎的。',toast:'早餐要趁热。',craft:'添一笔颜色。',sew:'这一针缝好了。',type:'把想法记下来。',print:'这张印得不错。',rest:'风吹得正好。',water:'慢慢长大呀。',care:'叶子精神多啦。',exercise:'再轻轻骑两圈。'};
   const state=()=>getState(),positions=()=>state().home.positions,room=()=>state().home.room;
   const dims=(item,p)=>({width:item.w*scaleAt(p.y),height:item.w*scaleAt(p.y)*meta[item.asset].ratio*2/3});
   const box=(x,y,width,z)=>`left:${x*100}%;top:${y*100}%;width:${width*100}%;z-index:${z}`;
   function actorWidth(who,pose,y){
-    const seated=['sit','read','sip','craft','sew','type','rest','exercise'].includes(pose);
-    const size=(who==='cat'?.28:.35)*(seated?.88:pose==='stretch'?1.18:1)*scaleAt(y);
-    return size/(meta[`${who}-${pose}`].ratio*2/3);
+    const rig=poseRig(who,pose,meta);
+    return rig.scale*scaleAt(y)/(rig.ratio*2/3);
   }
   function idlePoint(who){
     const saved=state().home.actorPositions?.[room()]?.[who==='cat'?0:1];
@@ -40,12 +42,12 @@ export async function createHomeView({getState,commitMove,commitActor,onSelect,o
     const width=actorWidth(who,pose,p.y);
     const height=width*meta[`${who}-${pose}`].ratio*2/3;
     if(item.seats){
-      const [sx,sy]=item.seats[perf.seat],original=pose==='sit'||pose==='read';
-      const hipX=who==='cat'?(original?.60:.50):.44,hipY=pose==='exercise'?.60:who==='cat'?.72:.70;
+      const [sx,sy]=item.seats[perf.seat];
+      const [hipX,hipY]=poseRig(who,pose,meta).anchors.seat;
       return{who,pose,x:p.x-dim.width/2+dim.width*sx+(.5-hipX)*width,y:p.y-dim.height+dim.height*sy+(1-hipY)*height,width,z:Math.round(p.y*500)+1};
     }
     if(['water','care'].includes(perf.action)){
-      const [tx,ty]=meta[item.asset].waterTarget,[sx,sy]=meta[`${who}-water`].waterSpout;
+      const [tx,ty]=meta[item.asset].waterTarget,[sx,sy]=poseRig(who,'water',meta).anchors.waterSpout;
       const targetX=p.x+(tx-.5)*dim.width,targetY=p.y-(1-ty)*dim.height;
       const facing=targetX+(1-sx)*width>.98?-1:1;
       const x=targetX+(.5-(facing===1?sx:1-sx))*width;
@@ -58,8 +60,9 @@ export async function createHomeView({getState,commitMove,commitActor,onSelect,o
   }
   function renderActors(){
     actors.innerHTML=[0,1].map(index=>{const b=actorBox(index),perf=performances.get(index),spout=b.pose==='water'?meta[`${b.who}-water`].waterSpout:null;return `<button class="home-actor ${grab?.index===index?'grabbed':perf?'acting pose-'+perf.pose:''}" data-person="${index}" style="${box(b.x,b.y,b.width,b.z)};--water-facing:${b.facing||1}"><img alt="">${spout?`<span class="actor-water" aria-hidden="true"><span class="water-drops" style="left:${spout[0]*100}%;top:${spout[1]*100}%;height:${b.waterLength*100}%"><i></i><i></i><i></i></span></span>`:''}${perf?`<small class="home-speech">${phrases[perf.action]}</small>`:''}</button>`;}).join('');
-    for(const el of actors.children){const index=Number(el.dataset.person),b=actorBox(index),prop=performances.get(index)?.action==='read'?'book':null;el.dataset.prop=prop||'';el.setAttribute('aria-label',state().chars[index].name+'的档案');paintOutfit(el.querySelector('img'),b.who,b.pose,state().chars[index].clothes,prop).catch(e=>notice(e.message));}
+    for(const el of actors.children){const index=Number(el.dataset.person),b=actorBox(index),action=performances.get(index)?.action,prop=action==='read'?'book':action==='print'&&index===0?'paper':null;el.dataset.prop=prop||'';el.setAttribute('aria-label',state().chars[index].name+'的档案');paintOutfit(el.querySelector('img'),b.who,b.pose,state().chars[index].clothes,prop).catch(e=>notice(e.message));}
     fronts.innerHTML=[...performances.values()].filter((p,i,list)=>itemOf(p.id)?.seats&&list.findIndex(p2=>p2.id===p.id)===i).map(perf=>{const item=itemOf(perf.id),p=positions()[item.id],dim=dims(item,p);return `<img src="assets/home/${item.asset}-front.webp" alt="" style="${box(p.x,p.y,dim.width,Math.round(p.y*500)+2)}">`;}).join('');
+    for(const el of actors.children){const speech=el.querySelector('.home-speech');if(speech){speech.id='home-action-'+el.dataset.person;el.setAttribute('aria-describedby',speech.id);}}
     updateEffects();
   }
   function updateEffects(){
@@ -83,7 +86,7 @@ export async function createHomeView({getState,commitMove,commitActor,onSelect,o
     });icons();
   }
   function cancelGrab(){clearTimeout(press?.timer);press=null;const old=grab;grab=null;stage.querySelector('.grab-landing')?.remove();stage.classList.remove('is-grabbing');if(old){suppressClickUntil=performance.now()+650;if(stage.hasPointerCapture(old.pointer))stage.releasePointerCapture(old.pointer);}}
-  function stop(){cancelGrab();performances.clear();const cancelled=drag;drag=null;clearTimeout(expiryTimer);if(enabled){if(cancelled)render();else renderActors();}}
+  function stop(){cancelGrab();performances.clear();const cancelled=drag||keepsakeDrag;drag=null;keepsakeDrag=null;clearTimeout(expiryTimer);if(enabled){if(cancelled)render();else renderActors();}}
   function use(id,index=person){
     if(!enabled||editing||grab||press||!isActive()||document.hidden)return;
     const source=itemOf(id);if(!source||positions()[id]?.room!==room()||![0,1].includes(index))return;
@@ -105,14 +108,40 @@ export async function createHomeView({getState,commitMove,commitActor,onSelect,o
     const current=ROOMS.find(r=>r.id===room());stage.classList.toggle('is-editing',editing);stage.classList.toggle('reduce-motion',isReduced());
     const bg=stage.querySelector('.home-background');bg.src=`assets/home/room-${room()}-full.webp`;bg.alt=current.name;
     const localItems=HOME_ITEMS.filter(i=>positions()[i.id]?.room===room()),poses=new Set(['stand','sit',...localItems.map(i=>actions[i.interaction]),...(localItems.some(i=>i.interaction==='read')?['read','standing-read']:[]),...(localItems.some(i=>['tea','cup'].includes(i.interaction))?['sip','standing-sip']:[])]);
-    const files=[bg.getAttribute('src'),...localItems.flatMap(i=>[`assets/home/${i.asset}.webp`,...(i.variant?[`assets/home/${i.asset}-on.webp`]:[]),...(i.seats?[`assets/home/${i.asset}-front.webp`]:[])]),...[...poses].flatMap(p=>state().chars.flatMap((c,i)=>{const prefix=`assets/home/rig-v9/${i?'fox':'cat'}-${p}`;return [`${prefix}-body.webp`,`${prefix}-front.webp`,...Object.keys(c.clothes).map(part=>`${prefix}-${part}-${c.clothes[part]}.webp`)];}))];
+    const files=[bg.getAttribute('src'),...localItems.flatMap(i=>[`assets/home/${i.asset}.webp`,...(i.variant?[`assets/home/${i.asset}-on.webp`]:[]),...(i.seats?[`assets/home/${i.asset}-front.webp`]:[])]),...[...poses].flatMap(p=>state().chars.flatMap((c,i)=>outfitLayers(i?'fox':'cat',p,c.clothes).map(layer=>layer.src)))];
     navigator.serviceWorker?.controller?.postMessage({type:'warm-home',files});
     if(localItems.some(i=>i.interaction==='read'))navigator.serviceWorker?.controller?.postMessage({type:'warm-home',files:['cat','fox'].flatMap(who=>['read','standing-read'].map(pose=>`assets/home/rig-v9/${who}-${pose}-book.webp`))});
     const doors={living:{west:[[.035,.23],[.085,.255],[.085,.52],[.035,.55]],east:[[.918,.255],[.968,.23],[.968,.55],[.918,.52]]},bedroom:{east:[[.91,.235],[.96,.215],[.96,.535],[.91,.505]]},kitchen:{west:[[.035,.215],[.084,.236],[.084,.515],[.035,.55]],east:[[.918,.233],[.969,.21],[.969,.55],[.918,.515]]},study:{west:[[.035,.23],[.09,.259],[.09,.53],[.035,.566]],east:[[.92,.258],[.976,.225],[.976,.569],[.92,.53]]},balcony:{west:[[.035,.208],[.087,.232],[.087,.509],[.035,.55]]}};
     for(const side of ['west','east']){const el=stage.querySelector('.home-'+side),next=current[side],name=ROOMS.find(r=>r.id===next)?.name||'',locked=next&&!state().home.unlocked.includes(next);el.hidden=!next;el.dataset.homeRoom=next||'';el.classList.toggle('locked',Boolean(locked));el.setAttribute('aria-label',name+(locked?' · 尚未开放':''));el.title=el.getAttribute('aria-label');el.style.clipPath=next?'polygon('+doors[room()][side].map(([x,y])=>`${x*100}% ${y*100}%`).join(',')+')':'';}
     objects.innerHTML=HOME_ITEMS.filter(i=>positions()[i.id]?.room===room()).map(item=>{const p=positions()[item.id],dim=dims(item,p);return `<button class="home-furniture ${editing&&selected===item.id?'selected':''}" data-home-item="${item.id}" aria-label="${item.name}" style="${box(p.x,p.y,dim.width,Math.round(p.y*500))}"><img src="assets/home/${item.asset}.webp" alt="${item.name}"></button>`;}).join('');
-    renderActors();renderId++;icons();
+    renderKeepsakes();renderActors();renderId++;icons();
   }
+  function renderKeepsakes(override){
+    const s=override?{...state(),home:{...state().home,positions:override}}:state();
+    decorations.innerHTML=L.KEEPSAKES.map(k=>{
+      const b=L.keepsakeBox(s,k.id,meta);if(b?.room!==room())return '';
+      return `<button class="home-keepsake ${selected==='keepsake:'+k.id?'selected':''}" data-home-keepsake="${k.id}" style="${box(b.x,b.y,b.width,b.z)}" aria-label="${k.name}" ${editing?'':'tabindex="-1"'}><img src="assets/life39/keepsake-${k.id}.webp" alt="${k.name}"></button>`;
+    }).join('');
+  }
+  let keepsakeDrag=null;
+  decorations.addEventListener('pointerdown',event=>{
+    const target=event.target.closest('[data-home-keepsake]');if(!target||!editing||!isActive())return;
+    event.preventDefault();event.stopPropagation();const id=target.dataset.homeKeepsake;selected='keepsake:'+id;onSelect(selected);
+    if(L.keepsakeOf(id).kind==='table')return;
+    const r=stage.getBoundingClientRect(),p=L.keepsakePosition(state(),id);
+    keepsakeDrag={id,target,pointer:event.pointerId,draft:p,dx:(event.clientX-r.left)/r.width-p.x,dy:(event.clientY-r.top)/r.height-p.y};target.setPointerCapture(event.pointerId);
+  });
+  decorations.addEventListener('pointermove',event=>{
+    const d=keepsakeDrag;if(!d||d.pointer!==event.pointerId)return;
+    const r=stage.getBoundingClientRect(),p={room:room(),x:(event.clientX-r.left)/r.width-d.dx,y:(event.clientY-r.top)/r.height-d.dy};d.draft=p;
+    d.target.style.cssText=box(p.x,p.y,L.keepsakeBox(state(),d.id,meta).width,800);d.target.classList.toggle('invalid',!L.validKeepsakePlace(state(),d.id,p));
+  });
+  function endKeepsakeDrag(event,cancel=false){
+    const d=keepsakeDrag;if(!d||d.pointer!==event.pointerId)return;keepsakeDrag=null;
+    if(!cancel&&L.validKeepsakePlace(state(),d.id,d.draft))commitKeepsake(d.id,d.draft);else if(!cancel)notice('这里不合适，已放回原位。');renderKeepsakes();
+  }
+  decorations.addEventListener('pointerup',event=>endKeepsakeDrag(event));decorations.addEventListener('pointercancel',event=>endKeepsakeDrag(event,true));decorations.addEventListener('lostpointercapture',event=>endKeepsakeDrag(event,true));
+  decorations.addEventListener('click',event=>{event.stopPropagation();const el=event.target.closest('[data-home-keepsake]');if(editing&&el){selected='keepsake:'+el.dataset.homeKeepsake;onSelect(selected);}});
   function grabPoint(event){
     const r=stage.getBoundingClientRect();
     return{x:grab.start.x+(event.clientX-grab.clientX)/r.width,y:grab.start.y+(event.clientY-grab.clientY)/r.height};
@@ -168,8 +197,8 @@ export async function createHomeView({getState,commitMove,commitActor,onSelect,o
   stage.addEventListener('pointercancel',event=>finishGrab(event,true));
   stage.addEventListener('lostpointercapture',event=>{if(grab?.pointer===event.pointerId)finishGrab(event,true);});
   stage.addEventListener('click',event=>{if(performance.now()<suppressClickUntil&&(event.target.closest('.home-actor')||event.target===stage)){event.preventDefault();event.stopImmediatePropagation();}},true);
-  document.addEventListener('keydown',event=>{if(event.key==='Escape'&&(grab||press)){cancelGrab();renderActors();}});
-  window.addEventListener('blur',()=>{if(grab||press){cancelGrab();renderActors();}});
+  document.addEventListener('keydown',event=>{if(event.key==='Escape'){if(keepsakeDrag||drag)stop();else if(grab||press){cancelGrab();renderActors();}}});
+  window.addEventListener('blur',()=>{if(keepsakeDrag||drag)stop();else if(grab||press){cancelGrab();renderActors();}});
   objects.addEventListener('pointerdown',event=>{
     const target=event.target.closest('[data-home-item]');if(!editing||!target||!isActive())return;
     event.preventDefault();event.stopPropagation();selected=target.dataset.homeItem;performances.clear();renderActors();onSelect(selected);
@@ -180,6 +209,7 @@ export async function createHomeView({getState,commitMove,commitActor,onSelect,o
     if(!drag||drag.pointer!==event.pointerId)return;const r=stage.getBoundingClientRect();
     const p={room:room(),x:(event.clientX-r.left)/r.width-drag.dx,y:(event.clientY-r.top)/r.height-drag.dy};drag.draft=p;
     drag.target.style.cssText=box(p.x,p.y,dims(itemOf(drag.id),p).width,800);drag.target.classList.toggle('invalid',!validPlacement(drag.id,p,positions()));
+    renderKeepsakes({...positions(),[drag.id]:p});
   });
   function endDrag(event,cancel=false){if(!drag||drag.pointer!==event.pointerId)return;const d=drag;drag=null;
     if(!cancel&&validPlacement(d.id,d.draft,positions()))commitMove(d.id,d.draft);else if(!cancel)notice('这里放不下，已返回原位置。');render();

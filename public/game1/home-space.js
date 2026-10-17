@@ -1,4 +1,4 @@
-import {EXTRA_ITEMS} from './home-extras.js';
+import {EXTRA_ITEMS} from './home-extras.js?v=1.0.3-life39';
 export const ROOMS=[
   {id:'bedroom',name:'卧室',west:null,east:'living'},
   {id:'living',name:'客厅',west:'bedroom',east:'kitchen'},

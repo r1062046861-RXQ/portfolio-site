@@ -1,5 +1,6 @@
-import * as H from './home-system.js?v=home-v10';
-export {CLOTHES,COUNT_LABELS,garmentUnlocked,roomProgress,renameCharacter,equipClothes,setRoom,moveHomeFurniture,storeHomeFurniture} from './home-system.js?v=home-v10';
+import * as H from './home-system.js?v=1.0.3-life39';
+import * as L from './life-progress.js?v=1.0.3-life39';
+export {CLOTHES,COUNT_LABELS,garmentUnlocked,roomProgress,renameCharacter,equipClothes,setRoom,moveHomeFurniture,storeHomeFurniture} from './home-system.js?v=1.0.3-life39';
 export const DAYS = ['周一', '周二', '周三', '周四', '周五', '周六', '周日'];
 export const JOBS = [
   {id:'shop', name:'小店值班员', wage:100, skill:0, level:0, icon:'store', line:'最后一位客人，总在最后一分钟出现。'},
@@ -54,7 +55,7 @@ export const HOME_SPOTS = {
   lightRear:{name:'后墙晚读角',x:70,bottom:41,width:11}
 };
 export const HOME_CHOICES = {plant:['green','greenRear'],lamp:['light','lightRear'],shelf:['reading','readingRear'],sofa:['lounge','loungeRear'],coffee:['kitchen','kitchenLeft'],balcony:['dining','diningRear']};
-export const placementOf = (s,id) => s.placements?.[id]||HOME_CHOICES[id][0];
+export const placementOf = (s,id) => s.placements?.[id]||HOME_CHOICES[id]?.[0];
 const HOME_CONFLICTS=[['readingRear','lightRear'],['loungeRear','diningRear'],['lounge','kitchenLeft'],['green','kitchenLeft']];
 export const spotAvailable=(s,id,spot)=>!s.furniture.some(other=>other!==id&&HOME_CONFLICTS.some(pair=>pair.includes(spot)&&pair.includes(placementOf(s,other))));
 export function placeFurniture(s,id,spot){
@@ -139,6 +140,7 @@ export function fresh() {
   ],plan:[['work','admin'],['rest','work'],['work','second'],['creative','work'],['work','rest'],['second','work']],sunday:'walk', inventory:0, batches:0, second:0, furniture:[], ledger:blankLedger(),log:[], reports:[], memories:[], decisions:{}, adWeek:0, drawWeek:0, drawJob:null};
   s.ledger.start=500;
   s.home={room:'living',unlocked:['living'],positions:{},legacyStats:false,fromWeek:1};
+  s.life=L.freshLife();
   return s;
 }
 export const jobOf = (s,d=Math.min(s.day,5)) => JOBS.find(j=>j.id===(s.shiftJobs?.[d]||s.job));
@@ -247,12 +249,14 @@ export function executeDay(s,expectedWeek=s.week,expectedDay=s.day,{forecast=fal
   if(s.week!==expectedWeek||s.day!==expectedDay||s.day>=7)throw Error('这一天已经结算，请查看新的日程。');
   if(eventFor(s)&&!forecast)throw Error('先回应今天的小事，再开始一天。');
   const n=copy(s);n.journey=copy(journeyOf(s));
+  if(!forecast)L.migrateLife(n,jobOf);
   if(n.day<6) {
     const row=n.plan[n.day];
     if(row.filter(a=>a==='work').length!==1)throw Error('每个工作日恰好需要一人上班。');
     const worker=row.indexOf('work');
     // 工资先到账，再执行空档行动；整天失败时不提交任何变化。
     action(n,worker,'work');action(n,1-worker,row[1-worker]);
+    if(!forecast)L.recordWork(n,worker,jobOf(s).id,s.day);
     n.journey.shifts++;n.journey.weekly.jobs.push(jobOf(s).id);n.journey.weekly.actions.push(row[1-worker]);
     if(!n.journey.jobs.includes(jobOf(s).id))n.journey.jobs.push(jobOf(s).id);
     if(['admin','creative'].includes(row[1-worker]))n.journey.courses++;
@@ -287,7 +291,9 @@ export function executeDay(s,expectedWeek=s.week,expectedDay=s.day,{forecast=fal
     if(goalMet){n.journey.wishes++;grantReward(n,80,`完成周心愿「${goal.title}」`);}
     if(goalMet&&!n.memories.includes(goal.id))n.memories.push(goal.id);
     if(balanced&&happy&&!n.memories.includes('balance'))n.memories.push('balance');
-    n.reports.push({week:n.week,job:n.job,jobs:[...new Set(n.shiftJobs||Array(6).fill(n.job))],ledger:copy(n.ledger),cash:n.cash,debt:n.debt,balanced,happy,goalMet,wishReward:goalMet?80:0,goal:goal.title,chars:copy(n.chars)});
+    if(!forecast)L.migrateLife(n,jobOf);
+    const keepsake=!forecast&&goalMet?L.grantKeepsake(n,goal.id):null;
+    n.reports.push({week:n.week,job:n.job,jobs:[...new Set(n.shiftJobs||Array(6).fill(n.job))],ledger:copy(n.ledger),cash:n.cash,debt:n.debt,balanced,happy,goalMet,wishReward:goalMet?80:0,goal:goal.title,chars:copy(n.chars),keepsake});
     n.reports=n.reports.slice(-16);
     addLog(n,`本周生活费360币${n.debt?`，待缴${n.debt}币`:'已缴清'}。`);
   }
@@ -369,12 +375,16 @@ export function validateSave(value) {
     if(!s.decisions||typeof s.decisions!=='object'||Array.isArray(s.decisions)||Object.keys(s.decisions).length>2||!Object.entries(s.decisions).every(([k,v])=>[`${s.week}-2`,`${s.week}-4`].includes(k)&&['none','meeting','sun','photo','sort','fruit'].includes(v)))return false;
     if(!integer(s.adWeek,0,s.week)||!integer(s.drawWeek,0,s.week)||(s.drawJob!==null&&!JOBS.some(j=>j.id===s.drawJob)))return false;
     if(s.version===2&&!H.validateHome(s))return false;
+    if(s.life!==undefined&&!L.validateLife(s))return false;
+    if(s.reports.some(r=>r.keepsake!==undefined&&r.keepsake!==null&&(!L.keepsakeOf(r.keepsake)||!r.goalMet||!s.life?.keepsakes[r.keepsake]||s.life.keepsakes[r.keepsake].week!==r.week)))return false;
     return true;
   }catch{return false;}
 }
 export function migrateSave(value){
   if(!validateSave(value))throw Error('存档格式不正确，原进度已经保留。');
-  const n=copy(value);if(n.version===2)return n;
-  n.journey=copy(journeyOf(n));n.version=2;H.migrateHome(n,HOME_SPOTS,HOME_CHOICES);
+  const n=copy(value);
+  if(n.version===2){for(const c of n.chars)if(c.clothes.accessory===2)c.clothes.accessory=0;}
+  else{n.journey=copy(journeyOf(n));n.version=2;H.migrateHome(n,HOME_SPOTS,HOME_CHOICES);}
+  L.migrateLife(n,jobOf);
   if(!validateSave(n))throw Error('旧存档升级失败，原进度已经保留。');return n;
 }

@@ -1,4 +1,4 @@
-import {ROOMS,ITEMS,canPlace,scaleAt,footprint} from './home-space.js';
+import {ROOMS,ITEMS,canPlace,scaleAt,footprint} from './home-space.js?v=1.0.3-life39';
 export {scaleAt,ROOMS};
 export const HOME_ITEMS=ITEMS.map(item=>({...item,asset:item.id,id:item.id==='bistro'?'balcony':item.id}));
 export const itemOf=id=>HOME_ITEMS.find(item=>item.id===id);
@@ -14,6 +14,7 @@ export const CLOTHES={
   accessory:[['原配饰','glasses',null,0],['领结','briefcase-business','work',12],['运动帽','footprints','outing',4],['手作围裙','scissors','course',4]]
 };
 export const clothingTemplate=(part,index)=>CLOTHES[part]?.[index]?.[4]??index;
+export const clothingAvailable=(person,part,index)=>!(part==='accessory'&&index===2);
 export const COUNT_LABELS={work:'上班',rest:'好好休息',course:'短训',outing:'周日散步或野餐'};
 let adminMode=false;
 export const setAdminMode=value=>{adminMode=value===true;};
@@ -77,7 +78,7 @@ export function renameCharacter(s,index,name){
   const n=structuredClone(s);n.chars[index].name=name;return n;
 }
 export function equipClothes(s,index,outfit){
-  if(![0,1].includes(index)||!outfit||Object.keys(outfit).length!==3||!Object.keys(CLOTHES).every(p=>Number.isInteger(outfit[p])&&garmentUnlocked(s.chars[index],p,outfit[p])))throw Error('还有未解锁的服饰，请换成已拥有的搭配。');
+  if(![0,1].includes(index)||!outfit||Object.keys(outfit).length!==3||!Object.keys(CLOTHES).every(p=>Number.isInteger(outfit[p])&&clothingAvailable(index,p,outfit[p])&&garmentUnlocked(s.chars[index],p,outfit[p])))throw Error('还有未解锁或已移除的服饰，请换成已拥有的搭配。');
   const n=structuredClone(s);n.chars[index].clothes={...outfit};return n;
 }
 export function setRoom(s,room){
@@ -90,7 +91,9 @@ export function moveHomeFurniture(s,id,p){
 }
 export function storeHomeFurniture(s,id){
   if(!s.furniture.includes(id))throw Error('请先拥有这件家具。');
-  const n=structuredClone(s);n.home.positions[id].room=null;return n;
+  const n=structuredClone(s);n.home.positions[id].room=null;
+  for(const k of Object.values(n.life?.keepsakes||{}))if(k.place?.host===id)k.place=null;
+  return n;
 }
 export function actorPointInBounds(index,p){
   if(![0,1].includes(index)||!p||![p.x,p.y].every(Number.isFinite)||p.y<.50||p.y>.97)return false;

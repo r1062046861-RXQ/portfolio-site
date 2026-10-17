@@ -1,4 +1,4 @@
-import {clothingTemplate} from './home-system.js?v=home-v10';
+import {clothingTemplate} from './home-system.js?v=1.0.3-life39';
 export async function grabPuppet(image,who,outfit){
   const w=image.naturalWidth,h=image.naturalHeight,home=clothingTemplate('top',outfit.top)===3;
   const load=part=>new Promise((resolve,reject)=>{const img=new Image();img.onload=()=>resolve(img);img.onerror=()=>reject(Error('抓取服饰暂时未加载，请重试。'));img.src=`assets/home/rig-v9/${who}-stand-${part}.webp`;});
