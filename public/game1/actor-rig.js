@@ -1,4 +1,4 @@
-import {clothingTemplate} from './home-system.js?v=1.0.3-life39';
+import {clothingTemplate} from './home-system.js?v=1.0.3-menubuttonalign41';
 
 // These are the verified rig-v9 silhouettes. Keep their canvas/anchors stable.
 export const POSES=['stand','sit','read','sip','craft','cook','fold','stretch','rest','water','exercise','type','sew','standing-read','standing-sip','groom'];

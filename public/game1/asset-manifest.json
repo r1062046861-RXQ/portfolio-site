@@ -1,18 +1,18 @@
 {
   "version": "1.0.3",
-  "build": "1.0.3-life39",
+  "build": "1.0.3-menubuttonalign41",
   "files": [
     {
-      "url": "actor-rig.js?v=1.0.3-life39",
+      "url": "actor-rig.js?v=1.0.3-menubuttonalign41",
       "kind": "core",
-      "bytes": 2310,
-      "sha256": "6a7a588b3deef16be372e3e6e19eb95cd8252a3f83fc24813bbd1c748424e285"
+      "bytes": 2321,
+      "sha256": "5d829f818e52da30654e6b84f12af087d572f7fba680d43d8bb9cf65c1e77959"
     },
     {
-      "url": "app.js?v=1.0.3-life39",
+      "url": "app.js?v=1.0.3-menubuttonalign41",
       "kind": "core",
-      "bytes": 83358,
-      "sha256": "8f55005cba3562883cff967d87e10483c313a2d57ad042201e19ca2bcf9a6bff"
+      "bytes": 83468,
+      "sha256": "76b86e3cb9d3b0dbd2655fbb69e4fb03e1539981b32230ddf2a3396f229e6b4a"
     },
     {
       "url": "assets/fonts/ZCOOLKuaiLe-ui.woff2",
@@ -51,49 +51,49 @@
       "sha256": "cad2c13aaa9b1af8772158ff3c7576f4e91772edc09aa9084841aecc5d71d914"
     },
     {
-      "url": "audio.js?v=1.0.3-life39",
+      "url": "audio.js?v=1.0.3-menubuttonalign41",
       "kind": "core",
       "bytes": 752,
       "sha256": "28d40da37a749ca0d528a303fcdfc0da14cb5e9f3d698ac9c3cc14c477987b46"
     },
     {
-      "url": "base.css?v=1.0.3-life39",
+      "url": "base.css?v=1.0.3-menubuttonalign41",
       "kind": "core",
       "bytes": 68983,
       "sha256": "8440323c093c3ab1347cf5c661cbbc55a7791068dc1ba1306561c5f622992f35"
     },
     {
-      "url": "engine.js?v=1.0.3-life39",
+      "url": "engine.js?v=1.0.3-menubuttonalign41",
       "kind": "core",
-      "bytes": 34929,
-      "sha256": "c903d04a250ba461eabb336ab3179146483569e5a95e7e4a0ebe14f5205678bf"
+      "bytes": 34962,
+      "sha256": "c0bf34231faa772dbbd29d11934dbd19bc4e59582ff86b9a645e78ec57600c1b"
     },
     {
-      "url": "home-extras.js?v=1.0.3-life39",
+      "url": "home-extras.js?v=1.0.3-menubuttonalign41",
       "kind": "core",
       "bytes": 3223,
       "sha256": "74573a373f1b6925f27794bb18f73a45fe6e9a39a1944870ddba822129c54e2b"
     },
     {
-      "url": "home-space.js?v=1.0.3-life39",
+      "url": "home-space.js?v=1.0.3-menubuttonalign41",
       "kind": "core",
-      "bytes": 3499,
-      "sha256": "e4675f82e957630f93d7aa03f96fa9d349d6e647305fa9b7d7cf6a9c976a5581"
+      "bytes": 3510,
+      "sha256": "7b26935ef792fae41e133cc33807195bcdbacd9bfb05be20707bb0b78f10f03c"
     },
     {
-      "url": "home-system.js?v=1.0.3-life39",
+      "url": "home-system.js?v=1.0.3-menubuttonalign41",
       "kind": "core",
-      "bytes": 9370,
-      "sha256": "88525ec2be88efa5128d22485919d56db9a495a7cc5d5856df14a79f15e5f274"
+      "bytes": 9381,
+      "sha256": "a276051b93733d5180093ff2cc4938cb980e284c7f828416d16868d8a15f99dc"
     },
     {
-      "url": "home-view.js?v=1.0.3-life39",
+      "url": "home-view.js?v=1.0.3-menubuttonalign41",
       "kind": "core",
-      "bytes": 22758,
-      "sha256": "1939757a8e8a1ea1dd5e8e0e91e1297459436d0bded6746c3fa1060e3a990819"
+      "bytes": 22802,
+      "sha256": "0e9e652c456ac6a7d4054c9095d506771ab6cd1aa6345a6ea24ff3a2dbdc1213"
     },
     {
-      "url": "home.css?v=1.0.3-life39",
+      "url": "home.css?v=1.0.3-menubuttonalign41",
       "kind": "core",
       "bytes": 42053,
       "sha256": "93f50394dbe3f57f31ad83de8791f5881c4f376834e8c70be0c51fd787c5704c"
@@ -101,32 +101,32 @@
     {
       "url": "index.html",
       "kind": "core",
-      "bytes": 9189,
-      "sha256": "8cde1b2b32d3190648fb93f9ac5aa856f35d7cb364c86a04527dadd73f123b45"
+      "bytes": 9266,
+      "sha256": "2e2124da6028bffb8606a2152cab00736dfec974401b9bbb49fc816fbff5f578"
     },
     {
-      "url": "interface.css?v=1.0.3-life39",
+      "url": "interface.css?v=1.0.3-menubuttonalign41",
       "kind": "core",
-      "bytes": 101646,
-      "sha256": "ab31b85a749fe7d2b9b2d6c836e85b904f963afac657a52c8846f59726e9a61f"
+      "bytes": 101649,
+      "sha256": "3e7eab64358234e2e85e84d9bc48ec3ee7832b2adea60606d85c368c914b84a4"
     },
     {
-      "url": "life-progress.js?v=1.0.3-life39",
+      "url": "life-progress.js?v=1.0.3-menubuttonalign41",
       "kind": "core",
-      "bytes": 8226,
-      "sha256": "7cd236497f5e18c979859d6b7d2dc81c2f9d75b65ced81ba8071be8f2883279f"
+      "bytes": 8237,
+      "sha256": "94bece504b1099f0f2ac2af32c7b3417ad1cb92cd0fd2bac2d492d7e8a1ca43e"
     },
     {
-      "url": "life-view.js?v=1.0.3-life39",
+      "url": "life-view.js?v=1.0.3-menubuttonalign41",
       "kind": "core",
-      "bytes": 6566,
-      "sha256": "34402986214af600e0dd6913784f27cd4764636c74156129ccf15523f242b7ba"
+      "bytes": 6610,
+      "sha256": "90a58294c0733a7e9ffc1e9687eddf2a0a30ba42fbde821440dcd84c0067d35f"
     },
     {
-      "url": "life.css?v=1.0.3-life39",
+      "url": "life.css?v=1.0.3-menubuttonalign41",
       "kind": "core",
-      "bytes": 9056,
-      "sha256": "3aaa648cb0b31a15dcd0b95fcd08c122ecceb9f7249ed4f4205b528cb8b2daea"
+      "bytes": 9058,
+      "sha256": "d1896f7b90fc5628c7649c8709e706a5d869ed1c68a1ec062e0adbacacbf360a"
     },
     {
       "url": "manifest.webmanifest",
@@ -135,31 +135,31 @@
       "sha256": "f5931ccb2fac4ccf0fa2e6f956ac3997a1c4d7e64099a2953bc51ef0d6a0aec9"
     },
     {
-      "url": "outfits.js?v=1.0.3-life39",
+      "url": "outfits.js?v=1.0.3-menubuttonalign41",
       "kind": "core",
-      "bytes": 3138,
-      "sha256": "31504d399927ca888a5a8657f51ee0ca8c5bb2b9ccb17bc6cc102a1cbf78337c"
+      "bytes": 3149,
+      "sha256": "5b71eae19d9828907301f3fc1cc28291aa61d4f83bcb6214efdd758b1b2752e8"
     },
     {
-      "url": "persistence.js?v=1.0.3-life39",
+      "url": "persistence.js?v=1.0.3-menubuttonalign41",
       "kind": "core",
-      "bytes": 1607,
-      "sha256": "983563cbe9187cbcde5e42514a771889dbd262f5e619d82adeec774e4e96eba6"
+      "bytes": 1618,
+      "sha256": "c3d3f0cf33853b3ea2099fc22718c7bcee92cfd1a2f4fe3a400cdaf957e1f5b3"
     },
     {
-      "url": "release.js?v=1.0.3-life39",
+      "url": "release.js?v=1.0.3-menubuttonalign41",
       "kind": "core",
-      "bytes": 123,
-      "sha256": "050f4de6f15b4ec5392dd869f11cad200d39107df4de87c306a0c41761c98b1b"
+      "bytes": 134,
+      "sha256": "bbb5d66e5636ebfc9f914251dbc987aa8f4c906b523a56026fbddba56b38f424"
     },
     {
-      "url": "ui-templates.js?v=1.0.3-life39",
+      "url": "ui-templates.js?v=1.0.3-menubuttonalign41",
       "kind": "core",
       "bytes": 4661,
       "sha256": "db235c74e0353ed1ee221dd15aa849c2901d524848cf61bed8334c31288a9e4d"
     },
     {
-      "url": "vendor/lucide.min.js?v=1.0.3-life39",
+      "url": "vendor/lucide.min.js?v=1.0.3-menubuttonalign41",
       "kind": "core",
       "bytes": 397450,
       "sha256": "ab85225ecc1daa2033607856f03dd2dabcbc08e2d260a5b97e17c690aa929766"

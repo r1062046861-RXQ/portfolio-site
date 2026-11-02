@@ -1,7 +1,7 @@
 /* Approved paper book and house, with independent title and content anchors. */
 #modal[data-art="work"]{--frame-depth:1.54676259;--title-x:50%;--title-y:6%;--title-width:68%;--close-x:91%;--close-y:5%;--body-top:12%;--body-bottom:5%;background-image:url('assets/life39/work-frame.webp')!important}
 #modal[data-art="work"] #modal-body{left:9%!important;right:9%!important;bottom:5%!important}
-#modal[data-art="weekly"]{--frame-depth:1.5;--title-x:50%;--title-y:14%;--title-width:60%;--close-x:89%;--close-y:17%;--body-top:28%;--body-bottom:12%;background-image:url('assets/home/ui-house.webp')!important}
+#modal[data-art="weekly"]{--frame-depth:1.5;--title-x:50%;--title-y:11.5%;--title-width:60%;--close-x:89%;--close-y:17%;--body-top:28%;--body-bottom:12%;background-image:url('assets/home/ui-house.webp')!important}
 #modal[data-art="weekly"] #modal-body{left:19%!important;right:17%!important}
 #modal[data-art="weekly"] #modal-tools{position:absolute;left:15%;right:15%;top:21%;height:32px}
 #modal[data-art="weekly"] #modal-pager{bottom:5%!important}

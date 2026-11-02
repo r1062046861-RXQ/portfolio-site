@@ -1,4 +1,4 @@
-import {migrateSave,validateSave} from './engine.js?v=1.0.3-life39';
+import {migrateSave,validateSave} from './engine.js?v=1.0.3-menubuttonalign41';
 
 export function saveSnapshot(storage,key,state,{backup=true}={}){
   const previous=storage.getItem(key),raw=JSON.stringify(state);

@@ -1,4 +1,4 @@
-import {ROOMS,ITEMS,canPlace,scaleAt,footprint} from './home-space.js?v=1.0.3-life39';
+import {ROOMS,ITEMS,canPlace,scaleAt,footprint} from './home-space.js?v=1.0.3-menubuttonalign41';
 export {scaleAt,ROOMS};
 export const HOME_ITEMS=ITEMS.map(item=>({...item,asset:item.id,id:item.id==='bistro'?'balcony':item.id}));
 export const itemOf=id=>HOME_ITEMS.find(item=>item.id===id);

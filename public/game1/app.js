@@ -1,12 +1,12 @@
-import {BUILD,VERSION} from './release.js?v=1.0.3-life39';
-import {music,updateMusic,playDaySound} from './audio.js?v=1.0.3-life39';
-import {saveSnapshot,readModeSave,readPreferences,writePreferences} from './persistence.js?v=1.0.3-life39';
-import {icon,escape,glyph,REQUEST_SYMBOLS,CHAPTER_SYMBOLS,WISH_SYMBOLS,REQUIREMENT_SYMBOLS,stat,reward,heading,actionEffects,meter,objectiveRows,profileHTML} from './ui-templates.js?v=1.0.3-life39';
-import * as G from './engine.js?v=1.0.3-life39';
-import * as H from './home-system.js?v=1.0.3-life39';
-import {paintOutfit} from './outfits.js?v=1.0.3-life39';
-import * as L from './life-progress.js?v=1.0.3-life39';
-import {art,loadLifeMeta,workBookHTML,workRewardHTML,weeklyHomeHTML,keepsakeRewardHTML} from './life-view.js?v=1.0.3-life39';
+import {BUILD,VERSION} from './release.js?v=1.0.3-menubuttonalign41';
+import {music,updateMusic,playDaySound} from './audio.js?v=1.0.3-menubuttonalign41';
+import {saveSnapshot,readModeSave,readPreferences,writePreferences} from './persistence.js?v=1.0.3-menubuttonalign41';
+import {icon,escape,glyph,REQUEST_SYMBOLS,CHAPTER_SYMBOLS,WISH_SYMBOLS,REQUIREMENT_SYMBOLS,stat,reward,heading,actionEffects,meter,objectiveRows,profileHTML} from './ui-templates.js?v=1.0.3-menubuttonalign41';
+import * as G from './engine.js?v=1.0.3-menubuttonalign41';
+import * as H from './home-system.js?v=1.0.3-menubuttonalign41';
+import {paintOutfit} from './outfits.js?v=1.0.3-menubuttonalign41';
+import * as L from './life-progress.js?v=1.0.3-menubuttonalign41';
+import {art,loadLifeMeta,workBookHTML,workRewardHTML,weeklyHomeHTML,keepsakeRewardHTML} from './life-view.js?v=1.0.3-menubuttonalign41';
 
 const $=id=>document.getElementById(id);
 $('scene').addEventListener('dragstart',event=>event.preventDefault());
@@ -234,7 +234,7 @@ function renderScene(){
 }
 function ensureHome(){
   if(homeView||homeLoading)return;
-  homeLoading=import('./home-view.js?v=1.0.3-life39').then(m=>m.createHomeView({getState:()=>state,commitMove:(id,p)=>perform(()=>G.moveHomeFurniture(state,id,p)),commitKeepsake:(id,p)=>perform(()=>L.moveKeepsake(state,id,p)),commitActor:(index,p)=>perform(()=>H.moveHomeActor(state,index,p)),onSelect:id=>{decorating=id;renderDecorator();},onRoom:room=>switchHomeRoom(room),icons,notice:toast,isActive:()=>!menuOpen&&!busy&&tab===null&&!$('modal').open&&!$('memory-viewer').open&&!$('wardrobe-window').open&&!$('home-dialog').open,isReduced:()=>reduceMotion||matchMedia('(prefers-reduced-motion: reduce)').matches})).then(view=>{homeView=view;homeLoading=null;renderScene();icons();}).catch(e=>{homeLoading=null;toast(e.message);});
+  homeLoading=import('./home-view.js?v=1.0.3-menubuttonalign41').then(m=>m.createHomeView({getState:()=>state,commitMove:(id,p)=>perform(()=>G.moveHomeFurniture(state,id,p)),commitKeepsake:(id,p)=>perform(()=>L.moveKeepsake(state,id,p)),commitActor:(index,p)=>perform(()=>H.moveHomeActor(state,index,p)),onSelect:id=>{decorating=id;renderDecorator();},onRoom:room=>switchHomeRoom(room),icons,notice:toast,isActive:()=>!menuOpen&&!busy&&tab===null&&!$('modal').open&&!$('memory-viewer').open&&!$('wardrobe-window').open&&!$('home-dialog').open,isReduced:()=>reduceMotion||matchMedia('(prefers-reduced-motion: reduce)').matches})).then(view=>{homeView=view;homeLoading=null;renderScene();icons();}).catch(e=>{homeLoading=null;toast(e.message);});
 }
 function switchHomeRoom(room){
   if(!state.home.unlocked.includes(room)){const r=G.roomProgress(state).find(r=>r.id===room);toast(`${r.name}尚未开放 · ${r.key==='shifts'?'上班':r.key==='courses'?'短训':'平衡周'} ${r.value}/${r.target}${r.previous?'':' · 先开放前一间'}`);return;}
