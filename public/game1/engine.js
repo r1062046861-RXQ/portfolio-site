@@ -1,6 +1,6 @@
-import * as H from './home-system.js?v=1.0.3-tutorialtabsmooth43';
-import * as L from './life-progress.js?v=1.0.3-tutorialtabsmooth43';
-export {CLOTHES,COUNT_LABELS,garmentUnlocked,roomProgress,renameCharacter,equipClothes,setRoom,moveHomeFurniture,storeHomeFurniture} from './home-system.js?v=1.0.3-tutorialtabsmooth43';
+import * as H from './home-system.js?v=1.0.3-tutorialassetcache44';
+import * as L from './life-progress.js?v=1.0.3-tutorialassetcache44';
+export {CLOTHES,COUNT_LABELS,garmentUnlocked,roomProgress,renameCharacter,equipClothes,setRoom,moveHomeFurniture,storeHomeFurniture} from './home-system.js?v=1.0.3-tutorialassetcache44';
 export const DAYS = ['周一', '周二', '周三', '周四', '周五', '周六', '周日'];
 export const JOBS = [
   {id:'shop', name:'小店值班员', wage:100, skill:0, level:0, icon:'store', line:'最后一位客人，总在最后一分钟出现。'},

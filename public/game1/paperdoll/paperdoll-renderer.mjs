@@ -1,4 +1,4 @@
-import {tintFabricPixels} from './paperdoll-core.mjs?v=paperdoll-v1-20261108-43';
+import {tintFabricPixels} from './paperdoll-core.mjs?v=paperdoll-v1-20261108-44';
 
 const images = new Map();
 const safeAsset = src => typeof src === 'string' && /^assets\/[a-zA-Z0-9/_-]+\.(webp|png)$/.test(src) && !src.split('/').includes('..');

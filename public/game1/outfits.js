@@ -1,4 +1,4 @@
-import {outfitLayers} from './actor-rig.js?v=1.0.3-tutorialtabsmooth43';
+import {outfitLayers} from './actor-rig.js?v=1.0.3-tutorialassetcache44';
 const images=new Map(),composites=new Map(),pending=new Map();
 function warm(files){navigator.serviceWorker?.controller?.postMessage({type:'warm-home',files});}
 const load=src=>{

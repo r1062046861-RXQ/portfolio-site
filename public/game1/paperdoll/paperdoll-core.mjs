@@ -1,5 +1,5 @@
-import {POSES, poseRig, outfitLayers} from '../actor-rig.js?v=1.0.3-tutorialtabsmooth43';
-import {CLOTHES} from '../home-system.js?v=1.0.3-tutorialtabsmooth43';
+import {POSES, poseRig, outfitLayers} from '../actor-rig.js?v=1.0.3-tutorialassetcache44';
+import {CLOTHES} from '../home-system.js?v=1.0.3-tutorialassetcache44';
 
 // No DOM, storage, player economy, or animation scheduling lives in this module.
 export const CAPABILITIES = Object.freeze({

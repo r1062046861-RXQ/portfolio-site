@@ -1,18 +1,18 @@
 {
   "version": "1.0.3",
-  "build": "1.0.3-tutorialtabsmooth43",
+  "build": "1.0.3-tutorialassetcache44",
   "files": [
     {
-      "url": "actor-rig.js?v=1.0.3-tutorialtabsmooth43",
+      "url": "actor-rig.js?v=1.0.3-tutorialassetcache44",
       "kind": "core",
-      "bytes": 2323,
-      "sha256": "947a33e4f78c91a1746fd832f9c06a826b1b11ebfdc3eda5824ae3fff7c7af96"
+      "bytes": 2324,
+      "sha256": "90bc6d157b16a46dbbbb5359cdf055edbd7443b9f6aed727b7905a1116f86a65"
     },
     {
-      "url": "app.js?v=1.0.3-tutorialtabsmooth43",
+      "url": "app.js?v=1.0.3-tutorialassetcache44",
       "kind": "core",
-      "bytes": 83488,
-      "sha256": "56dfb62997335fc12f7e24abc4d77c5e67cbace5dc3dcaa3c533272e879b6992"
+      "bytes": 83498,
+      "sha256": "95e9ae786fd1baeb887dfe3197ffcfc5d9b7531c9e38beeb9d2047d075d6d2d5"
     },
     {
       "url": "assets/fonts/ZCOOLKuaiLe-ui.woff2",
@@ -51,49 +51,49 @@
       "sha256": "cad2c13aaa9b1af8772158ff3c7576f4e91772edc09aa9084841aecc5d71d914"
     },
     {
-      "url": "audio.js?v=1.0.3-tutorialtabsmooth43",
+      "url": "audio.js?v=1.0.3-tutorialassetcache44",
       "kind": "core",
       "bytes": 752,
       "sha256": "28d40da37a749ca0d528a303fcdfc0da14cb5e9f3d698ac9c3cc14c477987b46"
     },
     {
-      "url": "base.css?v=1.0.3-tutorialtabsmooth43",
+      "url": "base.css?v=1.0.3-tutorialassetcache44",
       "kind": "core",
       "bytes": 68983,
       "sha256": "8440323c093c3ab1347cf5c661cbbc55a7791068dc1ba1306561c5f622992f35"
     },
     {
-      "url": "engine.js?v=1.0.3-tutorialtabsmooth43",
+      "url": "engine.js?v=1.0.3-tutorialassetcache44",
       "kind": "core",
-      "bytes": 34968,
-      "sha256": "96f0221ebaae642666b41551b806e57d90f70aa627e6c5cae54baf4c5adb4713"
+      "bytes": 34971,
+      "sha256": "cf1e6f28297a4e0f6c3002e4e2e64d5a3a7a5019851283ec0bdf4dda715ab606"
     },
     {
-      "url": "home-extras.js?v=1.0.3-tutorialtabsmooth43",
+      "url": "home-extras.js?v=1.0.3-tutorialassetcache44",
       "kind": "core",
       "bytes": 3223,
       "sha256": "74573a373f1b6925f27794bb18f73a45fe6e9a39a1944870ddba822129c54e2b"
     },
     {
-      "url": "home-space.js?v=1.0.3-tutorialtabsmooth43",
+      "url": "home-space.js?v=1.0.3-tutorialassetcache44",
       "kind": "core",
-      "bytes": 3512,
-      "sha256": "16ad7b21cda0aefe0acc9831a0897ced7dfaf8eb025ad3610c54eb9d3e680c7e"
+      "bytes": 3513,
+      "sha256": "af6df5b198180aba68b5afb9555a65d2fd16fe7c4058cc540b634b0ab00581a8"
     },
     {
-      "url": "home-system.js?v=1.0.3-tutorialtabsmooth43",
+      "url": "home-system.js?v=1.0.3-tutorialassetcache44",
       "kind": "core",
-      "bytes": 9383,
-      "sha256": "f6ac75cbf4cbdd04bb898c8dc9f49b346882845a6100157a0d355608c55867f9"
+      "bytes": 9384,
+      "sha256": "40ab6f3bdb10017df0fce0c6c50545ac4bfd236921667f7351c93518789d57de"
     },
     {
-      "url": "home-view.js?v=1.0.3-tutorialtabsmooth43",
+      "url": "home-view.js?v=1.0.3-tutorialassetcache44",
       "kind": "core",
-      "bytes": 22810,
-      "sha256": "9cb356afa1147463c69defba5622e9fd9ee7d3f9449af3aa66bb86216c573cf5"
+      "bytes": 22814,
+      "sha256": "57acd3dbe7088f6bf407f4f1f50336ec38bead91260c22ed981dad0bdd7c6e1e"
     },
     {
-      "url": "home.css?v=1.0.3-tutorialtabsmooth43",
+      "url": "home.css?v=1.0.3-tutorialassetcache44",
       "kind": "core",
       "bytes": 42053,
       "sha256": "93f50394dbe3f57f31ad83de8791f5881c4f376834e8c70be0c51fd787c5704c"
@@ -101,29 +101,29 @@
     {
       "url": "index.html",
       "kind": "core",
-      "bytes": 9280,
-      "sha256": "130123fca39e5b7e431656d72f91df7463caaa8463e6cc87f2f63d94418d57a2"
+      "bytes": 9287,
+      "sha256": "de4ab8b4287fe46a75f9a4f4a26ceee6a1871e9ad69a640c1eeca93d33e87c12"
     },
     {
-      "url": "interface.css?v=1.0.3-tutorialtabsmooth43",
+      "url": "interface.css?v=1.0.3-tutorialassetcache44",
       "kind": "core",
-      "bytes": 102399,
-      "sha256": "3d046f3a1c9680de7167f9296b086453b58769d67d41e905380a6f393737460d"
+      "bytes": 102408,
+      "sha256": "342c8a3b9b02a4bed07b96e001b2c2d395ae5ac9103566ce27316e44c2b33b95"
     },
     {
-      "url": "life-progress.js?v=1.0.3-tutorialtabsmooth43",
+      "url": "life-progress.js?v=1.0.3-tutorialassetcache44",
       "kind": "core",
-      "bytes": 8239,
-      "sha256": "94048f5f4a41fa63290a47f890379e710d254d7084a4893979c06044307d37d0"
+      "bytes": 8240,
+      "sha256": "ffe27bcbd5337a5bfae37c5f4bd4db4029a740b4182f6f2698c86b1550ae47d6"
     },
     {
-      "url": "life-view.js?v=1.0.3-tutorialtabsmooth43",
+      "url": "life-view.js?v=1.0.3-tutorialassetcache44",
       "kind": "core",
-      "bytes": 6618,
-      "sha256": "0ae51586ad05dc2b07d53468a668e0106379594fe065d7766f146bdd61b2162a"
+      "bytes": 6622,
+      "sha256": "547acd97c11e096ca429da4d30b57df22e0ba322c17e1cd3d065a06adb1432ad"
     },
     {
-      "url": "life.css?v=1.0.3-tutorialtabsmooth43",
+      "url": "life.css?v=1.0.3-tutorialassetcache44",
       "kind": "core",
       "bytes": 9058,
       "sha256": "d1896f7b90fc5628c7649c8709e706a5d869ed1c68a1ec062e0adbacacbf360a"
@@ -135,31 +135,31 @@
       "sha256": "f5931ccb2fac4ccf0fa2e6f956ac3997a1c4d7e64099a2953bc51ef0d6a0aec9"
     },
     {
-      "url": "outfits.js?v=1.0.3-tutorialtabsmooth43",
+      "url": "outfits.js?v=1.0.3-tutorialassetcache44",
       "kind": "core",
-      "bytes": 3151,
-      "sha256": "5e674d7f1cf7cb9b3eb811f62fe7f04d4a92745e762100f764d274defa0db334"
+      "bytes": 3152,
+      "sha256": "1becba66ee0e274ad0abd6ddfce8d67355c4e60ff628f9fc3a0e27c81f39e3a9"
     },
     {
-      "url": "persistence.js?v=1.0.3-tutorialtabsmooth43",
+      "url": "persistence.js?v=1.0.3-tutorialassetcache44",
       "kind": "core",
-      "bytes": 1620,
-      "sha256": "6f681bd200114fb6929f02752e7b58a06743b6b5c3e59dfbb8898d97bfe805a8"
+      "bytes": 1621,
+      "sha256": "c41134760ebab25de01b267eed982fac5ec21f01ba9d6d504ce6d0473f51257f"
     },
     {
-      "url": "release.js?v=1.0.3-tutorialtabsmooth43",
+      "url": "release.js?v=1.0.3-tutorialassetcache44",
       "kind": "core",
-      "bytes": 136,
-      "sha256": "88ceed386cb5906dbfdf6ae848a5efd84f8867c75979516605d5744e99bffd9f"
+      "bytes": 137,
+      "sha256": "dd9d14e9706d68c6c423a5d48d095cd2aca070fa6b98e97defab48cadae2027c"
     },
     {
-      "url": "ui-templates.js?v=1.0.3-tutorialtabsmooth43",
+      "url": "ui-templates.js?v=1.0.3-tutorialassetcache44",
       "kind": "core",
       "bytes": 4661,
       "sha256": "db235c74e0353ed1ee221dd15aa849c2901d524848cf61bed8334c31288a9e4d"
     },
     {
-      "url": "vendor/lucide.min.js?v=1.0.3-tutorialtabsmooth43",
+      "url": "vendor/lucide.min.js?v=1.0.3-tutorialassetcache44",
       "kind": "core",
       "bytes": 397450,
       "sha256": "ab85225ecc1daa2033607856f03dd2dabcbc08e2d260a5b97e17c690aa929766"
@@ -7803,7 +7803,7 @@
       "sha256": "867f0204dd1438306723774b6b266e9060faa9d5bee7d2cc17bfd840c4e84141"
     },
     {
-      "url": "assets/ui-v16/tutorial-frame.webp",
+      "url": "assets/ui-v16/tutorial-frame-smooth43.webp",
       "kind": "optional",
       "bytes": 242346,
       "sha256": "e8f48a1cd5139cb68007056fe279226ebdb1e211f16d3fbe03924185c2025a9c"

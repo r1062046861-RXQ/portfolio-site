@@ -1,7 +1,7 @@
-import {icon,escape,glyph} from './ui-templates.js?v=1.0.3-tutorialtabsmooth43';
-import {JOBS,JOB_DETAILS,DAYS} from './engine.js?v=1.0.3-tutorialtabsmooth43';
-import {HOME_ITEMS,scaleAt} from './home-system.js?v=1.0.3-tutorialtabsmooth43';
-import * as L from './life-progress.js?v=1.0.3-tutorialtabsmooth43';
+import {icon,escape,glyph} from './ui-templates.js?v=1.0.3-tutorialassetcache44';
+import {JOBS,JOB_DETAILS,DAYS} from './engine.js?v=1.0.3-tutorialassetcache44';
+import {HOME_ITEMS,scaleAt} from './home-system.js?v=1.0.3-tutorialassetcache44';
+import * as L from './life-progress.js?v=1.0.3-tutorialassetcache44';
 
 export const art=id=>`assets/life39/${id}.webp`;
 let metaPromise;

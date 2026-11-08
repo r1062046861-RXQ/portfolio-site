@@ -1,4 +1,4 @@
-import {compileTimeline} from './paperdoll-core.mjs?v=paperdoll-v1-20261108-43';
+import {compileTimeline} from './paperdoll-core.mjs?v=paperdoll-v1-20261108-44';
 
 // These presets use existing approved rig-v9 images. New art remains a separate approval step.
 const segment = (id, pose, durationMs, label, prop = null) => ({id, pose, durationMs, label, prop});

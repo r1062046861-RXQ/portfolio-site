@@ -662,7 +662,7 @@ body:has(.decoration-mode) #toast{bottom:calc(190px + var(--safe-bottom))}
 #modal[data-art="report"]{--frame-depth:1.137777778;--title-x:35.00000%;--title-y:4.49219%;--close-x:87.0%;--close-y:8.57812%;--body-top:12.33105%;--body-bottom:8.04199%;background-image:url("assets/ui-v16/report-frame.webp")!important}
 #modal[data-art="reward"]{--frame-depth:1.137777778;--title-x:50.00000%;--title-y:4.68750%;--close-x:94.0%;--close-y:6.52051%;--body-top:14.22656%;--body-bottom:9.48438%;background-image:url("assets/ui-v16/reward-frame.webp")!important}
 #modal[data-art="sunday"]{--frame-depth:1.137777778;--title-x:50.00000%;--title-y:4.29688%;--close-x:87.0%;--close-y:9.70312%;--body-top:15.63281%;--body-bottom:9.70312%;background-image:url("assets/ui-v16/sunday-frame.webp")!important}
-#modal[data-art="tutorial"]{--frame-depth:1.137777778;--title-x:50.00000%;--title-y:9.86328%;--close-x:85.0%;--close-y:8.70215%;--body-top:13.28223%;--body-bottom:11.90820%;background-image:url("assets/ui-v16/tutorial-frame.webp")!important}
+#modal[data-art="tutorial"]{--frame-depth:1.137777778;--title-x:50.00000%;--title-y:9.86328%;--close-x:85.0%;--close-y:8.70215%;--body-top:13.28223%;--body-bottom:11.90820%;background-image:url("assets/ui-v16/tutorial-frame-smooth43.webp")!important}
 #modal[data-art="free-time"]{--frame-depth:1.421508035;--title-x:55%;--title-y:6%;--close-x:93%;--close-y:14%;--body-top:22%;--body-bottom:14%}
 #modal[data-art="goals"]{--title-width:36%}#modal[data-art="report"]{--title-width:46%}
 #modal[data-art="xian"],#modal[data-art="mang"]{--title-width:47%}
