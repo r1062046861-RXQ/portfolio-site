@@ -1,7 +1,7 @@
-import {ROOMS,HOME_ITEMS,itemOf,scaleAt,floorFootprint,validPlacement,validActorPoint} from './home-system.js?v=1.0.3-menubuttonalign41';
-import {paintOutfit} from './outfits.js?v=1.0.3-menubuttonalign41';
-import {poseRig,outfitLayers,ACTION_POSES} from './actor-rig.js?v=1.0.3-menubuttonalign41';
-import * as L from './life-progress.js?v=1.0.3-menubuttonalign41';
+import {ROOMS,HOME_ITEMS,itemOf,scaleAt,floorFootprint,validPlacement,validActorPoint} from './home-system.js?v=1.0.3-tutorialstepalign42';
+import {paintOutfit} from './outfits.js?v=1.0.3-tutorialstepalign42';
+import {poseRig,outfitLayers,ACTION_POSES} from './actor-rig.js?v=1.0.3-tutorialstepalign42';
+import * as L from './life-progress.js?v=1.0.3-tutorialstepalign42';
 export async function createHomeView({getState,commitMove,commitKeepsake,commitActor,onSelect,onRoom,icons,notice,isActive,isReduced}){
   const meta=await fetch('assets/home/meta.json').then(r=>{if(!r.ok)throw Error('小家素材暂时无法读取，请重试。');return r.json();});
   const stage=document.createElement('div');stage.id='home-stage';

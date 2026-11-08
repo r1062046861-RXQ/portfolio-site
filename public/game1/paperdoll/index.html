@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>今天谁上班 · 纸娃娃开发预览</title>
+  <link rel="stylesheet" href="./lab.css?v=paperdoll-v1-20261108">
+</head>
+<body>
+  <header><span class="eyebrow">今天谁上班 / 开发支线 V1</span><h1>纸娃娃与场景动作</h1><p>先用现有素材验证搭配与动作编排。新服饰、连续动作帧和场景美术待出图审批。</p></header>
+  <main>
+    <section class="workbench" aria-label="角色预览">
+      <nav id="scene-tabs" aria-label="场景预设"></nav>
+      <div class="scene-heading"><div><h2 id="scene-name"></h2><p id="scene-subtitle"></p></div><span class="badge">现有素材 · 原生视角</span></div>
+      <div class="actors">
+        <figure class="actor-card selected" data-actor="cat"><figcaption><button class="actor-select" data-who="cat" aria-pressed="true">小满</button><span class="pose-label" id="cat-pose">载入中</span></figcaption><canvas id="cat-canvas" width="720" height="840" role="img" aria-label="小满的纸娃娃预览"></canvas><p class="costume" id="cat-costume"></p></figure>
+        <figure class="actor-card" data-actor="fox"><figcaption><button class="actor-select" data-who="fox" aria-pressed="false">小夏</button><span class="pose-label" id="fox-pose">载入中</span></figcaption><canvas id="fox-canvas" width="720" height="840" role="img" aria-label="小夏的纸娃娃预览"></canvas><p class="costume" id="fox-costume"></p></figure>
+      </div>
+      <div class="playback"><button id="play-toggle">播放动作</button><button id="restart">从头播放</button><button id="stop">停止演出</button><button id="grab" aria-pressed="false">按住200ms抓取</button><label class="check"><input type="checkbox" id="reduced">减少动态</label><label class="check"><input type="checkbox" id="anchors" checked>显示锚点</label></div>
+      <div class="scrubber"><label for="scrub">动作进度</label><input id="scrub" type="range" min="0" max="1000" step="1" value="0"><output id="timecode">0.0s</output></div>
+      <div id="segments" class="segments" aria-label="动作片段"></div>
+      <p id="playback-status" role="status">准备中</p>
+      <p class="small-note">姿态按原画切换；此处不展示未制作的走路、翻页或踏圈中间帧。后台自动暂停。</p>
+    </section>
+    <aside>
+      <section class="panel"><h2 id="editor-name">小满的搭配</h2><div class="fields"><label>上衣<select id="top"></select></label><label>下装<select id="bottom"></select></label><label>配饰<select id="accessory"></select></label><label>单独检查姿态<select id="pose"><option value="timeline">跟随场景动作</option></select></label><label>独立手持物<select id="prop"><option value="auto">跟随动作</option><option value="none">无独立手持物</option><option value="book">书本（阅读姿态）</option><option value="paper">纸张（小满站读）</option></select></label></div><button id="reset-outfit">恢复场景搭配</button></section>
+      <section class="panel"><h2>合成图层</h2><p class="small-note">按游戏唯一配方排列，勾选可查看遮挡。身体与手仍是复合层。</p><div id="layers"></div><dl id="rig-info"></dl></section>
+      <section class="panel future"><h2>下一份美术包</h2><p id="new-outfit"></p><p id="new-motion"></p><p id="missing" class="small-note"></p><span class="badge">待生图 · 尚未批准接入</span></section>
+    </aside>
+    <section class="scope"><h2>这版能验证什么</h2><p>双人换装、四场景动作时间线、原生图层和锚点、暂停/跳转/取消、200ms静止抓取。已提供未来17语义槽、逐方向逐帧、衣料蒙版与部件旋转的程序接口，等待正式分层素材。</p><p>页面是独立开发工具。修改仅保存在本页内存，刷新恢复预设；无游戏存档读写或收益结算。</p><a href="./guide.txt">使用说明</a> · <a href="../">返回游戏</a></section>
+  </main>
+  <p id="error" role="alert" hidden></p>
+  <script type="module" src="./lab.mjs?v=paperdoll-v1-20261108"></script>
+</body>
+</html>

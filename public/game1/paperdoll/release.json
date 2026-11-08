@@ -1,0 +1,41 @@
+{
+  "build": "paperdoll-v1-20261108",
+  "gameBuild": "1.0.3-tutorialstepalign42",
+  "files": [
+    {
+      "name": "index.html",
+      "bytes": 4218,
+      "sha256": "c44a6b81398acdf5a8c4b80d81abe770662d3cbb39096b7c4a59adf8ca07accb"
+    },
+    {
+      "name": "lab.css",
+      "bytes": 5027,
+      "sha256": "494448816c12a93d6ec75eb436cc44d0be033d85ade9de773d393812f25cb5a5"
+    },
+    {
+      "name": "lab.mjs",
+      "bytes": 13756,
+      "sha256": "c150182ec0db0931086fbf2ad2b8902e01872c159d8a5ed15122e621be807abe"
+    },
+    {
+      "name": "paperdoll-core.mjs",
+      "bytes": 16442,
+      "sha256": "74cdc2426ddfefae5d67a29d3459ded74b0f0ae6032b6e3a42f62b27e818ad2e"
+    },
+    {
+      "name": "paperdoll-renderer.mjs",
+      "bytes": 6004,
+      "sha256": "113c12aa13365277036954ff4938519889682bf5505f25648ceca5db3c0eaf94"
+    },
+    {
+      "name": "scene-catalog.mjs",
+      "bytes": 4594,
+      "sha256": "d5c3d2caf4fd75d5b562a4e91e4153e1ead76994d61ed84f44cecf843728c3c8"
+    },
+    {
+      "name": "guide.txt",
+      "bytes": 796,
+      "sha256": "a9bcafb6ea92dfb96c86b81c43a9f47951dce9255e8dc8bf368bd1e386cfd061"
+    }
+  ]
+}

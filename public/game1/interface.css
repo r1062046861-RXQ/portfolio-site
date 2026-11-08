@@ -701,7 +701,11 @@ body:has(.decoration-mode) #toast{bottom:calc(190px + var(--safe-bottom))}
 #modal[data-art="preset"] #close-modal{top:16px!important;height:32px!important;min-height:var(--ui-control-min)!important}
 #modal[data-art="goals"] #modal-tools{top:calc(8.75923% + 6px)}
 #modal[data-art="goals"] #modal-body{top:calc(15.32953% + 8px)!important}
-.tutorial-steps{top:1%;font-size:14px;line-height:18px}
+#modal[data-art="tutorial"] #modal-tools{left:0;right:0}
+/* Eight lessons share the eight paper tabs; anchor numbers to the full frame. */
+#modal[data-art="tutorial"] .tutorial-steps{top:0;left:9.333333%;right:auto;width:74.666667%;height:6.4%;display:grid;grid-template-columns:repeat(8,minmax(0,1fr));align-items:center;justify-content:normal;font-size:clamp(11px,3.6vw,14px);line-height:1}
+#modal[data-art="tutorial"] .tutorial-steps span{display:grid;place-items:center;justify-self:center;width:71.428571%;height:86%;padding:0;box-sizing:border-box}
+#modal[data-art="tutorial"] .tutorial-actions{left:10%;right:10%}
 
 #modal[data-art="settings"] #modal-tools{height:32px}
 #modal[data-art="settings"] #modal-body{top:calc(18.9% + 40px)!important}
