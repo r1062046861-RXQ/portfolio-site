@@ -1,7 +1,7 @@
-import {CAPABILITIES, createLegacyPlan, createTimelinePlayer} from './paperdoll-core.mjs?v=paperdoll-v1-20261108';
-import {SCENES, sceneOf, sceneTimeline, POSE_LABELS, LAYER_LABELS} from './scene-catalog.mjs?v=paperdoll-v1-20261108';
-import {createPaperdollRenderer} from './paperdoll-renderer.mjs?v=paperdoll-v1-20261108';
-import {CLOTHES} from '../home-system.js?v=1.0.3-tutorialstepalign42';
+import {CAPABILITIES, createLegacyPlan, createTimelinePlayer} from './paperdoll-core.mjs?v=paperdoll-v1-20261108-43';
+import {SCENES, sceneOf, sceneTimeline, POSE_LABELS, LAYER_LABELS} from './scene-catalog.mjs?v=paperdoll-v1-20261108-43';
+import {createPaperdollRenderer} from './paperdoll-renderer.mjs?v=paperdoll-v1-20261108-43';
+import {CLOTHES} from '../home-system.js?v=1.0.3-tutorialtabsmooth43';
 
 const $ = id => document.getElementById(id);
 const names = {cat: '小满', fox: '小夏'};

@@ -1,4 +1,4 @@
-import {ROOMS,HOME_ITEMS,scaleAt} from './home-system.js?v=1.0.3-tutorialstepalign42';
+import {ROOMS,HOME_ITEMS,scaleAt} from './home-system.js?v=1.0.3-tutorialtabsmooth43';
 
 export const JOB_IDS=['shop','register','event','archive','layout','design'];
 export const STAGES=[1,6,12];

@@ -1,18 +1,18 @@
 {
   "version": "1.0.3",
-  "build": "1.0.3-tutorialstepalign42",
+  "build": "1.0.3-tutorialtabsmooth43",
   "files": [
     {
-      "url": "actor-rig.js?v=1.0.3-tutorialstepalign42",
+      "url": "actor-rig.js?v=1.0.3-tutorialtabsmooth43",
       "kind": "core",
       "bytes": 2323,
-      "sha256": "22e783bf71abcc8b1f4b87dda75f1bdf8aa014b99b18e4a022ec9184ad04fa69"
+      "sha256": "947a33e4f78c91a1746fd832f9c06a826b1b11ebfdc3eda5824ae3fff7c7af96"
     },
     {
-      "url": "app.js?v=1.0.3-tutorialstepalign42",
+      "url": "app.js?v=1.0.3-tutorialtabsmooth43",
       "kind": "core",
       "bytes": 83488,
-      "sha256": "fda7d3d3674b090348053d00d349f9376222e66274065c42c7a09ee0a66d789b"
+      "sha256": "56dfb62997335fc12f7e24abc4d77c5e67cbace5dc3dcaa3c533272e879b6992"
     },
     {
       "url": "assets/fonts/ZCOOLKuaiLe-ui.woff2",
@@ -51,49 +51,49 @@
       "sha256": "cad2c13aaa9b1af8772158ff3c7576f4e91772edc09aa9084841aecc5d71d914"
     },
     {
-      "url": "audio.js?v=1.0.3-tutorialstepalign42",
+      "url": "audio.js?v=1.0.3-tutorialtabsmooth43",
       "kind": "core",
       "bytes": 752,
       "sha256": "28d40da37a749ca0d528a303fcdfc0da14cb5e9f3d698ac9c3cc14c477987b46"
     },
     {
-      "url": "base.css?v=1.0.3-tutorialstepalign42",
+      "url": "base.css?v=1.0.3-tutorialtabsmooth43",
       "kind": "core",
       "bytes": 68983,
       "sha256": "8440323c093c3ab1347cf5c661cbbc55a7791068dc1ba1306561c5f622992f35"
     },
     {
-      "url": "engine.js?v=1.0.3-tutorialstepalign42",
+      "url": "engine.js?v=1.0.3-tutorialtabsmooth43",
       "kind": "core",
       "bytes": 34968,
-      "sha256": "b55130efdc0a392a975067c2d73a41749831a12195cdef518e37e24efc7e3ba9"
+      "sha256": "96f0221ebaae642666b41551b806e57d90f70aa627e6c5cae54baf4c5adb4713"
     },
     {
-      "url": "home-extras.js?v=1.0.3-tutorialstepalign42",
+      "url": "home-extras.js?v=1.0.3-tutorialtabsmooth43",
       "kind": "core",
       "bytes": 3223,
       "sha256": "74573a373f1b6925f27794bb18f73a45fe6e9a39a1944870ddba822129c54e2b"
     },
     {
-      "url": "home-space.js?v=1.0.3-tutorialstepalign42",
+      "url": "home-space.js?v=1.0.3-tutorialtabsmooth43",
       "kind": "core",
       "bytes": 3512,
-      "sha256": "7ac889a071e2a7bb9bfb46168c4fd7222b64696c0f9d9d52296e06b9131abc57"
+      "sha256": "16ad7b21cda0aefe0acc9831a0897ced7dfaf8eb025ad3610c54eb9d3e680c7e"
     },
     {
-      "url": "home-system.js?v=1.0.3-tutorialstepalign42",
+      "url": "home-system.js?v=1.0.3-tutorialtabsmooth43",
       "kind": "core",
       "bytes": 9383,
-      "sha256": "57da3e50f5672d6e361e9cd63e5a38c36164dd18c11a3b1c5165343eb1390adf"
+      "sha256": "f6ac75cbf4cbdd04bb898c8dc9f49b346882845a6100157a0d355608c55867f9"
     },
     {
-      "url": "home-view.js?v=1.0.3-tutorialstepalign42",
+      "url": "home-view.js?v=1.0.3-tutorialtabsmooth43",
       "kind": "core",
       "bytes": 22810,
-      "sha256": "d01bedbf49fcd6362a1c7b4f5265aa8536ce442fa15b39b6a616007d5da7eb6b"
+      "sha256": "9cb356afa1147463c69defba5622e9fd9ee7d3f9449af3aa66bb86216c573cf5"
     },
     {
-      "url": "home.css?v=1.0.3-tutorialstepalign42",
+      "url": "home.css?v=1.0.3-tutorialtabsmooth43",
       "kind": "core",
       "bytes": 42053,
       "sha256": "93f50394dbe3f57f31ad83de8791f5881c4f376834e8c70be0c51fd787c5704c"
@@ -102,28 +102,28 @@
       "url": "index.html",
       "kind": "core",
       "bytes": 9280,
-      "sha256": "e6764feadea9c51491af6aaede6ba2660b8b0f93b6e6f22236bc0f6ce6c7ee56"
+      "sha256": "130123fca39e5b7e431656d72f91df7463caaa8463e6cc87f2f63d94418d57a2"
     },
     {
-      "url": "interface.css?v=1.0.3-tutorialstepalign42",
+      "url": "interface.css?v=1.0.3-tutorialtabsmooth43",
       "kind": "core",
-      "bytes": 102218,
-      "sha256": "9426b8398106e8b90722358a7de797c58b375fab22e6e3bf154c2ba090bb0a02"
+      "bytes": 102399,
+      "sha256": "3d046f3a1c9680de7167f9296b086453b58769d67d41e905380a6f393737460d"
     },
     {
-      "url": "life-progress.js?v=1.0.3-tutorialstepalign42",
+      "url": "life-progress.js?v=1.0.3-tutorialtabsmooth43",
       "kind": "core",
       "bytes": 8239,
-      "sha256": "f44ea6c7d813043a5bf0767f6a95b0b5d513ed4ba7bcc9fe12aef36d8857808b"
+      "sha256": "94048f5f4a41fa63290a47f890379e710d254d7084a4893979c06044307d37d0"
     },
     {
-      "url": "life-view.js?v=1.0.3-tutorialstepalign42",
+      "url": "life-view.js?v=1.0.3-tutorialtabsmooth43",
       "kind": "core",
       "bytes": 6618,
-      "sha256": "412e48cc475b007a7b1ab1913c4cfe0d0e4bf897702173102cae8eec5809fabb"
+      "sha256": "0ae51586ad05dc2b07d53468a668e0106379594fe065d7766f146bdd61b2162a"
     },
     {
-      "url": "life.css?v=1.0.3-tutorialstepalign42",
+      "url": "life.css?v=1.0.3-tutorialtabsmooth43",
       "kind": "core",
       "bytes": 9058,
       "sha256": "d1896f7b90fc5628c7649c8709e706a5d869ed1c68a1ec062e0adbacacbf360a"
@@ -135,31 +135,31 @@
       "sha256": "f5931ccb2fac4ccf0fa2e6f956ac3997a1c4d7e64099a2953bc51ef0d6a0aec9"
     },
     {
-      "url": "outfits.js?v=1.0.3-tutorialstepalign42",
+      "url": "outfits.js?v=1.0.3-tutorialtabsmooth43",
       "kind": "core",
       "bytes": 3151,
-      "sha256": "1b74c8bffafeedbc46778c8c619ca5c807f9924d6ced13fa49fdefed12358dc5"
+      "sha256": "5e674d7f1cf7cb9b3eb811f62fe7f04d4a92745e762100f764d274defa0db334"
     },
     {
-      "url": "persistence.js?v=1.0.3-tutorialstepalign42",
+      "url": "persistence.js?v=1.0.3-tutorialtabsmooth43",
       "kind": "core",
       "bytes": 1620,
-      "sha256": "0313b0f92b565bfa1563f2db4275a582bce5cfc9aaf436389ffd78edf574dda6"
+      "sha256": "6f681bd200114fb6929f02752e7b58a06743b6b5c3e59dfbb8898d97bfe805a8"
     },
     {
-      "url": "release.js?v=1.0.3-tutorialstepalign42",
+      "url": "release.js?v=1.0.3-tutorialtabsmooth43",
       "kind": "core",
       "bytes": 136,
-      "sha256": "5c641beaf3beec03a8eeeaa8e3d786bf24255ab0489060a6ba89bd27b1bc2d44"
+      "sha256": "88ceed386cb5906dbfdf6ae848a5efd84f8867c75979516605d5744e99bffd9f"
     },
     {
-      "url": "ui-templates.js?v=1.0.3-tutorialstepalign42",
+      "url": "ui-templates.js?v=1.0.3-tutorialtabsmooth43",
       "kind": "core",
       "bytes": 4661,
       "sha256": "db235c74e0353ed1ee221dd15aa849c2901d524848cf61bed8334c31288a9e4d"
     },
     {
-      "url": "vendor/lucide.min.js?v=1.0.3-tutorialstepalign42",
+      "url": "vendor/lucide.min.js?v=1.0.3-tutorialtabsmooth43",
       "kind": "core",
       "bytes": 397450,
       "sha256": "ab85225ecc1daa2033607856f03dd2dabcbc08e2d260a5b97e17c690aa929766"
@@ -7805,8 +7805,8 @@
     {
       "url": "assets/ui-v16/tutorial-frame.webp",
       "kind": "optional",
-      "bytes": 244792,
-      "sha256": "38bcdb656fe21b025f2c2aec033afba5d11394685ab5dd270e7089f7bb520306"
+      "bytes": 242346,
+      "sha256": "e8f48a1cd5139cb68007056fe279226ebdb1e211f16d3fbe03924185c2025a9c"
     },
     {
       "url": "assets/ui-v16/xian-frame.webp",
