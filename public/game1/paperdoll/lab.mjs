@@ -1,11 +1,11 @@
-import {CAPABILITIES, createLegacyPlan, createTimelinePlayer} from './paperdoll-core.mjs?v=paperdoll-v1-20261108-44';
-import {SCENES, sceneOf, sceneTimeline, POSE_LABELS, LAYER_LABELS} from './scene-catalog.mjs?v=paperdoll-v1-20261108-44';
-import {createPaperdollRenderer} from './paperdoll-renderer.mjs?v=paperdoll-v1-20261108-44';
+import {CAPABILITIES, createLegacyPlan, createTimelinePlayer} from './paperdoll-core.mjs?v=paperdoll-wardrobe-20261110-152';
+import {SCENES, sceneOf, sceneTimeline, POSE_LABELS, LAYER_LABELS} from './scene-catalog.mjs?v=paperdoll-wardrobe-20261110-152';
+import {createPaperdollRenderer} from './paperdoll-renderer.mjs?v=paperdoll-wardrobe-20261110-152';
 import {CLOTHES} from '../home-system.js?v=1.0.3-tutorialassetcache44';
 
 const $ = id => document.getElementById(id);
 const names = {cat: '小满', fox: '小夏'};
-const meta = await fetch(new URL('../assets/home/meta.json', import.meta.url)).then(r => {if (!r.ok) throw Error('角色元数据加载失败。'); return r.json();});
+const meta = await fetch('../assets/home/meta.json').then(r => {if (!r.ok) throw Error('角色元数据加载失败。'); return r.json();});
 const actors = Object.fromEntries(['cat', 'fox'].map(who => [who, {outfit: null, pose: 'timeline', prop: 'auto', hidden: new Set(), token: 0, requested: null, plan: null}]));
 const renderers = Object.fromEntries(['cat', 'fox'].map(who => [who, createPaperdollRenderer({canvas: $(who + '-canvas')})]));
 let scene = SCENES[0], selected = 'cat', player, reduced = false, showAnchors = true, current = null, backgroundResume = false, grabbing = false, grabPointer = null;
@@ -54,7 +54,7 @@ function renderDetails() {
     label.append(input, document.createTextNode(`${layer.order + 1}. ${LAYER_LABELS[layer.role] || layer.role}`)); return label;
   }));
   $('rig-info').replaceChildren();
-  for (const [label, value] of [['画布', `${plan.canvas.width} × ${plan.canvas.height}，完整层`], ['方向', '原生视角；其他方向待制作'], ['配方', 'actor-rig.js（只读调用）'], ['眼镜', selected === 'cat' ? '固有眼镜，已包含在身体层' : '无新增眼镜层']]) {
+  for (const [label, value] of [['画布', `${plan.canvas.width} × ${plan.canvas.height}，完整层`], ['方向', '原生视角；其他方向待制作'], ['配方', 'demo/actor-rig.js（只读调用）'], ['眼镜', selected === 'cat' ? '固有眼镜，已包含在身体层' : '无新增眼镜层']]) {
     const dt = document.createElement('dt'), dd = document.createElement('dd'); dt.textContent = label; dd.textContent = value; $('rig-info').append(dt, dd);
   }
 }

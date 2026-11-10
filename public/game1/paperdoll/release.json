@@ -1,11 +1,14 @@
 {
-  "build": "paperdoll-v1-20261108-44",
+  "build": "paperdoll-wardrobe-20261110-152",
   "gameBuild": "1.0.3-tutorialassetcache44",
+  "continuation": 152,
+  "wardrobeCount": 78,
+  "fitCorrection": 152,
   "files": [
     {
       "name": "index.html",
-      "bytes": 4224,
-      "sha256": "b1324ec78d23f7667d8759dd6e44b2fce234b95e75ddd96a395b70c00603faa5"
+      "bytes": 4338,
+      "sha256": "8df05a4ee9fca8372acc1203a07b52a933e3fe822af65a16a656c1db3044e454"
     },
     {
       "name": "lab.css",
@@ -15,7 +18,7 @@
     {
       "name": "lab.mjs",
       "bytes": 13766,
-      "sha256": "921abbd3eab526283fc78790bc6fd6f102c4cb387ed95e8d18c91d42d2eaf193"
+      "sha256": "797657d1dd4ba9173607ef68d1aab6694565c5ad629c447488462cf399c91afb"
     },
     {
       "name": "paperdoll-core.mjs",
@@ -24,18 +27,2123 @@
     },
     {
       "name": "paperdoll-renderer.mjs",
-      "bytes": 6007,
-      "sha256": "6e71bb39d8ac2b8b6ac40b0705611b2bbb8e5a742ebd63434a6daed279cd6e5a"
+      "bytes": 6597,
+      "sha256": "cca513428d5161e37e33cfc6011a7b713872eeeb3394e7df163f5563787cf9fe"
     },
     {
       "name": "scene-catalog.mjs",
-      "bytes": 4597,
-      "sha256": "11a5650afe32b40c973ed203471c03360540ec1090627bf4296cf89691eb018d"
+      "bytes": 4604,
+      "sha256": "75dd6883182e5e0eae54c4744547330870c5569e8434fcd806fec8377c2dc6fc"
+    },
+    {
+      "name": "wardrobe.html",
+      "bytes": 3338,
+      "sha256": "ee06485599870b5a80bdc0823aa375eb319d478031ca3627a4d2c12bdc1c30e3"
+    },
+    {
+      "name": "wardrobe.css",
+      "bytes": 3628,
+      "sha256": "0e0b33ca1c3b220e709f60eadeef22448eca8c03f674ab4949cebde11e945714"
+    },
+    {
+      "name": "wardrobe.mjs",
+      "bytes": 13029,
+      "sha256": "d2bf2b67eb89b4e25fde04b49531404261395395d8a7d640fa4544eb7458417f"
+    },
+    {
+      "name": "wardrobe-core.mjs",
+      "bytes": 6578,
+      "sha256": "91fd9eca7b617d097c654d4830423fb0f395af4878b39e3b6924b0342b43e0af"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-body.png",
+      "bytes": 126263,
+      "sha256": "6335febeca10554fb2fca659ec2fbb4c8255690ec6fbc7a560d7607a570ce57d"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-front.png",
+      "bytes": 42014,
+      "sha256": "809d4dd7d492657cd8fe3d005de0d723dd080b4216dd6d11ccaf77e95efef323"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-feet.png",
+      "bytes": 41986,
+      "sha256": "790989e66f48dea84b24ffc94cc088c768c466bd58d9c584f473fc0ff21abe03"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-body.png",
+      "bytes": 86019,
+      "sha256": "74dcf21a266b975eff69532f28d3b555f8fa1b34a8ea43748a34c824c809c291"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-front.png",
+      "bytes": 22756,
+      "sha256": "0bacd25eb350bcefc4df34df65f5cc13533f552b28854a46a58a52a6c50d94bc"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-feet.png",
+      "bytes": 22629,
+      "sha256": "d23d9f9a0e147bf674b6ffa44d0880fdbed116a1cf60b537787e1e9147de6a2b"
+    },
+    {
+      "name": "assets/wardrobe-v1/B01-thumb.png",
+      "bytes": 34860,
+      "sha256": "5c6f2d97586e0b0a766d6a71f7c34da9ff7ff8f1865ffa20965d61f9998b35e6"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-B01.png",
+      "bytes": 56534,
+      "sha256": "14001427b8fed26e7d068aad76f4cce08a623894fe10ef25d4c4dcf97c2a103d"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-body-B01.png",
+      "bytes": 124257,
+      "sha256": "9a867aefe4e1de5cb51118c88ef545e0ddc9f5d63b6c6b3b0d4634c4ccae4bab"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-front-B01.png",
+      "bytes": 46573,
+      "sha256": "4cefc2ae8ef89eef53de8a5de632da4eeeba4811494df7942727a3634d590ba2"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-B01.png",
+      "bytes": 33768,
+      "sha256": "5e6a0823ee3a3b0b321f93d553a1034024f67d755a2d2360bbd01772ccd853de"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-body-B01.png",
+      "bytes": 85886,
+      "sha256": "64fd3c07afac6d7877c6331b60c4658470e38f9b2458e1557ff88634e145e9ff"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-front-B01.png",
+      "bytes": 22756,
+      "sha256": "0bacd25eb350bcefc4df34df65f5cc13533f552b28854a46a58a52a6c50d94bc"
+    },
+    {
+      "name": "assets/wardrobe-v1/B02-thumb.png",
+      "bytes": 37750,
+      "sha256": "5877cb5c65a86b021e66298b4136562e742201238fa530198b1c02d949815465"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-B02.png",
+      "bytes": 65662,
+      "sha256": "b3d1eaedbc331c0d22827880af3a295cbf82f366df40d23575024b2432915fb8"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-body-B02.png",
+      "bytes": 108836,
+      "sha256": "e4dad4d06b2774a783816b67ae1ceab2326039047e683cc05a857a971c700d0d"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-front-B02.png",
+      "bytes": 46573,
+      "sha256": "4cefc2ae8ef89eef53de8a5de632da4eeeba4811494df7942727a3634d590ba2"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-B02.png",
+      "bytes": 38171,
+      "sha256": "2b509ea9c8fc7e0df7551b8ec8662839ff080164bd4be8463a47d7a9b7793632"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-body-B02.png",
+      "bytes": 72798,
+      "sha256": "64308ebcff7e09b86f98b368a57d2d7668aaffbc5e7fc20372ecd559c952f5ab"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-front-B02.png",
+      "bytes": 22756,
+      "sha256": "0bacd25eb350bcefc4df34df65f5cc13533f552b28854a46a58a52a6c50d94bc"
+    },
+    {
+      "name": "assets/wardrobe-v1/B03-thumb.png",
+      "bytes": 31984,
+      "sha256": "a9f4f3bbce5e3028e952e248ba33974d6501c7cd378e397385e61c0985d916a4"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-B03.png",
+      "bytes": 55224,
+      "sha256": "759f4ce3dacfe5e19d112d95209ff2b6b762e933435f445e82572034746c084c"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-body-B03.png",
+      "bytes": 124257,
+      "sha256": "9a867aefe4e1de5cb51118c88ef545e0ddc9f5d63b6c6b3b0d4634c4ccae4bab"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-front-B03.png",
+      "bytes": 46573,
+      "sha256": "4cefc2ae8ef89eef53de8a5de632da4eeeba4811494df7942727a3634d590ba2"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-B03.png",
+      "bytes": 32834,
+      "sha256": "9341ecd51b96cb06907354d956810fc455b261c03600151dd6d9fbe42f9ef2b6"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-body-B03.png",
+      "bytes": 85886,
+      "sha256": "64fd3c07afac6d7877c6331b60c4658470e38f9b2458e1557ff88634e145e9ff"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-front-B03.png",
+      "bytes": 22756,
+      "sha256": "0bacd25eb350bcefc4df34df65f5cc13533f552b28854a46a58a52a6c50d94bc"
+    },
+    {
+      "name": "assets/wardrobe-v1/B04-thumb.png",
+      "bytes": 32962,
+      "sha256": "c5dd750f0a80f9d725a1e70bdbbc26688177465cf24dba3c0e6d2b7212229a46"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-B04.png",
+      "bytes": 52497,
+      "sha256": "abc3b4f0f31d4ee3b7e6d5bf1f8443c653bea2694430b6559d479e1858d35bb9"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-body-B04.png",
+      "bytes": 108836,
+      "sha256": "e4dad4d06b2774a783816b67ae1ceab2326039047e683cc05a857a971c700d0d"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-front-B04.png",
+      "bytes": 46573,
+      "sha256": "4cefc2ae8ef89eef53de8a5de632da4eeeba4811494df7942727a3634d590ba2"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-B04.png",
+      "bytes": 31909,
+      "sha256": "026ca8672bb93e2765d66906a3e8df975b5d9704b09176915507c5220a88a6d0"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-body-B04.png",
+      "bytes": 72798,
+      "sha256": "64308ebcff7e09b86f98b368a57d2d7668aaffbc5e7fc20372ecd559c952f5ab"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-front-B04.png",
+      "bytes": 22756,
+      "sha256": "0bacd25eb350bcefc4df34df65f5cc13533f552b28854a46a58a52a6c50d94bc"
+    },
+    {
+      "name": "assets/wardrobe-v1/B05-thumb.png",
+      "bytes": 33320,
+      "sha256": "f5495f5430f894057c6658eb3ade173baaa440000722845f3b68d19b14e4e81a"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-B05.png",
+      "bytes": 41386,
+      "sha256": "ec7fa00c51d949214aceb831c83f4a82260010dcd8b96c644b8707860593a476"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-B05.png",
+      "bytes": 29113,
+      "sha256": "023bbf066f99d25dee63c6e9e67ca1955eb7270d7d517d59d2ed286997343786"
+    },
+    {
+      "name": "assets/wardrobe-v1/B06-thumb.png",
+      "bytes": 34387,
+      "sha256": "22ac485e07cfbc9892cfd51d988593488747c7077f75213abd57ba55468450a1"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-B06.png",
+      "bytes": 41711,
+      "sha256": "bd4086994288a667b9612dfb5a0f828758f50db0fd3641efd8dcc7e3ee493dfe"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-B06.png",
+      "bytes": 29108,
+      "sha256": "392c66a01878e82f1676958d3b0df3ad2bf0c1ecde28c93f5e160baa13acdca1"
+    },
+    {
+      "name": "assets/wardrobe-v1/R01-thumb.png",
+      "bytes": 37163,
+      "sha256": "fef70158f29e2e51e0395aeea8bf3d31492ef38abc2c99a46ac84e2b5468dc0d"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-R01.png",
+      "bytes": 56936,
+      "sha256": "72b5bda36ab137a00f4d2b19b41fef37771990319474c30b6de918003f52a8ff"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-body-R01.png",
+      "bytes": 108836,
+      "sha256": "e4dad4d06b2774a783816b67ae1ceab2326039047e683cc05a857a971c700d0d"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-front-R01.png",
+      "bytes": 46573,
+      "sha256": "4cefc2ae8ef89eef53de8a5de632da4eeeba4811494df7942727a3634d590ba2"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-R01.png",
+      "bytes": 33265,
+      "sha256": "bbc83473c497a4f0f2f9258b64f137a61c5b68af3a1daa587fb564ea5b3def96"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-body-R01.png",
+      "bytes": 72798,
+      "sha256": "64308ebcff7e09b86f98b368a57d2d7668aaffbc5e7fc20372ecd559c952f5ab"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-front-R01.png",
+      "bytes": 22756,
+      "sha256": "0bacd25eb350bcefc4df34df65f5cc13533f552b28854a46a58a52a6c50d94bc"
+    },
+    {
+      "name": "assets/wardrobe-v1/R02-thumb.png",
+      "bytes": 36893,
+      "sha256": "8abd6e1adb561fad919ef22fd0661bbed55dfa0e112c0bbef59e3b9e6fd996a8"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-R02.png",
+      "bytes": 56529,
+      "sha256": "d067d14f2d8a757e0d203921f29cefa0307d3b7ab2c039fd58b6d8b55d3f35d2"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-body-R02.png",
+      "bytes": 108836,
+      "sha256": "e4dad4d06b2774a783816b67ae1ceab2326039047e683cc05a857a971c700d0d"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-front-R02.png",
+      "bytes": 46573,
+      "sha256": "4cefc2ae8ef89eef53de8a5de632da4eeeba4811494df7942727a3634d590ba2"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-R02.png",
+      "bytes": 33087,
+      "sha256": "d757a7eb54d55ac88aa73ced9ac2244e0e45bc8079075df9489439b87a23829e"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-body-R02.png",
+      "bytes": 72798,
+      "sha256": "64308ebcff7e09b86f98b368a57d2d7668aaffbc5e7fc20372ecd559c952f5ab"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-front-R02.png",
+      "bytes": 22756,
+      "sha256": "0bacd25eb350bcefc4df34df65f5cc13533f552b28854a46a58a52a6c50d94bc"
+    },
+    {
+      "name": "assets/wardrobe-v1/R03-thumb.png",
+      "bytes": 44612,
+      "sha256": "72f4e50943f9444c7e3463545165bfb0bf8b98adc9b6d4765012a2b6362ad8b4"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-R03.png",
+      "bytes": 69536,
+      "sha256": "751c52fa73d2bf90067b5c75f6674162c56c98cfe60c266c19f99b7e9acdb545"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-body-R03.png",
+      "bytes": 108836,
+      "sha256": "e4dad4d06b2774a783816b67ae1ceab2326039047e683cc05a857a971c700d0d"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-front-R03.png",
+      "bytes": 46573,
+      "sha256": "4cefc2ae8ef89eef53de8a5de632da4eeeba4811494df7942727a3634d590ba2"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-R03.png",
+      "bytes": 40216,
+      "sha256": "d7f8c55047f0bcb23f26a1b23dcfe5322b6e76ba1faff5fc659465639dec2af4"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-body-R03.png",
+      "bytes": 72798,
+      "sha256": "64308ebcff7e09b86f98b368a57d2d7668aaffbc5e7fc20372ecd559c952f5ab"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-front-R03.png",
+      "bytes": 22756,
+      "sha256": "0bacd25eb350bcefc4df34df65f5cc13533f552b28854a46a58a52a6c50d94bc"
+    },
+    {
+      "name": "assets/wardrobe-v1/R04-thumb.png",
+      "bytes": 44003,
+      "sha256": "23a0a0ca70121979ffa616af100b29b0d3ae90417acb55c39b40a3efcf55b51b"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-R04.png",
+      "bytes": 67587,
+      "sha256": "e7456e69c0ae475bf2b7a7f53473b32dee8d7bcc2c910ada1b7941e97a1be231"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-body-R04.png",
+      "bytes": 108836,
+      "sha256": "e4dad4d06b2774a783816b67ae1ceab2326039047e683cc05a857a971c700d0d"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-front-R04.png",
+      "bytes": 46573,
+      "sha256": "4cefc2ae8ef89eef53de8a5de632da4eeeba4811494df7942727a3634d590ba2"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-R04.png",
+      "bytes": 38933,
+      "sha256": "c168c70407bc1b08f25dd8b3356c1167b0665d51700beac6559c6b6632cbeec2"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-body-R04.png",
+      "bytes": 72798,
+      "sha256": "64308ebcff7e09b86f98b368a57d2d7668aaffbc5e7fc20372ecd559c952f5ab"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-front-R04.png",
+      "bytes": 22756,
+      "sha256": "0bacd25eb350bcefc4df34df65f5cc13533f552b28854a46a58a52a6c50d94bc"
+    },
+    {
+      "name": "assets/wardrobe-v1/R05-thumb.png",
+      "bytes": 35037,
+      "sha256": "c100482e48a90afdb10e6ff58c4dbd1631d91f7c8c537d90519f4349d10b424d"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-R05.png",
+      "bytes": 44296,
+      "sha256": "9efb9747f425dbc559f4a96bc2acc1fbf0187148b9c8b994b04eb2e933f4fc14"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-R05.png",
+      "bytes": 30821,
+      "sha256": "92809fa5171e2c5fbd3dad62e1d561c82b5766d9a506d72936cc7c794315c70e"
+    },
+    {
+      "name": "assets/wardrobe-v1/R06-thumb.png",
+      "bytes": 30294,
+      "sha256": "0716e3b5c9c23ec25f270ddb806051a2845b3263f3ad25d84fa5bfbe966cba24"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-R06.png",
+      "bytes": 37806,
+      "sha256": "a1792b21f0d70c63d04820e87f347ce4c52b9e9a6dd0f69fdc12e1c2d30a59d2"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-R06.png",
+      "bytes": 26600,
+      "sha256": "f78b4c4035753f5c02430b730711ec4608d546e9fa903d0839e436ac8350ef62"
+    },
+    {
+      "name": "assets/wardrobe-v1/U01-thumb.png",
+      "bytes": 38902,
+      "sha256": "2628782ca4b01dc70fbc428c9054c3cf23e0acb737670ef06cc41f9a4822911a"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-U01.png",
+      "bytes": 70477,
+      "sha256": "cb8dd62cfe86b2e8f6e29c1a06464a120c33a751692c95f8f02a27bc4a35eeb5"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-body-U01.png",
+      "bytes": 108836,
+      "sha256": "e4dad4d06b2774a783816b67ae1ceab2326039047e683cc05a857a971c700d0d"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-front-U01.png",
+      "bytes": 46573,
+      "sha256": "4cefc2ae8ef89eef53de8a5de632da4eeeba4811494df7942727a3634d590ba2"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-U01.png",
+      "bytes": 41603,
+      "sha256": "ab699e1387dcba235512f3305a4bd5053eb8af36bd11c04a40ddb6d6f73d7c5f"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-body-U01.png",
+      "bytes": 72798,
+      "sha256": "64308ebcff7e09b86f98b368a57d2d7668aaffbc5e7fc20372ecd559c952f5ab"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-front-U01.png",
+      "bytes": 22756,
+      "sha256": "0bacd25eb350bcefc4df34df65f5cc13533f552b28854a46a58a52a6c50d94bc"
+    },
+    {
+      "name": "assets/wardrobe-v1/U02-thumb.png",
+      "bytes": 34676,
+      "sha256": "e67af727ea85d5ffe61fb03120c9c188f66313cd4766f240c5f4b8a753e93ab4"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-U02.png",
+      "bytes": 60278,
+      "sha256": "81b0c91982645872f77d58000ca0a74272b6985febb886fe5a97667130dce845"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-body-U02.png",
+      "bytes": 124257,
+      "sha256": "9a867aefe4e1de5cb51118c88ef545e0ddc9f5d63b6c6b3b0d4634c4ccae4bab"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-front-U02.png",
+      "bytes": 46573,
+      "sha256": "4cefc2ae8ef89eef53de8a5de632da4eeeba4811494df7942727a3634d590ba2"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-U02.png",
+      "bytes": 35939,
+      "sha256": "80cfd28b19c6e73abb8fe81647b3660831815407194669105c14a10466031ad3"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-body-U02.png",
+      "bytes": 85886,
+      "sha256": "64fd3c07afac6d7877c6331b60c4658470e38f9b2458e1557ff88634e145e9ff"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-front-U02.png",
+      "bytes": 22756,
+      "sha256": "0bacd25eb350bcefc4df34df65f5cc13533f552b28854a46a58a52a6c50d94bc"
+    },
+    {
+      "name": "assets/wardrobe-v1/U03-thumb.png",
+      "bytes": 36448,
+      "sha256": "d90e145528ced5aac330d11bb4b1797d5d97580cc7ebd9bbd2029939922baa0f"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-U03.png",
+      "bytes": 52167,
+      "sha256": "7b622ee7ec0a8dc15089d84d00767eda988e2cde3e7260b70695fe4071eb1db0"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-body-U03.png",
+      "bytes": 108836,
+      "sha256": "e4dad4d06b2774a783816b67ae1ceab2326039047e683cc05a857a971c700d0d"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-front-U03.png",
+      "bytes": 46573,
+      "sha256": "4cefc2ae8ef89eef53de8a5de632da4eeeba4811494df7942727a3634d590ba2"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-U03.png",
+      "bytes": 31530,
+      "sha256": "f0cf82546bf05066e123925483971066283bf44cd9491727a56703c366619f54"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-body-U03.png",
+      "bytes": 72798,
+      "sha256": "64308ebcff7e09b86f98b368a57d2d7668aaffbc5e7fc20372ecd559c952f5ab"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-front-U03.png",
+      "bytes": 22756,
+      "sha256": "0bacd25eb350bcefc4df34df65f5cc13533f552b28854a46a58a52a6c50d94bc"
+    },
+    {
+      "name": "assets/wardrobe-v1/U04-thumb.png",
+      "bytes": 38412,
+      "sha256": "6a131f73eb0939d149196c33be7b48a4236fcf2032d282261ea0d6d066f6256e"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-U04.png",
+      "bytes": 43216,
+      "sha256": "2eca62247406f85352150c18795adeabfa02f7a22a960807adea11be72ae0b53"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-U04.png",
+      "bytes": 29953,
+      "sha256": "35d0d5de45bff8fb774e5a091300ecf17d0c4028ba7650a66dc7f70c718fbf53"
+    },
+    {
+      "name": "assets/wardrobe-v1/U05-thumb.png",
+      "bytes": 40063,
+      "sha256": "86c2f719a993e22e65e47a020223a7133f6a9ad3567ebdb59a0ca833c09d5a06"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-U05.png",
+      "bytes": 57596,
+      "sha256": "44f3d3f1a5f4cf1f05b9bbc0f62e6f7911c184c9bafc0d7b8788ce4484417f9e"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-body-U05.png",
+      "bytes": 108836,
+      "sha256": "e4dad4d06b2774a783816b67ae1ceab2326039047e683cc05a857a971c700d0d"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-front-U05.png",
+      "bytes": 46573,
+      "sha256": "4cefc2ae8ef89eef53de8a5de632da4eeeba4811494df7942727a3634d590ba2"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-U05.png",
+      "bytes": 34096,
+      "sha256": "688d28681c787a78b5fc0eb6f5e6d62365948e647d2c88d6572c9dcad5b8c998"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-body-U05.png",
+      "bytes": 72798,
+      "sha256": "64308ebcff7e09b86f98b368a57d2d7668aaffbc5e7fc20372ecd559c952f5ab"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-front-U05.png",
+      "bytes": 22756,
+      "sha256": "0bacd25eb350bcefc4df34df65f5cc13533f552b28854a46a58a52a6c50d94bc"
+    },
+    {
+      "name": "assets/wardrobe-v1/U06-thumb.png",
+      "bytes": 28962,
+      "sha256": "1a64c6cd0de0478d399e1f3d6f1c36fdf5ec9a67a15f1c7201fc65fd9ac7530c"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-U06.png",
+      "bytes": 42059,
+      "sha256": "77ec3d8eb00367eef10686bad0ad762833c037d30ee21fc90b733e6964abae85"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-U06.png",
+      "bytes": 29678,
+      "sha256": "9c84c8c071fe9e635a06ee91a85c8adc340e5f93a710537da1e18a3cd240ae25"
+    },
+    {
+      "name": "assets/wardrobe-v1/A01-thumb.png",
+      "bytes": 40073,
+      "sha256": "015b2b46536e0e6312c4deac206b653924ba6cabe16431d7c3de26e590396261"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-A01.png",
+      "bytes": 65550,
+      "sha256": "3dc5c48881c6191b546da002ec001ad5b524900bfc9a8a690dc3242891c05515"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-body-A01.png",
+      "bytes": 108836,
+      "sha256": "e4dad4d06b2774a783816b67ae1ceab2326039047e683cc05a857a971c700d0d"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-front-A01.png",
+      "bytes": 46573,
+      "sha256": "4cefc2ae8ef89eef53de8a5de632da4eeeba4811494df7942727a3634d590ba2"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-A01.png",
+      "bytes": 37989,
+      "sha256": "2378e5c89999a3727b0c1749145a1f4a6123af59bc13202f48f1aef7928378d8"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-body-A01.png",
+      "bytes": 72798,
+      "sha256": "64308ebcff7e09b86f98b368a57d2d7668aaffbc5e7fc20372ecd559c952f5ab"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-front-A01.png",
+      "bytes": 22756,
+      "sha256": "0bacd25eb350bcefc4df34df65f5cc13533f552b28854a46a58a52a6c50d94bc"
+    },
+    {
+      "name": "assets/wardrobe-v1/A02-thumb.png",
+      "bytes": 30150,
+      "sha256": "d1b35afa5779204cf2770707134e80150721b97858bc29870093eb929a1371f8"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-A02.png",
+      "bytes": 64995,
+      "sha256": "c9e8944d91e1bd6d5b1adc3811c1657ed65643bf610b464c469d1d83e9134b2c"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-body-A02.png",
+      "bytes": 124257,
+      "sha256": "9a867aefe4e1de5cb51118c88ef545e0ddc9f5d63b6c6b3b0d4634c4ccae4bab"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-front-A02.png",
+      "bytes": 46573,
+      "sha256": "4cefc2ae8ef89eef53de8a5de632da4eeeba4811494df7942727a3634d590ba2"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-A02.png",
+      "bytes": 38983,
+      "sha256": "6ac9935dc625fb31b84a1c7678a7085ec43c649c6ede1251fe0b135609a06132"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-body-A02.png",
+      "bytes": 85886,
+      "sha256": "64fd3c07afac6d7877c6331b60c4658470e38f9b2458e1557ff88634e145e9ff"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-front-A02.png",
+      "bytes": 22756,
+      "sha256": "0bacd25eb350bcefc4df34df65f5cc13533f552b28854a46a58a52a6c50d94bc"
+    },
+    {
+      "name": "assets/wardrobe-v1/A03-thumb.png",
+      "bytes": 50070,
+      "sha256": "d0f630ebc96abad71a0e22278bc0ecbc177dec6e4f09cf72b5abd67b79cb0325"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-A03.png",
+      "bytes": 82396,
+      "sha256": "2b5ec39bde7b42b4aea84abef5cf18fc7a28914d0bc924a7125b8d6f1ee0e45a"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-body-A03.png",
+      "bytes": 108836,
+      "sha256": "e4dad4d06b2774a783816b67ae1ceab2326039047e683cc05a857a971c700d0d"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-front-A03.png",
+      "bytes": 46573,
+      "sha256": "4cefc2ae8ef89eef53de8a5de632da4eeeba4811494df7942727a3634d590ba2"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-A03.png",
+      "bytes": 47696,
+      "sha256": "fc99f70a687319371c5ddbf624c255a4faf5b7691fd53afa0f62c651890ef76c"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-body-A03.png",
+      "bytes": 72798,
+      "sha256": "64308ebcff7e09b86f98b368a57d2d7668aaffbc5e7fc20372ecd559c952f5ab"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-front-A03.png",
+      "bytes": 22756,
+      "sha256": "0bacd25eb350bcefc4df34df65f5cc13533f552b28854a46a58a52a6c50d94bc"
+    },
+    {
+      "name": "assets/wardrobe-v1/A04-thumb.png",
+      "bytes": 39085,
+      "sha256": "2e759a7c4bc28cdcdb79ce2a1fa7b73083e5ff318e9d6d868a9f8f88710066e2"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-A04.png",
+      "bytes": 73998,
+      "sha256": "91d1e7c8c3b7548c78b1c2a6e82e7b2715ce5fe8cc683b7ec816f8be0f30ef30"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-body-A04.png",
+      "bytes": 108836,
+      "sha256": "e4dad4d06b2774a783816b67ae1ceab2326039047e683cc05a857a971c700d0d"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-front-A04.png",
+      "bytes": 46573,
+      "sha256": "4cefc2ae8ef89eef53de8a5de632da4eeeba4811494df7942727a3634d590ba2"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-A04.png",
+      "bytes": 43630,
+      "sha256": "b697d583c18a0d75004e826f6ef9cbc459dd02adfb63fbbb1091903ecbc740c3"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-body-A04.png",
+      "bytes": 72798,
+      "sha256": "64308ebcff7e09b86f98b368a57d2d7668aaffbc5e7fc20372ecd559c952f5ab"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-front-A04.png",
+      "bytes": 22756,
+      "sha256": "0bacd25eb350bcefc4df34df65f5cc13533f552b28854a46a58a52a6c50d94bc"
+    },
+    {
+      "name": "assets/wardrobe-v1/A05-thumb.png",
+      "bytes": 38822,
+      "sha256": "263939ac26746ddd33dffc1fd8a4efe6beed7fd66947b30a3ece762d8eb86036"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-A05.png",
+      "bytes": 42826,
+      "sha256": "f7de4755e5632098afaa5c54b058646ed38f248db9721548b99346db236e5ef6"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-A05.png",
+      "bytes": 30199,
+      "sha256": "647555eff95b160f2202f888ce17d83c8d9006e074668f8f82c0d3854e2f04f5"
+    },
+    {
+      "name": "assets/wardrobe-v1/A06-thumb.png",
+      "bytes": 30375,
+      "sha256": "bf28856eb9ce948c5f75cb99b1fca297913c03c74b790023deac915289e1d680"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-A06.png",
+      "bytes": 80249,
+      "sha256": "01d173fca26df8f958c9e5cc5b10afb090b914e0e2e78e91ed81cd6f60f96822"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-body-A06.png",
+      "bytes": 124257,
+      "sha256": "9a867aefe4e1de5cb51118c88ef545e0ddc9f5d63b6c6b3b0d4634c4ccae4bab"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-front-A06.png",
+      "bytes": 46573,
+      "sha256": "4cefc2ae8ef89eef53de8a5de632da4eeeba4811494df7942727a3634d590ba2"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-A06.png",
+      "bytes": 54761,
+      "sha256": "5cce64fa2793b4f200609690a5dd2c93f191200bdc89f0df6b2584eccee8bfaa"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-body-A06.png",
+      "bytes": 85886,
+      "sha256": "64fd3c07afac6d7877c6331b60c4658470e38f9b2458e1557ff88634e145e9ff"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-front-A06.png",
+      "bytes": 22756,
+      "sha256": "0bacd25eb350bcefc4df34df65f5cc13533f552b28854a46a58a52a6c50d94bc"
+    },
+    {
+      "name": "assets/wardrobe-v1/N01-thumb.png",
+      "bytes": 15370,
+      "sha256": "9ca3760c2138b021ebe22c197d66c01283c34cace028c62537f04a00f7f33140"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-N01.png",
+      "bytes": 7098,
+      "sha256": "6666e92ee1780123bbdef6a740b368ae40e4411c2fb888624089be8a2b5e0fa6"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-N01.png",
+      "bytes": 4102,
+      "sha256": "c20be2455312c6a4fc61ae378a1cc004dc01e1ea5fdb86b6c57264a3785128b1"
+    },
+    {
+      "name": "assets/wardrobe-v1/N02-thumb.png",
+      "bytes": 20804,
+      "sha256": "973b3bdab9063a1d0341b9b8043220d5f32b847310758d26b5d80e18b3c18c33"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-N02.png",
+      "bytes": 11187,
+      "sha256": "b87a6ea543785cf3268116b27ed095a16f19bf884eb58fc15e58b3e20f292236"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-N02.png",
+      "bytes": 6240,
+      "sha256": "48480949f1611f75e76347ad81bf7fa451eec485a6ff890f36af80024c8ede8c"
+    },
+    {
+      "name": "assets/wardrobe-v1/N03-thumb.png",
+      "bytes": 27526,
+      "sha256": "94ac58759d2cfeae2e60cfa5a48d6a94cdf71e160d49916e85d4bf27b8e69a90"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-N03.png",
+      "bytes": 22610,
+      "sha256": "add6716f2a24660d62a97c2b07f65149e5b42264713b8622951f9daa10c84e80"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-N03.png",
+      "bytes": 13515,
+      "sha256": "d1bf7f4f8018593addc6075859ca005c2358dc920e7a3ce0fb306ee864344354"
+    },
+    {
+      "name": "assets/wardrobe-v1/N04-thumb.png",
+      "bytes": 24746,
+      "sha256": "5ba6bd07bddeb09961ede9a82068e7e4ae44e568e33feb24d1b6a0ba5c03ee25"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-N04.png",
+      "bytes": 9901,
+      "sha256": "f01f562bb9eccbf93d32ff60a377c5d429bbe41eeea410baba2a53602fd42d44"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-N04.png",
+      "bytes": 5966,
+      "sha256": "a3a5591583189dd6c53edc00cfa090e00e2c20d8f42d0e2f9280c34f8eff2310"
+    },
+    {
+      "name": "assets/wardrobe-v1/N05-thumb.png",
+      "bytes": 10294,
+      "sha256": "c87e9a6e411f7961d968ca7936ae0f9ba1e69643092728a9c335a815c3d5c819"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-N05.png",
+      "bytes": 9646,
+      "sha256": "6760bb4be08d2f729361005ebc16d451022d28c638936f52fa97a464ffbcfa64"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-N05.png",
+      "bytes": 6509,
+      "sha256": "b9fc2fe328452f93c2dd6f2ab5ec8af5641fc8268b573cac0376cd4db065118a"
+    },
+    {
+      "name": "assets/wardrobe-v1/N06-thumb.png",
+      "bytes": 8309,
+      "sha256": "6f01b34d298499f56623fb55afb2b2b4c14fa7e92d3bc8f06f75d293978fd681"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-N06.png",
+      "bytes": 6612,
+      "sha256": "10b195e26837d4178852664f85c984bf14c4e337076273ee7c0549693cd0cbfb"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-N06.png",
+      "bytes": 4271,
+      "sha256": "c311ddef6b75fac35b2708e9016885c8a807b2e0bbbf6f23469504f6eb879631"
+    },
+    {
+      "name": "assets/wardrobe-v1/N07-thumb.png",
+      "bytes": 16180,
+      "sha256": "a9175cf9d6dcfc79224c05ac0c5315db9a64466ee346667e2aa3df88ab6fd5ef"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-N07.png",
+      "bytes": 5268,
+      "sha256": "f1f90eadb4e45e0fede26bd814051fea409cad3436f94b7a5932527a9e4d333f"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-N07.png",
+      "bytes": 3093,
+      "sha256": "4e4ace8cc6292543d729aa9dab75e18a98d744dfd5f53e7a87e369d99581407b"
+    },
+    {
+      "name": "assets/wardrobe-v1/N08-thumb.png",
+      "bytes": 21131,
+      "sha256": "e4d46e74d71c77fcb61165912ad6b228522c748c5ee3868f7c9f00e8861d0144"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-N08.png",
+      "bytes": 15969,
+      "sha256": "6b56389147f25f3519b7d1682e657db13ecc394647b47d3d1c9e4b355437a4ae"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-N08.png",
+      "bytes": 9122,
+      "sha256": "7f3a95c6bfe97bb7af770308127b752632ef0cdcdca429a2e8403bb28bd9e7f1"
+    },
+    {
+      "name": "assets/wardrobe-v1/N09-thumb.png",
+      "bytes": 19685,
+      "sha256": "3319be2de5dfdfb10183300418132173d6d688939a3b0676fdd4f5ec9857da05"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-N09.png",
+      "bytes": 12704,
+      "sha256": "387118c22ccb273bf64845f032f0e220437f2a3a7b0e4c6a4f62923b8cc6b455"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-N09.png",
+      "bytes": 7768,
+      "sha256": "16bc4b1bd0bbc2cd43c73f250f3f898cacc5733f1a7de6111b91fc75505c87ee"
+    },
+    {
+      "name": "assets/wardrobe-v1/N10-thumb.png",
+      "bytes": 15729,
+      "sha256": "d30065ee0a8585adf9c4edb2249154c849150854e06b13e9c704d0a0c8a1cf23"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-N10.png",
+      "bytes": 7663,
+      "sha256": "78d39797a80a6dbb9312db146e28a3322f00c6cd02a6049cd44a70953a9efd1e"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-N10.png",
+      "bytes": 4316,
+      "sha256": "57cd6f064369d8c34e916a14f2256a77d0e423d077cd75b492d8c7a059230739"
+    },
+    {
+      "name": "assets/wardrobe-v1/N11-thumb.png",
+      "bytes": 8826,
+      "sha256": "2ac579d4db812724fc00b03d3302020dc45b2ae54fe6ac01d9bd1c2fb2792809"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-N11.png",
+      "bytes": 3750,
+      "sha256": "ee8f2216591d0287e944584f90c46cc1aab2c8e94c572d32d219b1accc3cbaff"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-N11.png",
+      "bytes": 2343,
+      "sha256": "bc1eb1b8866dad4f062662920680956c992b37bad910a729190f4c84dfa5e736"
+    },
+    {
+      "name": "assets/wardrobe-v1/N12-thumb.png",
+      "bytes": 21608,
+      "sha256": "b95e9e7e65c7c9a7658675180d81d65cce15f4024cdd15113b734ac3b45f30cb"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-N12.png",
+      "bytes": 31265,
+      "sha256": "e04029cb1c3108cca261e683788a6e05dd45fe78639235c7a16943a32c76a6c6"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-N12.png",
+      "bytes": 17564,
+      "sha256": "cb589ff97deef83e0adfb643c9e802b01309c611f560e69f712f837216cfbd96"
+    },
+    {
+      "name": "assets/wardrobe-v1/J01-thumb.png",
+      "bytes": 17520,
+      "sha256": "04ec2b33b3930aab0f2b79f4c08ac1010f9cd533d98a69d92759216252f7d846"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-J01.png",
+      "bytes": 2709,
+      "sha256": "6f356fb517ac0175912295c8b76079781aaa490925cb8b40126621f47eaf156d"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-J01.png",
+      "bytes": 1473,
+      "sha256": "4934364a13bb3e3d17608a8a8f5edce5719e5be05f3e9f7774c77b7448eba145"
+    },
+    {
+      "name": "assets/wardrobe-v1/J02-thumb.png",
+      "bytes": 19840,
+      "sha256": "e265c027aa7d23560dc6443f245a24128589b43217402c6a7b47c7dddceab165"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-J02.png",
+      "bytes": 2472,
+      "sha256": "406e49bf767c5f113fd262f99350c10f62bad1d3a1e1e5b1c2c8984963851c78"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-J02.png",
+      "bytes": 1345,
+      "sha256": "2408886641f6df8264e35e4329d573f01cf1b34ddea01f9024344fc720d241b5"
+    },
+    {
+      "name": "assets/wardrobe-v1/J03-thumb.png",
+      "bytes": 11977,
+      "sha256": "4f46f271124262890dd46f4b3c88f04593a62284e4893d000a3886dd0826be46"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-J03.png",
+      "bytes": 3034,
+      "sha256": "5b58d1b4e17323a03dcfaa6fb5772f2b9a5e383537bf42c8b3ef080b3d54d177"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-J03.png",
+      "bytes": 1593,
+      "sha256": "65ec3e07e5b3ffe800a4d136334e95ca8424e27499e5876ae8268a7fe85245b0"
+    },
+    {
+      "name": "assets/wardrobe-v1/J04-thumb.png",
+      "bytes": 15901,
+      "sha256": "68242ced7553f2d2050a27ee3df2e155a69c56be4ebc395a044df8fb8a7e1c77"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-J04.png",
+      "bytes": 2403,
+      "sha256": "82942bb90b2d35afce1a72d17b90febeccc0616e91439ad3381aff10121c92f5"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-J04.png",
+      "bytes": 1286,
+      "sha256": "9cceb25061e71bd37e08e7ef45ca809a9db72e166cbe00cf45d77c6e594ae1fc"
+    },
+    {
+      "name": "assets/wardrobe-v1/J05-thumb.png",
+      "bytes": 12907,
+      "sha256": "8dc32066ac1061ed5464bc38832bfd58bbe5641d966946ced255d1e621969ec3"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-J05.png",
+      "bytes": 1205,
+      "sha256": "b66c662fc62070279a0983546f13c47f57c9c3a0cb099cf3970ee6793bf0ca1c"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-J05.png",
+      "bytes": 878,
+      "sha256": "fd38927389886cb36bb2ab49234c290ff4b8b52019b987d1a58aaeab62db8f0f"
+    },
+    {
+      "name": "assets/wardrobe-v1/J06-thumb.png",
+      "bytes": 27327,
+      "sha256": "161af2b254be8f5c50f2bb4dc835f026d9ac0871e9e360bf5ce132bdd3939adf"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-J06.png",
+      "bytes": 10215,
+      "sha256": "41f834ca2673a7e0e99f6f41745b56f63158f111dccb0bbb1a4cc89b93879cf7"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-J06.png",
+      "bytes": 4443,
+      "sha256": "8a5cecade199279babc8ea74e41cb11f10e15281c94d2429b296981751a8cf1f"
+    },
+    {
+      "name": "assets/wardrobe-v1/J07-thumb.png",
+      "bytes": 19792,
+      "sha256": "8151a1ddc8f4248b8d8e037e6b18281efdfbc3fb21c1bfe7a39fae758836d7ed"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-J07.png",
+      "bytes": 9356,
+      "sha256": "5531ed949db3298670e28f0d387bf26b2f24b03c02dc558f79713c065b9aac30"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-J07.png",
+      "bytes": 4219,
+      "sha256": "b69717e09576d2f50c8caea27ec4bbe169660b8623adfc87a5a2894255994e36"
+    },
+    {
+      "name": "assets/wardrobe-v1/J08-thumb.png",
+      "bytes": 13929,
+      "sha256": "7585edb62e0b1799f9dd85fbdc9a18d87153776c9688a6c3572b05c47504b6b6"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-J08.png",
+      "bytes": 5183,
+      "sha256": "a6696e767e795b5a9aeec0162b34640cda3d0f069a1af43160ccddf3d87c2dcf"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-J08.png",
+      "bytes": 2466,
+      "sha256": "9fe428b1cb62c7008df6431cf7b9b6d12a6fc54b2b565342f877dcfe27b39bee"
+    },
+    {
+      "name": "assets/wardrobe-v1/J09-thumb.png",
+      "bytes": 30814,
+      "sha256": "24369dec31b45243969e7d6c60847779791c26f6bdafda65f76f52aa46f22de2"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-J09.png",
+      "bytes": 15854,
+      "sha256": "9427045f756a6f46f3a4d1d70597268dfba8c037fc97a2ae6fc054c3e80552d4"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-J09.png",
+      "bytes": 9619,
+      "sha256": "5565e4fc45e10e44d2b31a7943c68e7f209607176b196d103f4275707610649c"
+    },
+    {
+      "name": "assets/wardrobe-v1/J10-thumb.png",
+      "bytes": 30777,
+      "sha256": "17627b6f066a15eadaa7cfdcdf9328062935b01fb33ac624b1c6e730695e7f62"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-J10.png",
+      "bytes": 16481,
+      "sha256": "38c2cb82cce3a9053c637431be8c2dd2a05f5c2c188b10163efdac74c6fb4db5"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-J10.png",
+      "bytes": 10199,
+      "sha256": "8ae2e73eabbc69f057af4b9b088c052194d5075cc33d3274659de4e21050cc68"
+    },
+    {
+      "name": "assets/wardrobe-v1/J11-thumb.png",
+      "bytes": 30626,
+      "sha256": "602bd48a4a928d928b86527e579f347543f7e4e8b4a4b723a0a20b013288ed72"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-J11.png",
+      "bytes": 16680,
+      "sha256": "2569d010d4dd46e8ae16b23d85c4408d16c536b4d1466d0b113d0fd442e64b45"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-J11.png",
+      "bytes": 9992,
+      "sha256": "5b71091c963991c994f6e3e3e7b499bebc3cd3036e5f3506623e5e25a9887b66"
+    },
+    {
+      "name": "assets/wardrobe-v1/J12-thumb.png",
+      "bytes": 30375,
+      "sha256": "4ebd9c4e96f2275a5f1255bde579b698299e90c5dbcfafe84e45df08b592914a"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-J12.png",
+      "bytes": 15547,
+      "sha256": "ecc9951e735165fd968d6f1b49a834985f1a1d76e030b8297ea166ea7fd30563"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-J12.png",
+      "bytes": 9601,
+      "sha256": "75af9f4bd5c681fe700f20c24e9e46ba64ccaa92099500d6b56415fd9d16fb96"
+    },
+    {
+      "name": "assets/wardrobe-v1/WD01-thumb.png",
+      "bytes": 31571,
+      "sha256": "7bed8cd6b557815512c47ba2da2593c3f4dd133e90fa5fcd116467c3a5041a56"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-WD01.png",
+      "bytes": 83648,
+      "sha256": "bb5770e1b2f071968cada5b25adeacd681d8dae482f9a4ab8d4b30cab6b17542"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-body-WD01.png",
+      "bytes": 110829,
+      "sha256": "f1f546fe6a3c4cf15cf6d3479ada3e6afa3ee83be4f6689601c23325df91136f"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-front-WD01.png",
+      "bytes": 46573,
+      "sha256": "4cefc2ae8ef89eef53de8a5de632da4eeeba4811494df7942727a3634d590ba2"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-WD01.png",
+      "bytes": 57575,
+      "sha256": "feaf5ce8fc7effe93d612ca811dfc0185362972ef197a8e2b9f0ec6677fe981a"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-body-WD01.png",
+      "bytes": 74500,
+      "sha256": "26c68f17b0e5c12f5b0aeaaed9ca40c022ee1eeabd1ebffeb655aab5fdc2831f"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-front-WD01.png",
+      "bytes": 22756,
+      "sha256": "0bacd25eb350bcefc4df34df65f5cc13533f552b28854a46a58a52a6c50d94bc"
+    },
+    {
+      "name": "assets/wardrobe-v1/WD02-thumb.png",
+      "bytes": 33255,
+      "sha256": "6704e56347bc792e3dad6ef4d653bc6796e5f5389cefae14de8169e98fe945f5"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-WD02.png",
+      "bytes": 92951,
+      "sha256": "d1a7de0b2a8a7609c9c8c1436da6d6421f3444240c9c67fb827c6c520a4f43d3"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-body-WD02.png",
+      "bytes": 108836,
+      "sha256": "e4dad4d06b2774a783816b67ae1ceab2326039047e683cc05a857a971c700d0d"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-front-WD02.png",
+      "bytes": 46573,
+      "sha256": "4cefc2ae8ef89eef53de8a5de632da4eeeba4811494df7942727a3634d590ba2"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-WD02.png",
+      "bytes": 62691,
+      "sha256": "f27c09a9daf3fa358f6c64b792ff486c00a075a28ea1b0523dd9da1f2b7b6324"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-body-WD02.png",
+      "bytes": 72798,
+      "sha256": "64308ebcff7e09b86f98b368a57d2d7668aaffbc5e7fc20372ecd559c952f5ab"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-front-WD02.png",
+      "bytes": 22756,
+      "sha256": "0bacd25eb350bcefc4df34df65f5cc13533f552b28854a46a58a52a6c50d94bc"
+    },
+    {
+      "name": "assets/wardrobe-v1/WD03-thumb.png",
+      "bytes": 30138,
+      "sha256": "11b129a88061696f29b40ad296fcf2f8cd02bcaac3a4a89f74cabb26a01ce801"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-WD03.png",
+      "bytes": 68325,
+      "sha256": "60442371631b3fb1d0c4a38aa40c3b1e3c5e416afcc7fa02b701642ac9f063aa"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-body-WD03.png",
+      "bytes": 125273,
+      "sha256": "914d4a6d4bba61b497c507b6c44785923aed43e1eb0769eb0afd1df4c8feef48"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-front-WD03.png",
+      "bytes": 46573,
+      "sha256": "4cefc2ae8ef89eef53de8a5de632da4eeeba4811494df7942727a3634d590ba2"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-WD03.png",
+      "bytes": 46784,
+      "sha256": "621e1bc744078b72957db6acdb168bdbf108d1948a5aeeaf939e72e8f1724942"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-body-WD03.png",
+      "bytes": 87020,
+      "sha256": "6318f346301c13b49308d4d7ba2c5f10a1db0b6bd86d61e915347ba7812edb3b"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-front-WD03.png",
+      "bytes": 22756,
+      "sha256": "0bacd25eb350bcefc4df34df65f5cc13533f552b28854a46a58a52a6c50d94bc"
+    },
+    {
+      "name": "assets/wardrobe-v1/WD04-thumb.png",
+      "bytes": 33762,
+      "sha256": "7d6b7ff4d8145a35ea98bc0f44aace2d90e7bcfc3ade410d572f88b92ced42c8"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-WD04.png",
+      "bytes": 93012,
+      "sha256": "fe7e61172c3450d09cb5950d64f015ae4df18f87b0e91d89bf7e582eb7f15029"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-body-WD04.png",
+      "bytes": 108836,
+      "sha256": "e4dad4d06b2774a783816b67ae1ceab2326039047e683cc05a857a971c700d0d"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-front-WD04.png",
+      "bytes": 46573,
+      "sha256": "4cefc2ae8ef89eef53de8a5de632da4eeeba4811494df7942727a3634d590ba2"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-WD04.png",
+      "bytes": 62328,
+      "sha256": "e4f89800e6422b99d5102ed9be865a9f5ee7b37aa11c1e10c13fe357355cb2f5"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-body-WD04.png",
+      "bytes": 72798,
+      "sha256": "64308ebcff7e09b86f98b368a57d2d7668aaffbc5e7fc20372ecd559c952f5ab"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-front-WD04.png",
+      "bytes": 22756,
+      "sha256": "0bacd25eb350bcefc4df34df65f5cc13533f552b28854a46a58a52a6c50d94bc"
+    },
+    {
+      "name": "assets/wardrobe-v1/WD05-thumb.png",
+      "bytes": 40071,
+      "sha256": "cc2439710ababe1cca81de12c3f74c87be21f24233bcfda547024c239aa3264f"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-WD05.png",
+      "bytes": 92580,
+      "sha256": "04407576c124f92aeed95d2bb5c1f29de9729a2686b63a06e2cefd9be40b9d56"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-body-WD05.png",
+      "bytes": 124257,
+      "sha256": "9a867aefe4e1de5cb51118c88ef545e0ddc9f5d63b6c6b3b0d4634c4ccae4bab"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-front-WD05.png",
+      "bytes": 46573,
+      "sha256": "4cefc2ae8ef89eef53de8a5de632da4eeeba4811494df7942727a3634d590ba2"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-WD05.png",
+      "bytes": 62163,
+      "sha256": "a01856750dda8b990cb07925dac2b4eebdfd005df75f599d6af3b234349702ee"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-body-WD05.png",
+      "bytes": 85886,
+      "sha256": "64fd3c07afac6d7877c6331b60c4658470e38f9b2458e1557ff88634e145e9ff"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-front-WD05.png",
+      "bytes": 22756,
+      "sha256": "0bacd25eb350bcefc4df34df65f5cc13533f552b28854a46a58a52a6c50d94bc"
+    },
+    {
+      "name": "assets/wardrobe-v1/WD06-thumb.png",
+      "bytes": 35070,
+      "sha256": "ea395686ae7a82724f06d041568da684a47401bcb0580ff0098148462e69e9e9"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-WD06.png",
+      "bytes": 96917,
+      "sha256": "f5459c72e168f62fb20bc8162323b6f187b9137b55500daf62e40fc1feae1889"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-body-WD06.png",
+      "bytes": 108836,
+      "sha256": "e4dad4d06b2774a783816b67ae1ceab2326039047e683cc05a857a971c700d0d"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-front-WD06.png",
+      "bytes": 46573,
+      "sha256": "4cefc2ae8ef89eef53de8a5de632da4eeeba4811494df7942727a3634d590ba2"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-WD06.png",
+      "bytes": 64748,
+      "sha256": "0685a10172050053a22ac7fa9bcf8ffd54ba2789c37245781a380227552c2368"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-body-WD06.png",
+      "bytes": 72798,
+      "sha256": "64308ebcff7e09b86f98b368a57d2d7668aaffbc5e7fc20372ecd559c952f5ab"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-front-WD06.png",
+      "bytes": 22756,
+      "sha256": "0bacd25eb350bcefc4df34df65f5cc13533f552b28854a46a58a52a6c50d94bc"
+    },
+    {
+      "name": "assets/wardrobe-v1/WD07-thumb.png",
+      "bytes": 29656,
+      "sha256": "cace5ff14705d3697d4891160290c605e63c415cea13b961c0a5772ddf9aebec"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-WD07.png",
+      "bytes": 82458,
+      "sha256": "891ba86d72b1b185bd8fe1e5548aa48b76379aeeb389d65d1ff81a789726b733"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-body-WD07.png",
+      "bytes": 124257,
+      "sha256": "9a867aefe4e1de5cb51118c88ef545e0ddc9f5d63b6c6b3b0d4634c4ccae4bab"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-front-WD07.png",
+      "bytes": 46573,
+      "sha256": "4cefc2ae8ef89eef53de8a5de632da4eeeba4811494df7942727a3634d590ba2"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-WD07.png",
+      "bytes": 55277,
+      "sha256": "1935d97ea963b58b4e71eede19212c004bf2ef0fc2cc5ad06f820c3c85688c6c"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-body-WD07.png",
+      "bytes": 85886,
+      "sha256": "64fd3c07afac6d7877c6331b60c4658470e38f9b2458e1557ff88634e145e9ff"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-front-WD07.png",
+      "bytes": 22756,
+      "sha256": "0bacd25eb350bcefc4df34df65f5cc13533f552b28854a46a58a52a6c50d94bc"
+    },
+    {
+      "name": "assets/wardrobe-v1/WD08-thumb.png",
+      "bytes": 35336,
+      "sha256": "e15b56f47dbfdd24faa9a01e39362188fed27bc3a169e9ace9d2ed9e7a76ff9d"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-WD08.png",
+      "bytes": 84042,
+      "sha256": "396e6262b8a9d9e72061d665eaf15de670496769d40114ff6298fdec869ee71d"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-body-WD08.png",
+      "bytes": 108836,
+      "sha256": "e4dad4d06b2774a783816b67ae1ceab2326039047e683cc05a857a971c700d0d"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-front-WD08.png",
+      "bytes": 46573,
+      "sha256": "4cefc2ae8ef89eef53de8a5de632da4eeeba4811494df7942727a3634d590ba2"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-WD08.png",
+      "bytes": 57357,
+      "sha256": "6d80f211eb752dfc3d4919e6be857189926d6b1df69f68740feeb5867c39fbce"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-body-WD08.png",
+      "bytes": 72798,
+      "sha256": "64308ebcff7e09b86f98b368a57d2d7668aaffbc5e7fc20372ecd559c952f5ab"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-front-WD08.png",
+      "bytes": 22756,
+      "sha256": "0bacd25eb350bcefc4df34df65f5cc13533f552b28854a46a58a52a6c50d94bc"
+    },
+    {
+      "name": "assets/wardrobe-v1/WD09-thumb.png",
+      "bytes": 31732,
+      "sha256": "264cecb29e9b025c37009b1525e7754ac55a7b153ed7e382a99589534aa93cac"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-WD09.png",
+      "bytes": 79122,
+      "sha256": "fc8099d010ece12e5473075e1259f71f23f6f5c951b2261d4cab273f6080f88d"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-body-WD09.png",
+      "bytes": 125273,
+      "sha256": "914d4a6d4bba61b497c507b6c44785923aed43e1eb0769eb0afd1df4c8feef48"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-front-WD09.png",
+      "bytes": 46573,
+      "sha256": "4cefc2ae8ef89eef53de8a5de632da4eeeba4811494df7942727a3634d590ba2"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-WD09.png",
+      "bytes": 54490,
+      "sha256": "8df3524ab21fc0a7b093a85fe92df2dc30a61df42a5e69dd12cb2843e01d8d42"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-body-WD09.png",
+      "bytes": 87020,
+      "sha256": "6318f346301c13b49308d4d7ba2c5f10a1db0b6bd86d61e915347ba7812edb3b"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-front-WD09.png",
+      "bytes": 22756,
+      "sha256": "0bacd25eb350bcefc4df34df65f5cc13533f552b28854a46a58a52a6c50d94bc"
+    },
+    {
+      "name": "assets/wardrobe-v1/WD10-thumb.png",
+      "bytes": 32851,
+      "sha256": "8b94e5e8ff4790a5bd80b85f6f4cf1d3ba1a97b69e670506c166ef51314be26c"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-WD10.png",
+      "bytes": 76525,
+      "sha256": "dbfa9606fafcf52cef0a98e9fad4c2c567536a6916f9f49991532d60088f8d58"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-body-WD10.png",
+      "bytes": 108836,
+      "sha256": "e4dad4d06b2774a783816b67ae1ceab2326039047e683cc05a857a971c700d0d"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-front-WD10.png",
+      "bytes": 46573,
+      "sha256": "4cefc2ae8ef89eef53de8a5de632da4eeeba4811494df7942727a3634d590ba2"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-WD10.png",
+      "bytes": 52502,
+      "sha256": "fe5dd90d1c26c6d3166f4c8607790b687cde8325cea2544caa453b5b13600403"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-body-WD10.png",
+      "bytes": 72798,
+      "sha256": "64308ebcff7e09b86f98b368a57d2d7668aaffbc5e7fc20372ecd559c952f5ab"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-front-WD10.png",
+      "bytes": 22756,
+      "sha256": "0bacd25eb350bcefc4df34df65f5cc13533f552b28854a46a58a52a6c50d94bc"
+    },
+    {
+      "name": "assets/wardrobe-v1/WD11-thumb.png",
+      "bytes": 33517,
+      "sha256": "6cf1b985b7bfc6e8034347b8171471308f306505dd645212f821797c0e714419"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-WD11.png",
+      "bytes": 76109,
+      "sha256": "d6fbdd99ffab2041182c4ba60a8ad13ba33411ed45046327e14af30d95614a34"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-body-WD11.png",
+      "bytes": 124257,
+      "sha256": "9a867aefe4e1de5cb51118c88ef545e0ddc9f5d63b6c6b3b0d4634c4ccae4bab"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-front-WD11.png",
+      "bytes": 46573,
+      "sha256": "4cefc2ae8ef89eef53de8a5de632da4eeeba4811494df7942727a3634d590ba2"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-WD11.png",
+      "bytes": 51378,
+      "sha256": "992909c966460c0bee3e2296997ef4e298bfbd06203c3549a6d757792dccfd1f"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-body-WD11.png",
+      "bytes": 85886,
+      "sha256": "64fd3c07afac6d7877c6331b60c4658470e38f9b2458e1557ff88634e145e9ff"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-front-WD11.png",
+      "bytes": 22756,
+      "sha256": "0bacd25eb350bcefc4df34df65f5cc13533f552b28854a46a58a52a6c50d94bc"
+    },
+    {
+      "name": "assets/wardrobe-v1/WD12-thumb.png",
+      "bytes": 37319,
+      "sha256": "8fd602c0566b9b924826996d246823ecea6058731eb40514b6a8f741e021ad86"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-WD12.png",
+      "bytes": 91723,
+      "sha256": "6b1f16245d3ff1592f1d17a0ccf4a4da8e30d198c70d6474c84ee383213f8464"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-body-WD12.png",
+      "bytes": 124257,
+      "sha256": "9a867aefe4e1de5cb51118c88ef545e0ddc9f5d63b6c6b3b0d4634c4ccae4bab"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-front-WD12.png",
+      "bytes": 46573,
+      "sha256": "4cefc2ae8ef89eef53de8a5de632da4eeeba4811494df7942727a3634d590ba2"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-WD12.png",
+      "bytes": 61785,
+      "sha256": "5b475ec78b595e22f56bdbe65abe11b0d8ee2f3566ee611a9119fdaa78c9a6d7"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-body-WD12.png",
+      "bytes": 85886,
+      "sha256": "64fd3c07afac6d7877c6331b60c4658470e38f9b2458e1557ff88634e145e9ff"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-front-WD12.png",
+      "bytes": 22756,
+      "sha256": "0bacd25eb350bcefc4df34df65f5cc13533f552b28854a46a58a52a6c50d94bc"
+    },
+    {
+      "name": "assets/wardrobe-v1/WS01-thumb.png",
+      "bytes": 34350,
+      "sha256": "56cadf2c3316240f037bd5bb782a897adf7cdb266616a76fc7e2d9b47ed84d48"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-WS01.png",
+      "bytes": 40285,
+      "sha256": "79c596ad61240254392f9d1c32dd70aaf15a00c081e4d6e9ae02471e08496ebf"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-WS01.png",
+      "bytes": 28027,
+      "sha256": "6e64d21e7979057b0440ec1277dff443e83d822226b6e6499077d6d9e8cb894b"
+    },
+    {
+      "name": "assets/wardrobe-v1/WS02-thumb.png",
+      "bytes": 36495,
+      "sha256": "fc3ca270a262f080fba0cbbaeb4a1e76340994e421ff2ea3dec0f8b607c891a6"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-WS02.png",
+      "bytes": 45197,
+      "sha256": "fc4f48e2ef7b4abb41e04a80cad5eff33ca211d94fc6d9a7320bf1c0c57c4517"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-WS02.png",
+      "bytes": 31785,
+      "sha256": "b50b0b9ca5508289b11a19c46fea5f19b762f3ac5e9a8e3ba98702bae1345319"
+    },
+    {
+      "name": "assets/wardrobe-v1/WS03-thumb.png",
+      "bytes": 38290,
+      "sha256": "9540219cca0889c4984e69421f37185370462f565b062a820681e4c984a593c6"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-WS03.png",
+      "bytes": 45300,
+      "sha256": "95cd3a509ed51a4dc641ed942336ee7d0b086228e98d8a1772d7bf8945af5fb0"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-WS03.png",
+      "bytes": 31860,
+      "sha256": "604d6934990b129f80a075a971a263426eec057e5c31f50dd1c5d5db08a215bb"
+    },
+    {
+      "name": "assets/wardrobe-v1/WS04-thumb.png",
+      "bytes": 34992,
+      "sha256": "75da416357531d7ce891f7488bce067d45e482f36bd79fe1e5988735d76b6b64"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-WS04.png",
+      "bytes": 38478,
+      "sha256": "42c5fce21bd5f994868c568e56b1e1c2bb039a4e20e9c2dfaee61f372dac56ab"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-WS04.png",
+      "bytes": 26939,
+      "sha256": "56e36aab849987e069fc7c088316a06591b2115465595abf2b4587dc085b6474"
+    },
+    {
+      "name": "assets/wardrobe-v1/WS05-thumb.png",
+      "bytes": 43217,
+      "sha256": "019c8f01bba668bce16aff5c1f83acc2f3d94c2126ed74e55bab93f030c4ecd1"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-WS05.png",
+      "bytes": 43851,
+      "sha256": "b0dad4cb09a28c3e23e1f1917120af090fb6d435df7fa6457361d03844c72ddd"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-WS05.png",
+      "bytes": 30660,
+      "sha256": "9f61c53345bd738cceda2d6bf028ae456a6318bf904b6efa6bde2fd5f94f5097"
+    },
+    {
+      "name": "assets/wardrobe-v1/WS06-thumb.png",
+      "bytes": 30339,
+      "sha256": "efb6d0028323a84833433534f31d2e35d08a6a83b8eef782e9e2621fbabb3838"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-WS06.png",
+      "bytes": 38913,
+      "sha256": "52fdb11101f0f66d4939ebc147916ed534aded9814590e09b3513d25eae533b6"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-WS06.png",
+      "bytes": 26652,
+      "sha256": "a0dcb3c6a550e1973bb386e3141eb924e1146bc725b9691e1f90f3b9b5499db4"
+    },
+    {
+      "name": "assets/wardrobe-v1/WT01-thumb.png",
+      "bytes": 42588,
+      "sha256": "ae718da7963f3a536f89ae567735ed21c5855575dab3419dc61c4a2b29f53791"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-WT01.png",
+      "bytes": 65459,
+      "sha256": "ac18253bce964f94fa662e2d35aca29de4ff18da659a18a8d3742f6214e58710"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-body-WT01.png",
+      "bytes": 108836,
+      "sha256": "e4dad4d06b2774a783816b67ae1ceab2326039047e683cc05a857a971c700d0d"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-front-WT01.png",
+      "bytes": 46573,
+      "sha256": "4cefc2ae8ef89eef53de8a5de632da4eeeba4811494df7942727a3634d590ba2"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-WT01.png",
+      "bytes": 37606,
+      "sha256": "30980a8896f8c858982aec92fdf831cfe6a7ff9b8ecdc126d3386bdce8a39496"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-body-WT01.png",
+      "bytes": 72798,
+      "sha256": "64308ebcff7e09b86f98b368a57d2d7668aaffbc5e7fc20372ecd559c952f5ab"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-front-WT01.png",
+      "bytes": 22756,
+      "sha256": "0bacd25eb350bcefc4df34df65f5cc13533f552b28854a46a58a52a6c50d94bc"
+    },
+    {
+      "name": "assets/wardrobe-v1/WT02-thumb.png",
+      "bytes": 35885,
+      "sha256": "487cb01458dc537170042349ea3227290a74b8be8a634fb9da1ad52a73b841b7"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-WT02.png",
+      "bytes": 58439,
+      "sha256": "e5ba4c4f21a9a1d5d799ef5b0dbd91d678bac19d296afe62d09c2352339d36a3"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-body-WT02.png",
+      "bytes": 125273,
+      "sha256": "914d4a6d4bba61b497c507b6c44785923aed43e1eb0769eb0afd1df4c8feef48"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-front-WT02.png",
+      "bytes": 46573,
+      "sha256": "4cefc2ae8ef89eef53de8a5de632da4eeeba4811494df7942727a3634d590ba2"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-WT02.png",
+      "bytes": 34240,
+      "sha256": "ac8203778908a6f9adde443442efa89298660b9d8d06d10bd4171013f16995fc"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-body-WT02.png",
+      "bytes": 87020,
+      "sha256": "6318f346301c13b49308d4d7ba2c5f10a1db0b6bd86d61e915347ba7812edb3b"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-front-WT02.png",
+      "bytes": 22756,
+      "sha256": "0bacd25eb350bcefc4df34df65f5cc13533f552b28854a46a58a52a6c50d94bc"
+    },
+    {
+      "name": "assets/wardrobe-v1/WT03-thumb.png",
+      "bytes": 38137,
+      "sha256": "25b035e33b0bce3a85cf76ab6e6f1a6ea47e85bbbc9b664289a4fd838796064e"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-WT03.png",
+      "bytes": 50765,
+      "sha256": "00c166cf07c09d4b349b698a92bb4393771a141bca4a697cf0a3c5ce8aa27420"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-body-WT03.png",
+      "bytes": 124257,
+      "sha256": "9a867aefe4e1de5cb51118c88ef545e0ddc9f5d63b6c6b3b0d4634c4ccae4bab"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-front-WT03.png",
+      "bytes": 46573,
+      "sha256": "4cefc2ae8ef89eef53de8a5de632da4eeeba4811494df7942727a3634d590ba2"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-WT03.png",
+      "bytes": 30512,
+      "sha256": "593bd32fdca89cda35311bcdd3aac47c88afe084765615e77e0ac1638b757b87"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-body-WT03.png",
+      "bytes": 85886,
+      "sha256": "64fd3c07afac6d7877c6331b60c4658470e38f9b2458e1557ff88634e145e9ff"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-front-WT03.png",
+      "bytes": 22756,
+      "sha256": "0bacd25eb350bcefc4df34df65f5cc13533f552b28854a46a58a52a6c50d94bc"
+    },
+    {
+      "name": "assets/wardrobe-v1/WT04-thumb.png",
+      "bytes": 37224,
+      "sha256": "d69bc9b164640e3266b4d32371a7319141d54ca835a3ad229afc65b28e9d0f76"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-WT04.png",
+      "bytes": 54826,
+      "sha256": "bc1b8741d7db581cf4f0a45378c63903867e63bd25fbe503c56e06a00b55f778"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-body-WT04.png",
+      "bytes": 108836,
+      "sha256": "e4dad4d06b2774a783816b67ae1ceab2326039047e683cc05a857a971c700d0d"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-front-WT04.png",
+      "bytes": 46573,
+      "sha256": "4cefc2ae8ef89eef53de8a5de632da4eeeba4811494df7942727a3634d590ba2"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-WT04.png",
+      "bytes": 32018,
+      "sha256": "e1678b6ef88451526a05d07346de07e886dd72f169938c82f99d4438b83ac39b"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-body-WT04.png",
+      "bytes": 72798,
+      "sha256": "64308ebcff7e09b86f98b368a57d2d7668aaffbc5e7fc20372ecd559c952f5ab"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-front-WT04.png",
+      "bytes": 22756,
+      "sha256": "0bacd25eb350bcefc4df34df65f5cc13533f552b28854a46a58a52a6c50d94bc"
+    },
+    {
+      "name": "assets/wardrobe-v1/WT05-thumb.png",
+      "bytes": 47322,
+      "sha256": "f81e6c7d5d582d6a24e682f6850d3e7a67a85ead6f708ca27193ab940bea3dc6"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-WT05.png",
+      "bytes": 68168,
+      "sha256": "2254d202ab82a9ed0d82aa53c674f3904808d6191c6cdc0c7a5f8461ca300653"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-body-WT05.png",
+      "bytes": 108836,
+      "sha256": "e4dad4d06b2774a783816b67ae1ceab2326039047e683cc05a857a971c700d0d"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-front-WT05.png",
+      "bytes": 46573,
+      "sha256": "4cefc2ae8ef89eef53de8a5de632da4eeeba4811494df7942727a3634d590ba2"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-WT05.png",
+      "bytes": 39811,
+      "sha256": "e341f456b5bb420535199e48724cf887d443431d2cbf3aa44e9187a1245d41c8"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-body-WT05.png",
+      "bytes": 72798,
+      "sha256": "64308ebcff7e09b86f98b368a57d2d7668aaffbc5e7fc20372ecd559c952f5ab"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-front-WT05.png",
+      "bytes": 22756,
+      "sha256": "0bacd25eb350bcefc4df34df65f5cc13533f552b28854a46a58a52a6c50d94bc"
+    },
+    {
+      "name": "assets/wardrobe-v1/WT06-thumb.png",
+      "bytes": 38250,
+      "sha256": "2f110dd2e6557ae130b85bc721b950840583ff46ec5edbe5fbbbfddc788a34ab"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-WT06.png",
+      "bytes": 62537,
+      "sha256": "b596757fd0e9200a25d99b91d7beb28b3f684806947aa8ee92ccce3e2b3e0999"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-body-WT06.png",
+      "bytes": 108836,
+      "sha256": "e4dad4d06b2774a783816b67ae1ceab2326039047e683cc05a857a971c700d0d"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-front-WT06.png",
+      "bytes": 46573,
+      "sha256": "4cefc2ae8ef89eef53de8a5de632da4eeeba4811494df7942727a3634d590ba2"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-WT06.png",
+      "bytes": 37746,
+      "sha256": "0c86a1e1b3072da4192e8eb03278b4f9e5dcfe15eb7cbb19fb6ec476b99cf84c"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-body-WT06.png",
+      "bytes": 72798,
+      "sha256": "64308ebcff7e09b86f98b368a57d2d7668aaffbc5e7fc20372ecd559c952f5ab"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-front-WT06.png",
+      "bytes": 22756,
+      "sha256": "0bacd25eb350bcefc4df34df65f5cc13533f552b28854a46a58a52a6c50d94bc"
+    },
+    {
+      "name": "assets/wardrobe-v1/WO01-thumb.png",
+      "bytes": 46646,
+      "sha256": "37be058e96d1ae4f1bb0eeffca00cd9be09a1ade20df56cdbb51f1e6a1bb6857"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-WO01.png",
+      "bytes": 80267,
+      "sha256": "4b77fc5ccd85db42a919df3aaf19c78e97fca291e77b44dae9f43be9300e4059"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-body-WO01.png",
+      "bytes": 108836,
+      "sha256": "e4dad4d06b2774a783816b67ae1ceab2326039047e683cc05a857a971c700d0d"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-front-WO01.png",
+      "bytes": 46573,
+      "sha256": "4cefc2ae8ef89eef53de8a5de632da4eeeba4811494df7942727a3634d590ba2"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-underlay-WO01.png",
+      "bytes": 1906,
+      "sha256": "afa13fc2b06bda4ba32d48b4fb4a7a383fbda3666a068ae644b53021f386ea44"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-WO01.png",
+      "bytes": 46220,
+      "sha256": "b3112160277862a5381ca06f5a0eb29ece518797e0da41a31ac0ab4a75896d55"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-body-WO01.png",
+      "bytes": 72798,
+      "sha256": "64308ebcff7e09b86f98b368a57d2d7668aaffbc5e7fc20372ecd559c952f5ab"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-front-WO01.png",
+      "bytes": 22756,
+      "sha256": "0bacd25eb350bcefc4df34df65f5cc13533f552b28854a46a58a52a6c50d94bc"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-underlay-WO01.png",
+      "bytes": 1615,
+      "sha256": "8f0cc4408e6deeaffff121d291b625c33ded4a0a7c37f383e00ce7c86077df89"
+    },
+    {
+      "name": "assets/wardrobe-v1/WO02-thumb.png",
+      "bytes": 43788,
+      "sha256": "b2db60d03aa89204a087716664e7b2c4f1c3d9cec8375c21fe842236556d41b2"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-WO02.png",
+      "bytes": 70373,
+      "sha256": "685fc081ea501d63cbf16966430f7f6d19bcd1681163dc3168d40edd35bb0cc0"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-body-WO02.png",
+      "bytes": 108836,
+      "sha256": "e4dad4d06b2774a783816b67ae1ceab2326039047e683cc05a857a971c700d0d"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-front-WO02.png",
+      "bytes": 46573,
+      "sha256": "4cefc2ae8ef89eef53de8a5de632da4eeeba4811494df7942727a3634d590ba2"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-underlay-WO02.png",
+      "bytes": 2049,
+      "sha256": "d6f6c84649d1a82771adcd102ba2a2d99601435638a386a1b35bc73dfd9ee899"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-WO02.png",
+      "bytes": 41283,
+      "sha256": "3688c66b2aa4005a56f4db86644414ab61b288b04e1c019245c3c394b4aee443"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-body-WO02.png",
+      "bytes": 72798,
+      "sha256": "64308ebcff7e09b86f98b368a57d2d7668aaffbc5e7fc20372ecd559c952f5ab"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-front-WO02.png",
+      "bytes": 22756,
+      "sha256": "0bacd25eb350bcefc4df34df65f5cc13533f552b28854a46a58a52a6c50d94bc"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-underlay-WO02.png",
+      "bytes": 1794,
+      "sha256": "e199a0badf2456b9bf038a44764dd50ea622a32ad1bb042df7987717d76711f1"
+    },
+    {
+      "name": "assets/wardrobe-v1/WO03-thumb.png",
+      "bytes": 49380,
+      "sha256": "1f58c001878361939945e3a6214d8f25b2988f04419b5e0465064e31da7fb714"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-WO03.png",
+      "bytes": 79166,
+      "sha256": "6a7d1d744249f27d7302c0f85cdc956ab0759a12fc5cb787f00a2021f7e74b50"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-body-WO03.png",
+      "bytes": 124257,
+      "sha256": "9a867aefe4e1de5cb51118c88ef545e0ddc9f5d63b6c6b3b0d4634c4ccae4bab"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-front-WO03.png",
+      "bytes": 46573,
+      "sha256": "4cefc2ae8ef89eef53de8a5de632da4eeeba4811494df7942727a3634d590ba2"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-underlay-WO03.png",
+      "bytes": 2303,
+      "sha256": "1f6f6c51d2be328c5d3175451daaa9d5de9c53f95166b9e0879dfe7576ae501c"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-WO03.png",
+      "bytes": 45950,
+      "sha256": "dd5a8f24f6a30bf7419ca7b3a7c2770762d91ac49f50af3920d7ab942028ee85"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-body-WO03.png",
+      "bytes": 85886,
+      "sha256": "64fd3c07afac6d7877c6331b60c4658470e38f9b2458e1557ff88634e145e9ff"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-front-WO03.png",
+      "bytes": 22756,
+      "sha256": "0bacd25eb350bcefc4df34df65f5cc13533f552b28854a46a58a52a6c50d94bc"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-underlay-WO03.png",
+      "bytes": 1861,
+      "sha256": "769aa3212415a38d3095e8a628902293cf79c6ffdbd7321a0b9d11ec8126ba27"
+    },
+    {
+      "name": "assets/wardrobe-v1/WO04-thumb.png",
+      "bytes": 41683,
+      "sha256": "b44d524bbbf8c3a98415107b13a9ba34c400c12c577752b1a1758d9f39ab11a7"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-WO04.png",
+      "bytes": 60764,
+      "sha256": "7a38876a4e5554215a048bdbd195b0b6396966a90e8b49e5b436ead35512764c"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-body-WO04.png",
+      "bytes": 108836,
+      "sha256": "e4dad4d06b2774a783816b67ae1ceab2326039047e683cc05a857a971c700d0d"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-front-WO04.png",
+      "bytes": 46573,
+      "sha256": "4cefc2ae8ef89eef53de8a5de632da4eeeba4811494df7942727a3634d590ba2"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-underlay-WO04.png",
+      "bytes": 1966,
+      "sha256": "300a93161f0547d6a48c3abe30a423647ce0c842a4a0732599a9461770733332"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-WO04.png",
+      "bytes": 35914,
+      "sha256": "68cf003155de98e2f4e061c161254604f4a9c55bc8531e6d2c920ae5c517bdcc"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-body-WO04.png",
+      "bytes": 72798,
+      "sha256": "64308ebcff7e09b86f98b368a57d2d7668aaffbc5e7fc20372ecd559c952f5ab"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-front-WO04.png",
+      "bytes": 22756,
+      "sha256": "0bacd25eb350bcefc4df34df65f5cc13533f552b28854a46a58a52a6c50d94bc"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-underlay-WO04.png",
+      "bytes": 1743,
+      "sha256": "5dab2be5a23ef507d09bc1ed0bcbbc967a131b324f5ae549d6a62c4ad3e9803b"
+    },
+    {
+      "name": "assets/wardrobe-v1/WO05-thumb.png",
+      "bytes": 40105,
+      "sha256": "1a7dd313a895202d4dd4f71d7e4f4525b8f8d59fbf21b6107c4b25117b3c71f9"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-WO05.png",
+      "bytes": 60613,
+      "sha256": "f18db8d942e15ca8691d671319af00aea6b679f0a342aee462bfbb568f2fa99d"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-body-WO05.png",
+      "bytes": 108836,
+      "sha256": "e4dad4d06b2774a783816b67ae1ceab2326039047e683cc05a857a971c700d0d"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-front-WO05.png",
+      "bytes": 46573,
+      "sha256": "4cefc2ae8ef89eef53de8a5de632da4eeeba4811494df7942727a3634d590ba2"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-underlay-WO05.png",
+      "bytes": 2065,
+      "sha256": "ff620b3f814edb047f821d344f3a848b61bef9fda53542f5f83bd022b111bd4c"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-WO05.png",
+      "bytes": 35798,
+      "sha256": "c85bf0f831bf4f0287947831ac4a5418c0de0c47a8bb13f94141326d11e96aa8"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-body-WO05.png",
+      "bytes": 72798,
+      "sha256": "64308ebcff7e09b86f98b368a57d2d7668aaffbc5e7fc20372ecd559c952f5ab"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-front-WO05.png",
+      "bytes": 22756,
+      "sha256": "0bacd25eb350bcefc4df34df65f5cc13533f552b28854a46a58a52a6c50d94bc"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-underlay-WO05.png",
+      "bytes": 1730,
+      "sha256": "28234fcc092b9d76a37bf08e3da8d31f322e639c171f48527bf85f66c4f8c730"
+    },
+    {
+      "name": "assets/wardrobe-v1/WO06-thumb.png",
+      "bytes": 41828,
+      "sha256": "d871b23e095c5e2d34163b707e2a6d8c13f3b5d9f8432d2d0eed5a8bb9982141"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-WO06.png",
+      "bytes": 68443,
+      "sha256": "b0fe5853334381483cc5c6adcfa5ccbe44cbb96e612589cfcca6b89738a26de5"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-body-WO06.png",
+      "bytes": 104958,
+      "sha256": "a0a9dd3191ba8b552090d47408a9dbdff338e7bca70ba9dce0195fdca7a1a7ae"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-front-WO06.png",
+      "bytes": 42014,
+      "sha256": "809d4dd7d492657cd8fe3d005de0d723dd080b4216dd6d11ccaf77e95efef323"
+    },
+    {
+      "name": "assets/wardrobe-v1/cat-stand-underlay-WO06.png",
+      "bytes": 2211,
+      "sha256": "631643d52f1b34c905e52d505778ac5b30528cd2de822d38779742ef1e663bd7"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-WO06.png",
+      "bytes": 40178,
+      "sha256": "f83b100f4c17ec6e8945604c4e1b74a0cf156a517554dd2e940d2f03c203971a"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-body-WO06.png",
+      "bytes": 72031,
+      "sha256": "e8e995e073593fc1935c9c82cdb8b64f11eb7339f4d36709f21fecb3a5b12e42"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-front-WO06.png",
+      "bytes": 22756,
+      "sha256": "0bacd25eb350bcefc4df34df65f5cc13533f552b28854a46a58a52a6c50d94bc"
+    },
+    {
+      "name": "assets/wardrobe-v1/fox-stand-underlay-WO06.png",
+      "bytes": 1832,
+      "sha256": "1cf1ed3883e2fa09ab775221e98f1a06bb163d2886a8b2d2b57f7e489c44f376"
+    },
+    {
+      "name": "assets/wardrobe-v1/catalog.json",
+      "bytes": 240715,
+      "sha256": "d73fbe9328443e35ba61143913983f7da2dc54b886fd541044d58a8b203a9d0e"
     },
     {
       "name": "guide.txt",
-      "bytes": 796,
-      "sha256": "a9bcafb6ea92dfb96c86b81c43a9f47951dce9255e8dc8bf368bd1e386cfd061"
+      "bytes": 693,
+      "sha256": "b714b0871f7ff8661aecbdca550926eb4e4a88f80f5460eadadab2e2904ed44b"
     }
   ]
 }

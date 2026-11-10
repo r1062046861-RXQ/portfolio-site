@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>今天谁上班 · 新服饰试衣</title><link rel="stylesheet" href="./lab.css?v=paperdoll-wardrobe-20261110-152"><link rel="stylesheet" href="./wardrobe.css?v=paperdoll-wardrobe-20261110-152"></head>
+<body>
+  <header><span class="eyebrow">今天谁上班 / 纸娃娃衣橱</span><h1>今天穿什么</h1><p>54 款服装 · 24 款配饰，为小满和小夏试一套新搭配。</p><nav class="page-links"><a href="./">场景与动作预览</a><span aria-current="page">新服饰试衣</span></nav></header>
+  <main class="wardrobe-layout">
+    <section class="workbench wardrobe-stage" aria-label="双人试衣预览">
+      <div class="stage-heading"><h2>新装试穿</h2><span class="badge">本批已适配站姿</span></div>
+      <div class="actors">
+        <figure class="actor-card selected" data-actor="cat"><figcaption><button class="actor-select" data-who="cat" aria-pressed="true">小满</button><span class="pose-label">站姿试衣</span></figcaption><canvas id="cat-canvas" width="720" height="840" role="img" aria-label="小满的新服饰预览"></canvas><p class="costume" id="cat-costume">载入中</p></figure>
+        <figure class="actor-card" data-actor="fox"><figcaption><button class="actor-select" data-who="fox" aria-pressed="false">小夏</button><span class="pose-label">站姿试衣</span></figcaption><canvas id="fox-canvas" width="720" height="840" role="img" aria-label="小夏的新服饰预览"></canvas><p class="costume" id="fox-costume">载入中</p></figure>
+      </div>
+      <div class="playback"><button id="grab" aria-pressed="false">按住200ms抓取</button><label class="check"><input type="checkbox" id="anchors">显示锚点</label><button id="export">保存当前角色PNG</button></div>
+      <p id="fit-status" class="small-note" role="status">正在载入服饰…</p>
+    </section>
+    <aside class="wardrobe-editor">
+      <section class="panel"><h2 id="editor-name">小满的搭配</h2><div id="slots" class="fields"></div><div class="editor-actions"><button id="clear">清空新单品</button><button id="recommended">还原推荐搭配</button></div></section>
+      <details class="panel"><summary>查看穿戴图层</summary><div id="layers"></div><dl id="rig-info"></dl></details>
+    </aside>
+    <section class="panel wardrobe-gallery" aria-label="服饰目录"><div class="gallery-heading"><div><h2>选一件试试</h2><p id="catalog-count" class="small-note"></p></div><label class="search-field">搜索款式<input id="search" type="search" placeholder="名称或编号，例如 WD08" autocomplete="off"></label></div><nav id="filters" aria-label="服饰分类"></nav><p id="empty" hidden>没有找到对应款式。</p><div id="catalog"></div></section>
+    <section class="scope"><p>本页已接入新服饰的双人站姿试穿。裙装、外套与配饰可分别搭配；穿连衣裙时自动替换上衣和下装。</p><p>新服饰的坐姿、阅读、运动等动作帧正在等待后续适配。<a href="./">场景与动作预览</a>继续使用原服饰。</p></section>
+  </main>
+  <p id="error" role="alert" hidden></p><script type="module" src="./wardrobe.mjs?v=paperdoll-wardrobe-20261110-152"></script>
+</body>
+</html>

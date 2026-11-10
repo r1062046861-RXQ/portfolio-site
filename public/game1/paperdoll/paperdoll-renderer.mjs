@@ -1,4 +1,4 @@
-import {tintFabricPixels} from './paperdoll-core.mjs?v=paperdoll-v1-20261108-44';
+import {tintFabricPixels} from './paperdoll-core.mjs?v=paperdoll-wardrobe-20261110-152';
 
 const images = new Map();
 const safeAsset = src => typeof src === 'string' && /^assets\/[a-zA-Z0-9/_-]+\.(webp|png)$/.test(src) && !src.split('/').includes('..');
@@ -28,16 +28,23 @@ export function createPaperdollRenderer({canvas, assetBase = new URL('../', impo
   let revision = 0;
   return Object.freeze({
     cancel() {revision++;},
-    async render(plan, {hidden = [], anchors = false, grabbed = false, coordinateSpace = 'stage', tints = {}} = {}) {
+    async render(plan, {hidden = [], anchors = false, grabbed = false, coordinateSpace = 'stage', stageZoom = 1, tints = {}} = {}) {
       const ticket = ++revision;
       if (!plan || !['legacy-composite', 'semantic'].includes(plan.mode) || !plan.layers?.length || !['stage', 'native'].includes(coordinateSpace)) throw Error('纸娃娃绘制计划无效。');
+      if (!Number.isFinite(stageZoom) || stageZoom < .5 || stageZoom > 1.4) throw Error('预览放大比例无效。');
       if (plan.mode === 'semantic' && plan.layers.some(layer => !Array.isArray(layer.matrix) || layer.matrix.length !== 6 || !layer.matrix.every(Number.isFinite))) throw Error('缺少有效的语义层变换矩阵。');
       if (plan.mode === 'legacy-composite' && Object.keys(tints).length) throw Error('原复合图层禁止自动换色。');
       for (const slot of Object.keys(tints)) if (!plan.layers.some(layer => layer.slot === slot && layer.tintMask && ['top', 'bottom', 'neckwear'].includes(slot))) throw Error('换色需要明确的衣料槽和蒙版。');
       const width = plan.canvas.width, height = plan.canvas.height;
       const sized = async src => {const image = await loadImage(src); if ((image.naturalWidth ?? image.width) !== width || (image.naturalHeight ?? image.height) !== height) throw Error('所有角色图层和蒙版必须保持同一完整画布。'); return image;};
       const parts = await Promise.all(plan.layers.map(async layer => {
-        const image = await sized(layer.src), tint = tints[layer.slot];
+        let image = await sized(layer.src); const tint = tints[layer.slot];
+        if (layer.clipSrc !== undefined) {
+          if (!safeAsset(layer.clipSrc)) throw Error('衣物遮挡蒙版路径无效。');
+          const clip = await sized(layer.clipSrc), source = raster(image, width, height);
+          source.context.globalCompositeOperation = 'destination-in'; source.context.drawImage(clip, 0, 0);
+          source.context.globalCompositeOperation = 'source-over'; image = source.canvas;
+        }
         if (!tint) return image;
         const protectedSrc = tint.protectedSrc ?? layer.tintMask.protectedSrc;
         if (!Array.isArray(tint.color) || !safeAsset(layer.tintMask.src) || !safeAsset(protectedSrc)) throw Error('换色需要当前帧衣料蒙版、保护蒙版和明确RGB。');
@@ -49,7 +56,7 @@ export function createPaperdollRenderer({canvas, assetBase = new URL('../', impo
       if (ticket !== revision) return {committed: false};
       const ctx = canvas.getContext('2d'); ctx.clearRect(0, 0, canvas.width, canvas.height);
       const native = coordinateSpace === 'native';
-      const scale = native ? 1 : canvas.height * (plan.scale ?? .30) * 2 / height;
+      const scale = native ? 1 : canvas.height * (plan.scale ?? .30) * 2 * stageZoom / height;
       const floor = canvas.height * 371 / 420 - (grabbed ? canvas.height / 21 : 0);
       const left = native ? 0 : canvas.width / 2 - width * scale * plan.anchors.feet[0];
       const top = native ? 0 : floor - height * scale * plan.anchors.feet[1];
