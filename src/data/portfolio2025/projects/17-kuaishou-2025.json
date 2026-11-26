@@ -1,0 +1,226 @@
+{
+  "slug": "17-kuaishou-2025",
+  "no": "Ⅲ-06",
+  "categoryId": "commercial",
+  "categoryLabel": "Ⅲ 商业项目",
+  "title": "快手磁力引擎 2025 宣传片",
+  "subtitle": "AI 驱动视觉革新 · 动态拼贴与连续视频商业影像",
+  "year": "2025",
+  "medium": "商业宣传影像 / AI 图像拼贴 / 连续动态视频",
+  "durationOrSpec": "平台级节日视觉盛典 · 静帧与动态融合",
+  "theme": "mist",
+  "heroImage": {
+    "src": "/portfolio-2025/17-kuaishou-2025/p86-01.webp",
+    "alt": "快手磁力引擎 2025 宣传片三维微缩拼贴场景",
+    "width": 1600,
+    "height": 917,
+    "caption": "快手磁力引擎 2025 宣传片三维微缩拼贴场景"
+  },
+  "summary": "为快手磁力引擎 2025 年度活动制作的品牌宣传影像。以 AI 生成视觉拼贴与连续动态视频融合为核心，打破传统商业短片的实拍与特效边界，用微缩玩具质感与高饱和度视觉叙事展现平台级节日狂欢活力。",
+  "tags": [
+    "快手磁力引擎",
+    "AI 图像拼贴",
+    "连续动态视频",
+    "智能视觉叙事",
+    "品牌传播"
+  ],
+  "meta": [
+    {
+      "label": "年份",
+      "value": "2025"
+    },
+    {
+      "label": "品牌委托",
+      "value": "快手 · 磁力引擎"
+    },
+    {
+      "label": "核心技术",
+      "value": "AI 生成图像拼贴 + 连续动态视频工作流"
+    }
+  ],
+  "pages": [
+    {
+      "id": "p86",
+      "pageNo": 86,
+      "label": "原稿 P86",
+      "widthPt": 841.9,
+      "heightPt": 595.3,
+      "bgColor": "#e2e3e4",
+      "images": [
+        {
+          "id": "p86-i01",
+          "src": "/portfolio-2025/pages/17-kuaishou-2025/p86-g01.webp",
+          "x": 41.371,
+          "y": 50.132,
+          "w": 57.071,
+          "h": 46.257,
+          "z": 1,
+          "kind": "single",
+          "tileCount": 1,
+          "alt": "P86 作品图像 #01",
+          "caption": ""
+        }
+      ],
+      "texts": [
+        {
+          "id": "p86-t01",
+          "text": "快手磁力引擎2025 宣传片",
+          "x": 1.683,
+          "y": 2.042,
+          "w": 26.705,
+          "h": 3.641,
+          "z": 1,
+          "fontSizePt": 18.0,
+          "lineHeight": 1.2,
+          "color": "#231f20",
+          "fontFamily": "sans",
+          "fontWeight": 400,
+          "align": "left",
+          "rotation": 0,
+          "singleLine": true
+        },
+        {
+          "id": "p86-t02",
+          "text": "AI 驱动视觉革新 · 动态拼贴的未来影像",
+          "x": 1.683,
+          "y": 9.505,
+          "w": 33.447,
+          "h": 3.236,
+          "z": 2,
+          "fontSizePt": 16.0,
+          "lineHeight": 1.2,
+          "color": "#231f20",
+          "fontFamily": "sans",
+          "fontWeight": 400,
+          "align": "left",
+          "rotation": 0,
+          "singleLine": true
+        },
+        {
+          "id": "p86-t03",
+          "text": "以AI 生成图像拼贴和连续动态视频为核心技术，打破传统影像边界。通过智能算法将静态与动态视觉元素融合，创造连贯、丰富、多维的视觉叙事体验，为内容创作者和观众呈现未来影像的新可能。",
+          "x": 80.987,
+          "y": 2.155,
+          "w": 17.654,
+          "h": 19.36,
+          "z": 3,
+          "fontSizePt": 12.0,
+          "lineHeight": 1.2,
+          "color": "#231f20",
+          "fontFamily": "sans",
+          "fontWeight": 400,
+          "align": "left",
+          "rotation": 0
+        },
+        {
+          "id": "p86-t04",
+          "text": "智能视觉叙事",
+          "x": 24.848,
+          "y": 93.688,
+          "w": 9.102,
+          "h": 2.427,
+          "z": 4,
+          "fontSizePt": 12.0,
+          "lineHeight": 1.2,
+          "color": "#231f20",
+          "fontFamily": "sans",
+          "fontWeight": 400,
+          "align": "left",
+          "rotation": 0,
+          "singleLine": true
+        }
+      ],
+      "bgImage": "/portfolio-2025/pages/17-kuaishou-2025/p86-bg.webp"
+    },
+    {
+      "id": "p87",
+      "pageNo": 87,
+      "label": "原稿 P87",
+      "widthPt": 841.9,
+      "heightPt": 595.3,
+      "bgColor": "#e2e3e4",
+      "images": [
+        {
+          "id": "p87-i01",
+          "src": "/portfolio-2025/pages/17-kuaishou-2025/p87-g01.webp",
+          "x": 37.834,
+          "y": 2.175,
+          "w": 60.483,
+          "h": 94.223,
+          "z": 1,
+          "kind": "single",
+          "tileCount": 1,
+          "alt": "P87 作品图像 #01",
+          "caption": ""
+        },
+        {
+          "id": "p87-i02",
+          "src": "/portfolio-2025/pages/17-kuaishou-2025/p87-g02.webp",
+          "x": 1.546,
+          "y": 50.0,
+          "w": 25.221,
+          "h": 46.19,
+          "z": 2,
+          "kind": "single",
+          "tileCount": 1,
+          "alt": "P87 作品图像 #02",
+          "caption": ""
+        }
+      ],
+      "texts": [
+        {
+          "id": "p87-t01",
+          "text": "AI 图像拼贴",
+          "x": 1.683,
+          "y": 2.155,
+          "w": 7.882,
+          "h": 2.427,
+          "z": 1,
+          "fontSizePt": 12.0,
+          "lineHeight": 1.2,
+          "color": "#231f20",
+          "fontFamily": "sans",
+          "fontWeight": 400,
+          "align": "left",
+          "rotation": 0,
+          "singleLine": true
+        },
+        {
+          "id": "p87-t02",
+          "text": "连续动态视频",
+          "x": 1.683,
+          "y": 8.044,
+          "w": 9.102,
+          "h": 2.427,
+          "z": 2,
+          "fontSizePt": 12.0,
+          "lineHeight": 1.2,
+          "color": "#231f20",
+          "fontFamily": "sans",
+          "fontWeight": 400,
+          "align": "left",
+          "rotation": 0,
+          "singleLine": true
+        },
+        {
+          "id": "p87-t03",
+          "text": "创意影像",
+          "x": 1.683,
+          "y": 40.869,
+          "w": 6.251,
+          "h": 2.427,
+          "z": 3,
+          "fontSizePt": 12.0,
+          "lineHeight": 1.2,
+          "color": "#231f20",
+          "fontFamily": "sans",
+          "fontWeight": 400,
+          "align": "left",
+          "rotation": 0,
+          "singleLine": true
+        }
+      ],
+      "bgImage": "/portfolio-2025/pages/17-kuaishou-2025/p87-bg.webp"
+    }
+  ]
+}

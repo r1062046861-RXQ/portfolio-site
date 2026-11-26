@@ -502,7 +502,7 @@ export default function Home() {
                 client: "天津美术学院",
                 project: "AI 艺术高研班",
                 category: "教学与培训",
-                desc: "担任人工智能艺术高研班艺术创作导师，提供专业的生成式 AI 技能培训与数字艺术创作指导。",
+                desc: "担任人工智能艺术高级研修班艺术创作教师，指导学员开展多模态工作流搭建、定制模型训练及 AI 影像创作。",
                 image: "/images/22.webp"
               },
               {
@@ -667,7 +667,7 @@ export default function Home() {
               {
                 year: "2023",
                 title: "国家艺术基金数字博物馆数字艺术人才培训资助项目",
-                desc: "参与国家艺术基金数字艺术人才培训项目，由文化和旅游部艺术发展中心发起，聚焦数字博物馆与数字艺术方法。",
+                desc: "参与国家艺术基金数字艺术人才培训项目，由文化和旅游部艺术发展中心发起，聚焦数字博物馆展陈、三维空间视觉开发与区块链研究。",
                 image: "/images/ee.webp"
               },
               {
@@ -729,21 +729,21 @@ export default function Home() {
             <TiltWrapper delay={0.1} className="site-card bg-black p-6 sm:p-8 md:p-10 rounded-xl border border-zinc-800 h-full">
               <div className="flex items-center gap-4 mb-6" style={{ transform: "translateZ(30px)" }}>
                 <div className="relative shrink-0 aspect-square w-16 md:w-20 rounded-full overflow-hidden border border-zinc-700">
-                  <Image src="/images/rxq.webp" alt="任玄奇" fill className="object-cover" />
+                  <Image src="/portfolio-2025/meta/portrait-2026.webp" alt="任玄奇" fill className="object-cover object-top" />
                 </div>
                 <div>
                   <h3 className="text-xl md:text-2xl font-semibold mb-1">任玄奇</h3>
-                  <p className="text-zinc-400 text-sm md:text-base">动画导演 / 北京电影学院博士研究生 / 青年学者</p>
+                  <p className="text-zinc-400 text-sm md:text-base">北京电影学院博士研究生 / 数字艺术 · 虚拟现实艺术 · 实验影像</p>
                 </div>
               </div>
               
               <p className="text-zinc-300 text-sm md:text-base leading-relaxed mb-6" style={{ transform: "translateZ(20px)" }}>
-                研究科技艺术与跨媒体艺术，聚焦人工智能时代的影像与动画创作；也在编程、装置、新媒体和虚拟现实等实践中，将创意发展为可测试、可呈现的作品。
+                博士研究聚焦虚拟现实与沉浸式媒介感知，长期从事数字艺术创作、三维技术美术管线研发，以及涵盖独立游戏制作、前端产品开发与多模态工作流的 AI 开发实践。
               </p>
               <div className="text-xs md:text-sm text-zinc-500 space-y-1.5" style={{ transform: "translateZ(10px)" }}>
-                <p>学术与研修：国家艺术基金数字博物馆数字艺术人才培训、沉浸式交互动漫人工智能创作人才培养</p>
-                <p>教学经历：2024–2026 天津美术学院人工智能艺术通识课及高级研修班</p>
-                <p>展览与展映：中国数字艺术大展、全国美展、CCF 计算艺术大展及北京／海南岛国际电影节等</p>
+                <p>学术与研修：国家艺术基金沉浸式交互动漫人工智能创作人才培养、数字博物馆数字艺术人才培训</p>
+                <p>教学经历：2024–2026 天津美术学院《人工智能艺术》通识课程教师、2025 人工智能艺术高级研修班艺术创作教师</p>
+                <p>展览与展映：第十四届全国美展、首届中国数字艺术大展、首届中国计算机学会计算艺术大展、北京／海南岛国际电影节等</p>
               </div>
             </TiltWrapper>
 
