@@ -1,15 +1,17 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { IBM_Plex_Mono, IBM_Plex_Sans } from "next/font/google";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const studioSans = IBM_Plex_Sans({
+  variable: "--font-studio-sans",
   subsets: ["latin"],
+  weight: ["400", "500", "600"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const studioMono = IBM_Plex_Mono({
+  variable: "--font-studio-mono",
   subsets: ["latin"],
+  weight: ["400", "500"],
 });
 
 export const metadata: Metadata = {
@@ -25,9 +27,9 @@ export default function RootLayout({
   return (
     <html
       lang="zh-CN"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased bg-black text-white`}
+      className={`${studioSans.variable} ${studioMono.variable} h-full antialiased bg-[#0b0b0a] text-[#f4f1ea]`}
     >
-      <body className="min-h-full flex flex-col selection:bg-white selection:text-black">
+      <body className="min-h-full flex flex-col selection:bg-white selection:text-[#0b0b0a]">
         {children}
       </body>
     </html>

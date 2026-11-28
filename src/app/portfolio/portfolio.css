@@ -16,8 +16,8 @@
   --pf-gutter: clamp(18px, 4.5vw, 72px);
   --pf-max-w: 1320px;
   --pf-font-display: "STZhongsong", "华文中宋", "Songti SC", "Noto Serif SC", Georgia, serif;
-  --pf-font-sans: var(--font-geist-sans), "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
-  --pf-font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, Consolas, monospace;
+  --pf-font-sans: var(--font-studio-sans), "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  --pf-font-mono: var(--font-studio-mono), ui-monospace, SFMono-Regular, Consolas, monospace;
 
   min-height: 100vh;
   width: 100%;
