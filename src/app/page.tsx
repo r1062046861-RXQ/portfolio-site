@@ -343,18 +343,15 @@ export default function Home() {
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-end">
               {/* 左侧主叙事栏 */}
               <div className="lg:col-span-7 studio-reveal">
-                <div className="flex items-center gap-3 mb-6">
-                  <span className="inline-block w-8 h-px bg-[#e2785c]" aria-hidden="true" />
-                  <p className="text-xs sm:text-sm font-mono tracking-[0.18em] text-[#e2785c]">
-                    LIQUID PIXEL STUDIO · 企业团队 · 艺术家与创作机构
-                  </p>
-                </div>
-
-                <h1 className="studio-serif text-4xl sm:text-5xl lg:text-6xl font-semibold tracking-tight leading-[1.12] text-[#f4f1ea] mb-6">
+                <h1 className="studio-serif text-4xl sm:text-5xl lg:text-6xl font-semibold tracking-tight leading-[1.12] text-[#f4f1ea] mb-5">
                   让技术真正服务于
                   <br />
                   工作与创作
                 </h1>
+
+                <p className="text-sm sm:text-base font-medium text-[#e2785c] mb-5">
+                  面向企业团队、艺术家与创作机构
+                </p>
 
                 <p className="text-base sm:text-lg text-[#d4cfc4] max-w-2xl leading-[1.8] mb-9">
                   我们协助企业团队梳理重复工作、优化协作方式；也帮助艺术家和创作团队把新媒体、影像与影视创意发展为可讨论、可测试、可呈现的作品。
