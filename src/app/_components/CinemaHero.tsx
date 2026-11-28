@@ -99,7 +99,7 @@ export default function CinemaHero() {
           className="absolute inset-0 z-[2]"
           style={{
             background:
-              "radial-gradient(circle at 18% 82%, rgba(5,5,6,0.88) 0%, rgba(5,5,6,0.45) 45%, transparent 78%)",
+              "radial-gradient(circle at 18% 82%, rgba(5,5,6,0.88) 0%, rgba(5,5,6,0.45) 45%, transparent 78%), radial-gradient(circle at 90% 82%, rgba(5,5,6,0.9) 0%, rgba(5,5,6,0.46) 36%, transparent 66%)",
           }}
         />
       </div>
@@ -152,7 +152,7 @@ export default function CinemaHero() {
               href="#services"
               aria-label="向下浏览合作方向"
               data-print-hidden="true"
-              className="hidden lg:inline-flex items-center gap-2 text-[11px] font-mono tracking-[0.24em] text-[#9398a3] hover:text-[#f5f6f8] transition-colors [writing-mode:vertical-rl]"
+              className="hidden lg:inline-flex items-center gap-2 text-[11px] font-mono tracking-[0.24em] text-[#e4e6ec] hover:text-white transition-colors [writing-mode:vertical-rl]"
             >
               <span>SCROLL</span>
               <ArrowDown className="w-3.5 h-3.5 mt-1" aria-hidden="true" />
@@ -161,11 +161,11 @@ export default function CinemaHero() {
             <div className="flex flex-col lg:items-end gap-3">
               <div className="flex items-center gap-3 text-xs font-mono tracking-[0.16em] tabular-nums">
                 <span className="text-[#f5f6f8]">{current.code} / 04</span>
-                <span className="text-[#9398a3]">·</span>
-                <span className="text-[#9398a3]">{current.location}</span>
+                <span className="text-[#c4c7ce]">·</span>
+                <span className="text-[#c4c7ce]">{current.location}</span>
               </div>
 
-              <div className="text-xs text-[#c4c7ce] tracking-wide">
+              <div className="text-xs text-[#e4e6ec] tracking-wide">
                 {current.title}
               </div>
 
@@ -181,8 +181,8 @@ export default function CinemaHero() {
                       aria-pressed={selected}
                       className={`px-2.5 py-2 text-[11px] font-mono tabular-nums tracking-[0.14em] transition-colors ${
                         selected
-                          ? "text-[#f5f6f8] bg-white/12"
-                          : "text-[#9398a3] hover:text-[#c4c7ce]"
+                          ? "text-[#f5f6f8] bg-white/15"
+                          : "text-[#c4c7ce] hover:text-[#f5f6f8]"
                       }`}
                     >
                       {reel.code}
@@ -196,7 +196,7 @@ export default function CinemaHero() {
               href="#services"
               aria-label="向下浏览合作方向"
               data-print-hidden="true"
-              className="lg:hidden inline-flex items-center gap-1.5 text-xs font-mono tracking-[0.16em] text-[#9398a3] hover:text-[#f5f6f8] py-2"
+              className="lg:hidden inline-flex items-center gap-1.5 text-xs font-mono tracking-[0.16em] text-[#e4e6ec] hover:text-white py-2"
             >
               <span>SCROLL</span>
               <ArrowDown className="w-3.5 h-3.5" aria-hidden="true" />
