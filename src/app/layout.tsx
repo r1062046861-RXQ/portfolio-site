@@ -1,17 +1,22 @@
 import type { Metadata } from "next";
-import { IBM_Plex_Mono, IBM_Plex_Sans } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 
-const studioSans = IBM_Plex_Sans({
+const studioSans = localFont({
+  src: "./fonts/ibm-plex-sans-latin.woff2",
+  weight: "400 600",
+  style: "normal",
   variable: "--font-studio-sans",
-  subsets: ["latin"],
-  weight: ["400", "500", "600"],
+  display: "swap",
 });
 
-const studioMono = IBM_Plex_Mono({
+const studioMono = localFont({
+  src: [
+    { path: "./fonts/ibm-plex-mono-400-latin.woff2", weight: "400", style: "normal" },
+    { path: "./fonts/ibm-plex-mono-500-latin.woff2", weight: "500", style: "normal" },
+  ],
   variable: "--font-studio-mono",
-  subsets: ["latin"],
-  weight: ["400", "500"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -27,9 +32,9 @@ export default function RootLayout({
   return (
     <html
       lang="zh-CN"
-      className={`${studioSans.variable} ${studioMono.variable} h-full antialiased bg-[#0b0b0a] text-[#f4f1ea]`}
+      className={`${studioSans.variable} ${studioMono.variable} h-full antialiased bg-[#050506] text-[#f5f6f8]`}
     >
-      <body className="min-h-full flex flex-col selection:bg-white selection:text-[#0b0b0a]">
+      <body className="min-h-full flex flex-col selection:bg-[#f5f6f8] selection:text-[#050506]">
         {children}
       </body>
     </html>

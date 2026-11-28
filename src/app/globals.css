@@ -8,55 +8,65 @@
 }
 
 :root {
-  --background: #0b0b0a;
-  --foreground: #f4f1ea;
-  --studio-bg: #0b0b0a;
-  --studio-bg-alt: #111110;
-  --studio-surface: #161614;
-  --studio-ink: #f4f1ea;
-  --studio-ink-secondary: #d4cfc4;
-  --studio-ink-muted: #b8b3a8;
-  --studio-ink-subtle: #9e988d;
-  --studio-line: rgba(244, 241, 234, 0.12);
-  --studio-line-strong: rgba(244, 241, 234, 0.28);
-  --studio-accent: #e2785c;
-  --studio-serif: "STZhongsong", "华文中宋", "Songti SC", "Noto Serif SC", Georgia, serif;
+  --background: #050506;
+  --foreground: #f5f6f8;
+  --cinema-bg: #050506;
+  --cinema-elevated: #09090c;
+  --cinema-plate: #0e0e12;
+  --cinema-ink: #f5f6f8;
+  --cinema-silver: #c4c7ce;
+  --cinema-muted: #9398a3;
+  --cinema-line: rgba(245, 246, 248, 0.1);
 }
 
 html {
   scroll-behavior: smooth;
-  background-color: var(--studio-bg);
+  background-color: var(--cinema-bg);
 }
 
 body {
-  background-color: var(--studio-bg);
-  color: var(--studio-ink);
-  font-family: var(--font-sans), "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", Arial, sans-serif;
+  background-color: var(--cinema-bg);
+  color: var(--cinema-ink);
+  font-family: var(--font-sans), "PingFang SC", "Hiragino Sans GB", "Noto Sans SC", "Microsoft YaHei", sans-serif;
   overflow-x: clip;
   -webkit-font-smoothing: antialiased;
 }
 
 ::selection {
-  background: #f4f1ea;
-  color: #0b0b0a;
-}
-
-.studio-serif {
-  font-family: var(--studio-serif);
+  background: #f5f6f8;
+  color: #050506;
 }
 
 .site-nav a:focus-visible,
 .site-section a:focus-visible,
+.site-section button:focus-visible,
 .site-footer a:focus-visible {
-  outline: 2px solid #f4f1ea;
+  outline: 2px solid #f5f6f8;
   outline-offset: 4px;
 }
 
-/* 克制的进场律动 */
-@keyframes studioReveal {
+/* 电影银幕与液态暗房动态韵律 */
+@keyframes cinemaDrift {
+  0% {
+    transform: scale(1) translate3d(0, 0, 0);
+  }
+  50% {
+    transform: scale(1.045) translate3d(-0.6%, -0.4%, 0);
+  }
+  100% {
+    transform: scale(1.015) translate3d(0.4%, 0, 0);
+  }
+}
+
+.cinema-drift {
+  animation: cinemaDrift 20s ease-in-out infinite alternate;
+  will-change: transform;
+}
+
+@keyframes cinemaReveal {
   from {
     opacity: 0;
-    transform: translateY(14px);
+    transform: translateY(16px);
   }
   to {
     opacity: 1;
@@ -64,26 +74,55 @@ body {
   }
 }
 
-.studio-reveal {
-  animation: studioReveal 0.65s cubic-bezier(0.16, 1, 0.3, 1) both;
+.cinema-reveal {
+  animation: cinemaReveal 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
-.studio-reveal-delay {
-  animation: studioReveal 0.75s cubic-bezier(0.16, 1, 0.3, 1) 0.12s both;
+.cinema-reveal-delay {
+  animation: cinemaReveal 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.15s both;
 }
 
-/* 展品图版柔和缩放 */
-.studio-plate-img {
-  transition: transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+/* 作品展板：微弱冷银边线与液态暗房投影，悬停微缩放 */
+.cinema-optical-frame {
+  box-shadow:
+    inset 0 0 0 1px rgba(245, 246, 248, 0.1),
+    0 24px 60px rgba(0, 0, 0, 0.6);
+  transition: box-shadow 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.group:hover .studio-plate-img {
+.group:hover .cinema-optical-frame {
+  box-shadow:
+    inset 0 0 0 1px rgba(245, 246, 248, 0.24),
+    -1px 0 22px rgba(155, 190, 235, 0.12),
+    1px 0 22px rgba(235, 185, 155, 0.08),
+    0 28px 68px rgba(0, 0, 0, 0.72);
+}
+
+.cinema-plate-img {
+  transition: transform 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.group:hover .cinema-plate-img {
   transform: scale(1.03);
+}
+
+/* 档案右侧悬停光学浮窗：克制光学色散边缘（呼应 A2 概念图） */
+.cinema-chromatic-preview {
+  box-shadow:
+    inset 0 0 0 1px rgba(245, 246, 248, 0.16),
+    -2px 0 20px rgba(130, 185, 245, 0.14),
+    2px 0 20px rgba(240, 175, 130, 0.12),
+    0 24px 60px rgba(0, 0, 0, 0.75);
 }
 
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
+  }
+
+  .cinema-drift {
+    animation: none !important;
+    transform: none !important;
   }
 
   *,
@@ -94,24 +133,24 @@ body {
     transition-duration: 0.01ms !important;
   }
 
-  .group:hover .studio-plate-img {
+  .group:hover .cinema-plate-img {
     transform: none;
   }
 }
 
-/* 离线打印与 PDF 导出排版（保留深色美术馆质感并避免截断） */
+/* 离线打印与 PDF 导出排版（保留深色银幕档案质感并避免分页截断） */
 @page {
   size: A4;
   margin: 0;
-  background: #0b0b0a;
+  background: #050506;
 }
 
 @media print {
   html,
   body {
     min-height: 0 !important;
-    background: #0b0b0a !important;
-    color: #f4f1ea !important;
+    background: #050506 !important;
+    color: #f5f6f8 !important;
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
   }
@@ -123,16 +162,15 @@ body {
   }
 
   .site-shell {
-    background: #0b0b0a !important;
-    color: #f4f1ea !important;
+    background: #050506 !important;
+    color: #f5f6f8 !important;
   }
 
   .site-section {
     display: block !important;
     min-height: 0 !important;
     padding: 10mm 12mm !important;
-    background: #0b0b0a !important;
-    border-color: #2c2a26 !important;
+    background: #050506 !important;
     break-inside: auto;
     page-break-inside: auto;
   }
@@ -140,6 +178,8 @@ body {
   .site-hero {
     display: block !important;
     min-height: auto !important;
+    height: auto !important;
+    max-height: none !important;
   }
 
   #contact {
